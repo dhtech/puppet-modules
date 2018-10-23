@@ -14,6 +14,8 @@
 #
 
 class ldap ($master) {
+  include stdlib::stages
+
   # We want to run before 'ldaplogin' and other
   class {
     'ldap::setup':
