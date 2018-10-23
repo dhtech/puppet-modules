@@ -1,0 +1,17 @@
+# Managed by Puppet
+#
+## !! Any changes to this file will be overwritten !!
+
+[Unit]
+Description=Alertmanager
+After=syslog.target network.target
+
+[Service]
+EnvironmentFile=/etc/default/alertmanager
+User=prometheus
+WorkingDirectory=/opt/alertmanager
+ExecStart=/opt/alertmanager/alertmanager $ARGS
+
+[Install]
+WantedBy=multi-user.target
+

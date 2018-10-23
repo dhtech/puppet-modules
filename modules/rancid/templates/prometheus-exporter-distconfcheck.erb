@@ -1,0 +1,134 @@
+#!/usr/bin/env python
+import os
+import sys
+import sqlite3
+import re
+import time
+
+from ciscoconfparse import CiscoConfParse
+
+export_dir = '/var/tmp/export'
+export_file = 'distconfcheck.prom'
+
+current_event = '<%= @current_event %>'
+db_file = '/etc/ipplan.db'
+
+rancid_conf_dir = '/var/lib/rancid/%s/configs/' % current_event
+
+rancid_conf_files = os.listdir(rancid_conf_dir)
+
+
+def open_db():
+  if os.path.isfile(db_file):
+    try:
+      conn = sqlite3.connect(db_file)
+      db = conn.cursor()
+    except sqlite3.Error as e:
+      print >>sys-stderr, "An error accurd:", e.args[0]
+      sys.exit(1)
+  else:
+    print >>sys-stderr, "No database file found: %s" % db_file
+    sys.exit(2)
+  return db
+
+
+def get_dist_switches(db):
+  sql = "select host.name from host, option where host.node_id = option.node_id and option.name = 'layer' and option.value = 'dist';"
+  dists = db.execute(sql)
+  dists =  [x[0] for x in dists.fetchall()]
+  return dists
+
+def get_access_switches(db):
+  sql = "select host.name from host, option where host.node_id = option.node_id and option.name = 'layer' and option.value = 'access';"
+  return set([x[0].split('.')[0].lower() for x in db.execute(sql).fetchall()])
+
+def read_config_file(switchfile):
+  with open(rancid_conf_dir + switchfile, 'r') as content_file:
+    content = content_file.read()
+  return content
+
+
+def has_objects_with_child(cfg, obj, child):
+  parents = cfg.find_objects(obj)
+  for p in parents:
+    if not p.has_child_with(child):
+      return False
+  return True
+
+def get_description_access_switch(interface):
+  lines = interface.re_search_children('^ description BORD; ')
+  if lines == []:
+    return None
+  parts = lines[0].text.split('; ')
+  if len(parts) != 2:
+    return None
+  return parts[-1].lower()
+
+def get_circuit_id_access_switch(interface):
+  lines = interface.re_search_children('^ ip dhcp snooping vlan 601 information option format-type circuit-id string')
+  if lines == []:
+    return None
+  parts = lines[0].text.split()
+  if len(parts) != 11:
+    return None
+  return parts[-1].lower()
+
+
+## start
+
+if not os.path.exists(export_dir):
+  os.makedirs(export_dir)
+
+
+db = open_db()
+dist_switches  = get_dist_switches(db)
+access_switches = get_access_switches(db)
+
+try:
+  output_file = open('%s/%s' % (export_dir, export_file), 'w')
+except:
+  print >>sys.stderr, "Unable to open export file for writing"
+  sys.exit(1)
+  
+
+# start of stuff  
+for filename in rancid_conf_files:
+
+  # do not check for switches that are not in layer dist
+  if not filename in dist_switches:
+    continue
+
+  cfg = CiscoConfParse(os.path.join(rancid_conf_dir, filename))
+
+  # do not check for switches that are not upstream for tables
+  if not cfg.find_objects('BORD;'):
+    continue
+
+  table_interfaces = cfg.find_objects_w_child(parentspec='^interface GigabitEthernet', childspec='^ description BORD;')
+  for intf in table_interfaces:
+    if get_circuit_id_access_switch(intf) != get_description_access_switch(intf):
+      print get_circuit_id_access_switch(intf)
+      print get_description_access_switch(intf)
+  checks = {
+      "IpDhcpSnooping": bool(cfg.find_objects('^ip dhcp snooping$') and cfg.find_objects('ip dhcp snooping vlan 601')),
+
+      "RemoteIdFormat": cfg.has_line_with('^ip dhcp snooping information option format remote-id hostname$'),
+
+      "PortchannelDhcpSnoopingTrust": has_objects_with_child(cfg, '^interface Port-channel1$', '^ ip dhcp snooping trust$'),
+
+      "TableInterfaceSwitchportTrunkNativeVlan601": all([x.has_child_with('^ switchport trunk native vlan 601$') for x in table_interfaces]),
+      "TableInterfaceAllowedVlans": all([x.has_child_with('^ switchport trunk allowed vlan [0-9]{1,4},600,601,851$') for x in table_interfaces]),
+
+      "TableInterfaceIpDhcpSnoopingVlan601": all([bool(x.re_search_children('^ ip dhcp snooping vlan 601 information option format-type circuit-id string ')) for x in table_interfaces]),
+
+      "TableInterfaceCircuitIdAccessSwitchExists": all([get_circuit_id_access_switch(x) in access_switches for x in table_interfaces]),
+      "TableInterfaceDescriptionAccessSwitchExists": all([get_description_access_switch(x) in access_switches for x in table_interfaces]),
+
+      "TableInterfaceDescriptionAndSnoopingAccessSwitchesMatch": all([get_description_access_switch(x) == get_circuit_id_access_switch(x) for x in table_interfaces]),
+
+      "SpanningTreeMode": cfg.has_line_with('^spanning-tree mode mst$'),
+      "SpanningTreeInstance": cfg.find_objects('^spanning-tree mst configuration$')[0].has_child_with('^ instance 1 vlan 2-4094$'),
+  }
+  
+  for k, v in checks.items():
+    output_file.write('dist_check{{device="{}",check="{}"}} {} {}\n'.format(filename, k, int(v), int(time.time()*1000)))

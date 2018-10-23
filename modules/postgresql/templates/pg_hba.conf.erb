@@ -1,0 +1,8 @@
+# TYPE  DATABASE        USER            ADDRESS                                       METHOD
+<% @allowed_hosts.each do |padded_host| -%>
+host    all             all             <%= padded_host %>md5
+<% end -%>
+
+# Postgres maintenance user                                                      
+local   all             postgres                                                      peer
+local   all             root                                                          peer

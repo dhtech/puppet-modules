@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Most popular domains</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="container">
+      <div class="page-header">
+        <img width="40%" src="head.png" />
+      </div>
+      <h1>Most popular domains</h1>
+      <a href="graph/">Show graph instead</a>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Domain</th>
+            <th>Requests</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+      <script>
+        function addCommas(nStr) {
+          nStr += '';
+          x = nStr.split('.');
+          x1 = x[0];
+          x2 = x.length > 1 ? ' ' + x[1] : '';
+          var rgx = /(\d+)(\d{3})/;
+          while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ' ' + '$2');
+          }
+          return x1 + x2;
+        }
+        function updateTable() {
+          var xhr = new XMLHttpRequest();
+          xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+              var rows = '';
+              var json = JSON.parse(xhr.responseText);
+              json.forEach(function(d) {
+                rows += '<tr><td>' + d['domain_name'] + '</td><td>' + addCommas(d['requests']) + '</td></tr>';
+              });
+              document.querySelector('tbody').innerHTML = rows;
+            }
+          };
+          xhr.open('GET', 'stats.json', true);
+          xhr.send(null);
+        }
+        updateTable();
+        setInterval(updateTable, 15000);
+      </script>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,10 @@
+DROP TABLE IF EXISTS alerts;
+
+CREATE TABLE alerts (
+	id SERIAL NOT NULL PRIMARY KEY,
+	malware_type STRING NOT NULL,
+	date timestamp default CURRENT_TIMESTAMP,
+	src STRING NOT NULL,
+	dst STRING NOT NULL,
+	malware_name STRING NOT NULL,
+);

@@ -1,0 +1,13 @@
+[Unit]
+Description=Factorio Headless Server
+After=network.target
+
+[Service]
+Type=simple
+User=factorio
+WorkingDirectory=/home/factorio
+ExecStart=/home/factorio/factorio/bin/x64/factorio --start-server /home/factorio/factorio/saves/<%= @world_name %>.zip --server-settings /home/factorio/factorio/data/server-settings.json
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target

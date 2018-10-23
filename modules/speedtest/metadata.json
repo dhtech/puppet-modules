@@ -1,0 +1,14 @@
+{
+  "name": "dhtech-speedtest",
+  "version": "0.0.1",
+  "author": "dhtech",
+  "summary": "Manages our speedtest machine",
+  "license": "Apache 2.0",
+  "source": "",
+  "project_page": "",
+  "issues_url": null,
+  "dependencies": [
+    {"name":"puppetlabs/stdlib","version_requirement":">= 1.0.0"}
+  ]
+}
+

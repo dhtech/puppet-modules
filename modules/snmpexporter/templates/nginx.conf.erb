@@ -1,0 +1,30 @@
+user www-data;
+worker_processes auto;
+pid /run/nginx.pid;
+include /etc/nginx/modules-enabled/*.conf;
+
+events {
+  worker_connections 768;
+}
+
+http {
+    upstream exporter {
+        least_conn;
+        server localhost:9190;
+        server localhost:9191;
+        server localhost:9192;
+        server localhost:9193;
+        server localhost:9194;
+        server localhost:9195;
+        server localhost:9196;
+        server localhost:9197;
+    }
+
+    server {
+        listen 80;
+
+        location / {
+            proxy_pass http://exporter;
+        }
+    }
+}

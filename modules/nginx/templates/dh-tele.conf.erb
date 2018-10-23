@@ -1,0 +1,19 @@
+server {
+  listen 80;
+  listen [::]:80;
+
+  #root /var/www/tele;
+  root /srv/www/tele;
+  index index.html index.htm tele.html;
+
+  # Make site accessible from http://localhost/
+  server_name tele.event.dreamhack.se;
+
+  location / {
+    autoindex on;
+
+    # First attempt to serve request as file, then
+    # as directory, then fall back to displaying a 404.
+    try_files $uri $uri/ /index.html;
+  }
+}

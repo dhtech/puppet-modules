@@ -1,0 +1,33 @@
+#!/usr/bin/env python
+
+import os
+import sys
+
+export_dir = '/var/tmp/export'
+export_file = 'rancid.prom'
+
+current_event = '<%= @current_event %>'
+
+rancid_conf_dir = '/var/lib/rancid/%s/configs' % current_event
+
+rancid_conf_files = os.listdir(rancid_conf_dir)
+
+if not os.path.exists(export_dir):
+  os.makedirs(export_dir)
+
+try:
+  output_file = open('%s/%s' % (export_dir, export_file), 'w')
+  for rancid_conf_file in rancid_conf_files:
+    if rancid_conf_file.split('.')[-1] == "new":
+      continue
+
+    stat = os.stat('%s/%s' % (rancid_conf_dir, rancid_conf_file))
+    mtime = int(stat.st_mtime)
+    size = stat.st_size
+
+    output_file.write('rancid_config_updated{host="%s"} %s\n' % (rancid_conf_file, mtime))
+    output_file.write('rancid_config_bytes{host="%s"} %s\n' % (rancid_conf_file, size))
+
+  output_file.close()
+except IOError as error:
+  sys.exit('Failed to open %s/%s: %s' % (export_dir, export_file, error))

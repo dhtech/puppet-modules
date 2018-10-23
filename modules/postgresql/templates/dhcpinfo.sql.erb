@@ -1,0 +1,37 @@
+DROP VIEW IF EXISTS active_leases;
+DROP TABLE IF EXISTS lease;
+DROP TABLE IF EXISTS scope;
+DROP TABLE IF EXISTS oui;
+
+CREATE TABLE oui (
+	id SERIAL NOT NULL PRIMARY KEY,
+	mac MACADDR NOT NULL,
+	organization TEXT NOT NULL
+);
+
+CREATE TABLE scope (
+	id SERIAL NOT NULL PRIMARY KEY,
+	vlan_id INT,
+	vlan_name TEXT,
+	network CIDR,
+	gateway INET,
+	maximum_usable INT,
+	shared BOOLEAN,
+	currently_active BOOLEAN NOT NULL
+);
+
+CREATE TABLE lease (
+	id BIGSERIAL NOT NULL PRIMARY KEY,
+	starts TIMESTAMP NOT NULL,
+	ends TIMESTAMP NOT NULL,
+	binding_state TEXT NOT NULL,
+	mac MACADDR NOT NULL,
+	ip INET NOT NULL,
+	client_hostname TEXT,
+	circuit_id TEXT,
+	remote_id TEXT,
+	scope INT NOT NULL REFERENCES scope(id)
+);
+
+CREATE VIEW active_leases AS
+	SELECT * FROM lease WHERE (NOW() at time zone 'utc')::timestamp < ends;

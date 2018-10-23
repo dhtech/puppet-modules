@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# Set appropriate permissions for a new database in PostgreSQL.
+#
+# This script should be run as the "postgres" user after a new database is created.
+# Based on http://stackoverflow.com/questions/24918367/grant-privileges-for-a-particular-database-in-postgresql
+
+username=$1
+dbname=$2
+
+# Remove PUBLIC permissions on the database
+psql ${dbname} -c "REVOKE ALL ON DATABASE \"${dbname}\" FROM public"
+
+# Grant connect to the specific user
+psql ${dbname} -c "GRANT CONNECT ON DATABASE \"${dbname}\" TO ${username}"
+
+# Grant access to lookup objects contained in the public schema
+psql ${dbname} -c "GRANT USAGE ON SCHEMA public TO ${username}"
+
+# Give access to all the objects in the public schema
+psql ${dbname} -c "GRANT ALL ON ALL TABLES IN SCHEMA public TO ${username}"
+
+# Allow the use of autoincrementing keys in tables (http://www.neilconway.org/docs/sequences/)
+psql ${dbname} -c "GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO ${username}"

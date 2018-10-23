@@ -1,0 +1,17 @@
+<%= YAML.dump({
+  'global' => {
+    'scrape_interval' => '30s',
+    'scrape_timeout' => '25s',
+  },
+  'rule_files' => [
+    '/opt/prometheus/rules/*.prom.yml',
+  ],
+  'alerting' => {
+    'alertmanagers' => [
+     'scheme' => 'http',
+     'static_configs' => [
+      'targets' => ['localhost:9093']
+    ]]
+  },
+  'scrape_configs' => @scrape_configs
+}) %>

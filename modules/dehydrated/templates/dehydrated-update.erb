@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Renew certs
+
+if [[ ! -d /etc/dehydrated/certs ]]; then
+    /opt/dehydrated/dehydrated --register --accept-terms
+fi
+/opt/dehydrated/dehydrated -6 -c
+chgrp -R www-data /etc/dehydrated/certs
+chmod -R g+rX /etc/dehydrated/certs
+

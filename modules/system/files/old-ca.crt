@@ -1,0 +1,63 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number:
+            99:94:de:0d:f1:66:e6:44
+    Signature Algorithm: sha1WithRSAEncryption
+        Issuer: C = SE, ST = Smaland, L = Jonkoping, O = Dreamhack, OU = Network, CN = ca
+        Validity
+            Not Before: Nov  6 00:01:45 2011 GMT
+            Not After : Nov  3 00:01:45 2021 GMT
+        Subject: C = SE, ST = Smaland, L = Jonkoping, O = Dreamhack, OU = Network, CN = ca
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (1024 bit)
+                Modulus:
+                    00:ba:d2:d8:4a:07:3a:9a:61:8f:49:0b:99:86:85:
+                    4d:b8:c9:5e:30:19:ce:0a:ff:e5:bd:4b:6f:fd:a8:
+                    68:97:1f:0f:4a:4d:95:22:62:50:a0:1c:25:dc:56:
+                    87:64:e4:aa:ea:d9:d7:1d:31:e9:38:0f:ed:be:4d:
+                    13:a8:4b:96:cb:49:ac:9c:c2:a7:42:9a:93:fe:97:
+                    a3:ef:8f:98:b0:38:a8:50:77:d7:9b:84:2d:5a:97:
+                    2a:55:66:46:84:62:d3:cb:15:5e:f1:5e:99:f2:67:
+                    f5:01:d4:c5:de:b9:07:00:5c:95:45:1d:c3:01:3d:
+                    e0:f9:ff:96:11:e3:78:d9:67
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Subject Key Identifier:
+                6E:E7:3D:32:E8:E6:23:01:6F:BF:64:67:4F:66:1E:E5:EB:7C:59:2B
+            X509v3 Authority Key Identifier:
+                keyid:6E:E7:3D:32:E8:E6:23:01:6F:BF:64:67:4F:66:1E:E5:EB:7C:59:2B
+                DirName:/C=SE/ST=Smaland/L=Jonkoping/O=Dreamhack/OU=Network/CN=ca
+                serial:99:94:DE:0D:F1:66:E6:44
+
+            X509v3 Basic Constraints:
+                CA:TRUE
+    Signature Algorithm: sha1WithRSAEncryption
+         03:ea:4c:5a:d8:ad:6f:26:c8:ac:0c:7b:56:df:80:c3:44:22:
+         65:fe:5d:d3:7b:9d:b6:18:d4:35:e4:36:07:95:76:dc:a4:52:
+         53:08:12:7e:d7:40:d0:dd:a1:b6:70:77:89:97:fb:85:08:95:
+         f6:7e:be:7f:cb:22:e5:1b:b6:e2:fc:16:6c:64:b3:8e:0b:cc:
+         b7:0c:53:d9:04:08:1c:ac:02:2d:cd:db:dc:16:47:da:0c:a1:
+         d8:49:7e:f5:f5:b1:5e:88:2c:51:e2:21:e4:cd:a8:7f:1d:89:
+         a5:bf:14:2c:83:49:48:d7:03:27:b2:db:c2:00:b7:c9:5c:ee:
+         33:84
+-----BEGIN CERTIFICATE-----
+MIIDFjCCAn+gAwIBAgIJAJmU3g3xZuZEMA0GCSqGSIb3DQEBBQUAMGYxCzAJBgNV
+BAYTAlNFMRAwDgYDVQQIEwdTbWFsYW5kMRIwEAYDVQQHEwlKb25rb3BpbmcxEjAQ
+BgNVBAoTCURyZWFtaGFjazEQMA4GA1UECxMHTmV0d29yazELMAkGA1UEAxMCY2Ew
+HhcNMTExMTA2MDAwMTQ1WhcNMjExMTAzMDAwMTQ1WjBmMQswCQYDVQQGEwJTRTEQ
+MA4GA1UECBMHU21hbGFuZDESMBAGA1UEBxMJSm9ua29waW5nMRIwEAYDVQQKEwlE
+cmVhbWhhY2sxEDAOBgNVBAsTB05ldHdvcmsxCzAJBgNVBAMTAmNhMIGfMA0GCSqG
+SIb3DQEBAQUAA4GNADCBiQKBgQC60thKBzqaYY9JC5mGhU24yV4wGc4K/+W9S2/9
+qGiXHw9KTZUiYlCgHCXcVodk5Krq2dcdMek4D+2+TROoS5bLSaycwqdCmpP+l6Pv
+j5iwOKhQd9ebhC1alypVZkaEYtPLFV7xXpnyZ/UB1MXeuQcAXJVFHcMBPeD5/5YR
+43jZZwIDAQABo4HLMIHIMB0GA1UdDgQWBBRu5z0y6OYjAW+/ZGdPZh7l63xZKzCB
+mAYDVR0jBIGQMIGNgBRu5z0y6OYjAW+/ZGdPZh7l63xZK6FqpGgwZjELMAkGA1UE
+BhMCU0UxEDAOBgNVBAgTB1NtYWxhbmQxEjAQBgNVBAcTCUpvbmtvcGluZzESMBAG
+A1UEChMJRHJlYW1oYWNrMRAwDgYDVQQLEwdOZXR3b3JrMQswCQYDVQQDEwJjYYIJ
+AJmU3g3xZuZEMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQADgYEAA+pMWtit
+bybIrAx7Vt+Aw0QiZf5d03udthjUNeQ2B5V23KRSUwgSftdA0N2htnB3iZf7hQiV
+9n6+f8si5Ru24vwWbGSzjgvMtwxT2QQIHKwCLc3b3BZH2gyh2El+9fWxXogsUeIh
+5M2ofx2Jpb8ULINJSNcDJ7LbwgC3yVzuM4Q=
+-----END CERTIFICATE-----

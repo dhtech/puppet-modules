@@ -1,0 +1,14 @@
+{
+  "name": "dhtech-asterisk",
+  "version": "0.1.0",
+  "author": "dhtech",
+  "summary": "Asterisk server module and config",
+  "license": "GPL/3",
+  "source": "",
+  "project_page": null,
+  "issues_url": null,
+  "dependencies": [
+    {"name":"puppetlabs/stdlib","version_requirement":">= 1.0.0"}
+  ]
+}
+

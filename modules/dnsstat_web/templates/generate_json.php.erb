@@ -1,0 +1,11 @@
+#!/usr/bin/env php
+
+<?php
+  $conn = pg_connect("dbname=<%= @secret_db_dnsstatd['username'] %>_<%= @current_event %> host=<%= @secret_db_dnsstatd['hostname'] %> port=5432 user=<%= @secret_db_dnsstatd['username'] %> password=<%= @secret_db_dnsstatd['password'] %>") or die(pg_last_error());
+  $query = <<<'QUERY'
+select regexp_replace(name,'^.*?([^.]+\.[^.]+)\.$','\1') as domain_name, count(*) as requests from dnsstatd_question where name not like '%.event.dreamhack.se.' and name not like '%.local.' and type in (1,28,255) and name != 'wifi-security-server' and name not like '%.tech.dreamhack.se.' and name != 'videosearch.ubuntu.com.' and name != '.' group by domain_name order by requests desc limit 50;
+QUERY;
+  $res = pg_query($query);
+  file_put_contents("/var/www/dnsstat.event.dreamhack.se/public/stats.json", json_encode(pg_fetch_all($res)));
+  pg_close($conn);
+?>

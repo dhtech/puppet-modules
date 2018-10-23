@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# Puppet calls this script in an "onlyif" to decide if dhcp_leased needs
+# to be started.
+
+# Verify that dhcp_leased.conf is available
+if [ ! -f "/etc/dhcp_leased.conf" ]; then
+    # Puppet has not created the config.
+    exit 1
+fi
+
+# Verify that dhcp_leased is not currently running
+if /usr/bin/supervisorctl status dhcp_leased | grep -wq 'RUNNING'; then
+    # dhcp_leased is already running
+    exit 1
+fi
+
+# Everything is fine, dhcp_leased should be started
+exit 0

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -e
+
+#TODO ventris
+# Not really sure this is needed right now as it it failes with no_such_user: guest
+# Need to check if this has changed.
+#/usr/sbin/rabbitmqctl delete_user guest || true
+
+dh-create-service-account --type rabbitmq --product $(hostname -f) --username $1
+PASS=$(dh-create-service-account --type rabbitmq --product $(hostname -f) \
+  --username $1 --format '{password}')
+
+/usr/sbin/rabbitmqctl add_user $1 $PASS
+/usr/sbin/rabbitmqctl set_user_tags $1 administrator
+/usr/sbin/rabbitmqctl set_permissions -p / $1 ".*" ".*" ".*"
+
+rm -f $0

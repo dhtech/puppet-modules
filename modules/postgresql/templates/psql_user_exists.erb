@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# Find out if the user given as an argument exists in the PostgreSQL
+# server and exit with a suitable return value.
+#
+# This script should be run as the "postgres" user.
+
+user_name=$1
+
+# http://stackoverflow.com/questions/8546759/how-to-check-if-a-postgres-user-exists
+psql -tAc "SELECT 1 FROM pg_roles WHERE rolname='$user_name'" | grep -q 1
+exit $?

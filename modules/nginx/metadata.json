@@ -1,0 +1,14 @@
+{
+  "name": "dhtech-nginx",
+  "version": "0.0.1",
+  "author": "dhtech",
+  "summary": "Manages nginx",
+  "license": "Apache 2.0",
+  "source": "",
+  "project_page": "http://nginx.com",
+  "issues_url": null,
+  "dependencies": [
+    {"name":"puppetlabs/stdlib","version_requirement":">= 1.0.0"}
+  ]
+}
+

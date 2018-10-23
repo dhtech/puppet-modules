@@ -1,0 +1,33 @@
+Hello!
+
+This directory consists of two things:
+ - Puppet modules (directories)
+ - Dreamhack package modules (python files)
+
+=== Puppet modules ===
+These are ordinary puppet modules. Create a module here like this:
+  svn cp template mymodule
+  cat > mymodule.py <<EOF
+  def generate(host, *args):
+    return {'ipplan': None}
+  EOF
+  .. edit metadata.json and manifests/init.pp among others ..
+  svn add mymodule mymodule.py
+  svn commit -m 'new super awesome module!'
+And the puppet master will automatically fetch this new module
+and serve it!
+
+=== Dreamhack package modules ===
+These are Python scripts that are called when a puppet agent checks
+in with the master. They are used to calculate what options, attributes
+and requirements the different packages have.
+
+Have a look at puppetboard.py for a nice example.
+
+To test your module (please do this! ;)) run this:
+./test mymodule server.tech.dreamhack.se
+Run ./test without any arguments to see full usage
+
+(Pay no attention to __init__.py, they are needed so that Python
+understands that this is a library directory)
+

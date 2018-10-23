@@ -1,0 +1,10 @@
+[Unit]
+Description=Run ldapsync_prober.service every <%= @trigger_interval -%> seconds
+
+[Timer]
+OnUnitInactiveSec=<%= @trigger_interval -%>s
+OnBootSec=90s
+
+[Install]
+WantedBy=timers.target
+Require=slapd.service

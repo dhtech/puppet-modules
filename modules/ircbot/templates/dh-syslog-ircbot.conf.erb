@@ -1,0 +1,155 @@
+[irc]
+nick=Syslog
+server = irc0.event.dreamhack.se
+port = 6666 
+admins = "<% @admins.each do |admin|%><%= admin %> <% end -%>"
+
+[all]
+rule.debug = "\[Debug\]"
+rule.debug.color = ignore
+
+rule.debug2 = " level=debug "
+rule.debug2.color = ignore
+
+rule.notice = "\[Notice\]"
+rule.notice.color = ignore
+
+rule.tac_plus1 = "tac_plus.*\: Error .* Group '[a-z0-9-]+' not found"
+rule.tac_plus1.color = ignore
+
+rule.wlc = "\[Informational\]: .*webauthRedirect"
+rule.wlc.color = ignore
+
+rule.cloudinfo = "\((cloud|master)[0-9]+\) \[Informational\]"
+rule.cloudinfo.color = ignore
+
+rule.error = "\[Error\]"
+rule.error.color = red 
+
+rule.critical = "\[Critical\]"
+rule.critical.color = light red 
+
+rule.alert = "\[Alert\]"
+rule.alert.color = red 
+
+rule.emergency = "\[Emergency\]"
+rule.emergency.color = light red 
+
+rule.warning = "\[Warning\]"
+rule.warning.color = yellow  
+
+rule.info = "\[Informational\]"
+rule.info.color = white
+
+rule.firewall = "FW:"
+rule.firewall.color = red
+
+[cloud]
+rule.alert = "\((cloud|master)[0-9]+\) \[Alert\]"
+rule.alert.color = red
+
+rule.critical = "\((cloud|master)[0-9]+\) \[Critical\]"
+rule.critical.color = light red
+
+rule.emergency = "\((cloud|master)[0-9]+\) \[Emergency\]"
+rule.emergency.color = light red
+
+rule.error = "\((cloud|master)[0-9]+\) \[Error\]"
+rule.error.color = red
+
+rule.warning = "\((cloud|master)[0-9]+\) \[Warning\]"
+rule.warning.color = yellow
+
+[snooping]
+rule.info = "DHCP_SNOOPING"
+rule.info.color = white
+
+[oob]
+rule.ammc = "ammc[0-9]"
+rule.ammc.color = white
+
+[ldap]
+rule.ldapfail = "Could not mount LDAP Fuse"
+rule.ldapfail.color = red
+
+rule.ldapnotmount = "LDAP Fuse not mounted"
+rule.ldapnotmount.color = yellow
+
+rule.ldapcheck = "LDAP Fuse mounted"
+rule.ldapcheck.color = green
+
+[snmpc]
+rule.all = "snmpc"
+rule.all.color = white
+
+[dist]
+rule.error = "([a-z]-[a-z\-0-9]+)-[st|sw].*\[Error\]"
+rule.error.color = red 
+
+rule.notice = "([a-z]-[a-z\-0-9]+)-[st|sw].*\[Notice\]"
+rule.notice.color = blue 
+
+rule.warning = "([a-z]-[a-z\-0-9]+)-[st|sw].*\[Warning\]"
+rule.warning.color = yellow  
+
+rule.critical = "([a-z]-[a-z\-0-9]+-[st|sw]).*\[Critical\]"
+rule.critical.color = red 
+
+rule.switchwatcher = "Speed check failed"
+rule.switchwatcher.color = light red
+
+[core]
+rule.error = "\([a-z]-asr-[0-9][\w\.-]+\).*FAILURE"
+rule.error.color = orange
+
+rule.\warning = "\([a-z]-asr-[0-9][\w\.-]+\).*WARNING"
+rule.\warning.color = yellow
+
+rule.critical = "\([a-z]-asr-[0-9][\w\.-]+\).*CRITICAL"
+rule.critical.color = red
+
+rule.all = "\([a-z]-asr-[0-9][\w\.-]+\)"
+rule.all.color = white
+
+[auth]
+rule.dis = "\[(Debug|Notice)\]"
+rule.dis.color = ignore
+
+rule.login = "ROOT LOGIN"
+rule.login.color = yellow
+
+rule.accepted = "(Successful su|Accepted (password|publickey)|Authenticated user (?!backup))"
+rule.accepted.color = green
+
+rule.failed = "(Failed password|[Aa]uthentication failure|access denied)"
+rule.failed.color = red
+
+rule.wrongpublickey = "Connection closed by .*? \[preauth\]"
+rule.wrongpublickey.color = red
+
+[fail]
+rule.dis = "\[(Debug|Informational|Notice)\]"
+rule.dis.color = ignore
+
+rule.disk = "cpqarrayd.*"
+rule.disk.color = red
+
+rule.fail = "fail"
+rule.fail.color = red
+
+rule.warning = "warning"
+rule.warning.color = orange
+
+rule.error = "error"
+rule.error.color = red
+
+[swboot]
+rule.discron = "CRON\[[0-9]+\]"
+rule.discron.color = ignore
+
+rule.disiptables = "iptables: .*"
+rule.disiptables.color = ignore
+
+rule.swboot = "swboot"
+rule.swboot.color = yellow
+

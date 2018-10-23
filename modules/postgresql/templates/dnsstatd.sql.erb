@@ -1,0 +1,42 @@
+DROP TABLE IF EXISTS dnsstatd_failure;
+DROP TABLE IF EXISTS dnsstatd_resource_record;
+DROP TABLE IF EXISTS dnsstatd_response;
+DROP TABLE IF EXISTS dnsstatd_question;
+
+CREATE TABLE dnsstatd_response (
+	id BIGSERIAL PRIMARY KEY,
+	hdrid INT,
+	ts TIMESTAMP,
+	rcode SMALLINT,
+	aa BOOLEAN,
+	tc BOOLEAN,
+	rd BOOLEAN,
+	ra BOOLEAN,
+	client INET,
+	server INET
+);
+
+CREATE TABLE dnsstatd_resource_record (
+	id BIGSERIAL PRIMARY KEY,
+	response BIGINT NOT NULL REFERENCES dnsstatd_response (id) ON DELETE CASCADE,
+	name TEXT,
+	type INT,
+	class INT,
+	ttl BIGINT,
+	rdata TEXT
+);
+
+CREATE TABLE dnsstatd_question (
+	id BIGSERIAL PRIMARY KEY,
+	response BIGINT NOT NULL REFERENCES dnsstatd_response (id) ON DELETE CASCADE,
+	name TEXT,
+	type INT,
+	class INT
+);
+
+CREATE TABLE dnsstatd_failure (
+	id BIGSERIAL PRIMARY KEY,
+	ts TIMESTAMP,
+	error TEXT,
+	packet TEXT
+);

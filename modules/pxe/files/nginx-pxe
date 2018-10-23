@@ -1,0 +1,4 @@
+server {
+  root /srv/www;
+  server_name pxe;
+}

@@ -1,0 +1,20 @@
+DROP TABLE IF EXISTS switches;
+DROP TABLE IF EXISTS interfaces;
+
+CREATE TABLE switches (
+	id SERIAL NOT NULL PRIMARY KEY,
+	name TEXT NOT NULL,
+	confirmed BOOLEAN NOT NULL,
+	comment TEXT NOT NULL,
+	lastupdated timestamp default CURRENT_TIMESTAMP,
+	username TEXT NOT NULL
+);
+
+CREATE TABLE interfaces (
+	id SERIAL NOT NULL PRIMARY KEY,
+	switch TEXT NOT NULL,
+	interface TEXT NOT NULL,
+	description TEXT NOT NULL,
+	lastupdated timestamp default CURRENT_TIMESTAMP,
+	username TEXT NOT NULL
+);

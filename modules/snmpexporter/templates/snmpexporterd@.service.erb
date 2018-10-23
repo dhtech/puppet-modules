@@ -1,0 +1,15 @@
+[Unit]
+Description=Prometheus SNMP exporter on port %I
+After=network.target
+
+[Service]
+Type=simple
+User=prober
+ExecStart=/opt/snmpexporter/snmpexporterd.py \
+  --config /etc/snmpexporter/snmpexporter.yaml \
+  --poller-pool=50 \
+  --annotator-pool=15 \
+  --port=%i
+
+[Install]
+WantedBy=multi-user.target

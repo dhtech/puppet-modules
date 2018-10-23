@@ -1,0 +1,17 @@
+# Managed by Puppet
+#
+## !! Any changes to this file will be overwritten !!
+
+[Unit]
+Description=Prometheus
+After=syslog.target network.target
+
+[Service]
+EnvironmentFile=/etc/default/prometheus
+User=prometheus
+WorkingDirectory=/opt/prometheus
+ExecStart=/opt/prometheus/prometheus $ARGS
+
+[Install]
+WantedBy=multi-user.target
+

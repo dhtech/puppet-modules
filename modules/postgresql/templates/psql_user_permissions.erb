@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# Find out if the user given as an argument has at least some permissions on
+# the database given as the second argument.
+# This check does not check all permissions the user will be granted with
+# `psql_set_user_permissions`, but it should be close enough.
+#
+# This script should be run as the "postgres" user.
+
+username=$1
+dbname=$2
+
+psql -tAc "SELECT 1 FROM pg_database WHERE datname = '$dbname' AND cast(datacl AS varchar) LIKE '%${username}=c%';" | grep -q 1 || exit $?
+
+psql "${dbname}" -tAc "SELECT 1 FROM information_schema.role_table_grants WHERE table_catalog = '$dbname' AND grantee ='$username' HAVING COUNT(DISTINCT table_name) > 0;" | grep -q 1 || exit $?

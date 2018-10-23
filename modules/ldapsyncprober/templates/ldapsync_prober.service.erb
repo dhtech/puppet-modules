@@ -1,0 +1,8 @@
+[Unit]
+Description=Write something to LDAP to trigger a replication
+
+[Service]
+User=ldapsync-prober
+Group=ldapsync-prober
+Type=oneshot
+ExecStart=/opt/ldapsync_prober/ldapsync_prober.sh

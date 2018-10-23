@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# Managed by puppet
+
+# Decide some options based on kernel name.
+kernel_name=`uname -s`
+case ${kernel_name} in
+  Linux)
+    dhcp_leases_dir=/var/lib/dhcp
+    certdir=/var/lib/puppet/ssl
+  ;;
+  OpenBSD)
+    dhcp_leases_dir=/var/db
+    certdir=/var/lib/puppet/ssl
+  ;;
+  *)
+    echo "Kernel name ${kernel_name} is not supported"
+    exit 1;
+  ;;
+esac
+
+# We only sync file to non active servers
+if [ "<%= @active %>" -eq "1" ]; then
+  exit 0;
+fi
+
+# Copy lease database
+curl -s https://<%= @active_node %>:15443/leases --cacert ${certdir}/certs/ca.pem --cert ${certdir}/certs/<%= @fqdn %>.pem --key ${certdir}/private_keys/<%= @fqdn %>.pem > ${dhcp_leases_dir}/dhcpd.leases
+if [ $? -ne 0 ]; then
+  logger -t `basename $0` "syncing dhcp leases file FAILED"
+  sync_fail=1
+else
+  logger -t `basename $0` "syncing dhcp leases file OK"
+fi
+
+if [ -n "${sync_fail}" ]; then
+  exit 1
+fi

@@ -1,0 +1,9 @@
+port: 69
+user: nobody
+hooks:
+  - type: http
+    regexp: (.*).efi$
+    template: https://deploy.tech.dreamhack.se/ipxe.efi
+  - type: http
+    regexp: (.*)$
+    template: https://deploy.tech.dreamhack.se/ipxe.bin

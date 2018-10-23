@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+  <head>
+    <title>DNS Graph</title>
+    <meta http-equiv="refresh" content="60" />
+    <script src="js/amcharts.js" type="text/javascript"></script>
+    <script src="js/jquery.js" type="text/javascript"></script>
+    <script type="text/javascript">
+$(document).ready(function () {
+  $.ajax({
+    url: "http://dnsstat.event.dreamhack.se/stats.json",
+    dataType: 'json',
+    success: plot
+  });
+});
+
+function plot(chartData) {
+  var chart = new AmCharts.AmSerialChart();
+  chart.dataProvider = chartData;
+  chart.categoryField = "domain_name";
+  chart.marginTop = 15;
+  chart.marginLeft = 55;
+  chart.marginRight = 15;
+  chart.marginBottom = 80;
+  chart.angle = 30;
+  chart.depth3D = 15;
+
+  var catAxis = chart.categoryAxis;
+  catAxis.gridCount = chartData.length;
+  catAxis.labelRotation = 90;
+
+  var graph = new AmCharts.AmGraph();
+  graph.balloonText = "[[category]]: [[value]]";
+  graph.valueField = "requests"
+    graph.type = "column";
+  graph.lineAlpha = 0;
+  graph.fillAlphas = 0.8;
+  chart.addGraph(graph);
+
+  chart.write('chartContainer');
+}                                                                                                                                     
+    </script>
+  </head>
+  <body style="background: #000;"> 
+    <center>
+      <img src="head.png" />
+      <div id="chartContainer" style="width: 1024px; height: 600px;"></div>
+    </center>
+  </body>
+</html>
