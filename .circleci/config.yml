@@ -12,9 +12,9 @@ jobs:
       - run:
           name: puppet lint
           command: |
-            puppet-lint
+            /root/.rbenv/shims/puppet-lint .
 
       - run:
           name: erb check
           command: |
-            rails-erb-lint
+            /root/.rbenv/shims/rails-erb-lint check
