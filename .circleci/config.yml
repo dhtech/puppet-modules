@@ -1,0 +1,10 @@
+version: 2
+
+jobs:
+  test:
+    docker:
+    - image: quay.io/dhtech/puppet-ci:latest
+    steps:
+      - checkout
+      - run: puppet-lint
+      - run: rails-erb-lint
