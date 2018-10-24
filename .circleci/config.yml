@@ -1,10 +1,20 @@
 version: 2
-
 jobs:
-  test:
+  build:
     docker:
-    - image: quay.io/dhtech/puppet-ci:latest
+       - image: quay.io/dhtech/puppet-ci:latest
+      
+    working_directory: ~/repo
+
     steps:
       - checkout
-      - run: puppet-lint
-      - run: rails-erb-lint
+
+      - run:
+          name: puppet lint
+          command: |
+            puppet-lint
+
+      - run:
+          name: erb check
+          command: |
+            rails-erb-lint
