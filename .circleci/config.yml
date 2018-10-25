@@ -12,9 +12,9 @@ jobs:
       - run:
           name: puppet lint
           command: |
-            /root/.rbenv/shims/puppet-lint .
+            /root/.rbenv/shims/puppet-lint --no-puppet_url_without_modules-check --fail-on-warnings .
 
       - run:
           name: erb check
           command: |
-            /root/.rbenv/shims/rails-erb-lint check
+            /root/.rbenv/shims/rails-erb-lint check 
