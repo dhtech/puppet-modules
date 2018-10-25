@@ -4,42 +4,43 @@
 # license that can be found in the LICENSE file
 import lib
 
+
 def generate(host, *args):
-  my_domain = lib.get_domain(host)
-  
-  info = {}
-  
-  my_dns_domain = '.'.join(host.split('.')[1:])
+    my_domain = lib.get_domain(host)
 
-  info['domain'] = my_dns_domain
+    info = {}
 
-  # Some things (busybox? musl?) doesn't work well with multiple searchs.
-  # Let's use only the primary one for now
-  info['search'] = [my_dns_domain]
+    my_dns_domain = '.'.join(host.split('.')[1:])
 
-  if my_domain == 'EVENT':
-    resolvers = lib.get_servers_for_node('eventdns', host)
-  else:
-    resolvers = lib.get_servers_for_node('dns', host)
+    info['domain'] = my_dns_domain
 
-  # Sort to lexographical order (e.g. ddns1 before ddns3)
-  resolvers = sorted(resolvers)
+    # Some things (busybox? musl?) doesn't work well with multiple searchs.
+    # Let's use only the primary one for now
+    info['search'] = [my_dns_domain]
 
-  info['nameservers'] = []
+    if my_domain == 'EVENT':
+        resolvers = lib.get_servers_for_node('eventdns', host)
+    else:
+        resolvers = lib.get_servers_for_node('dns', host)
 
-  # Do not use ourself if we are a resolver.
-  if host in resolvers:
-    resolvers.remove(host)
-    # Use an external resolver by default so we do not create deadlocks
-    # when bootstrapping the environment from scratch.
-    info['nameservers'].append('8.8.8.8')
+    # Sort to lexographical order (e.g. ddns1 before ddns3)
+    resolvers = sorted(resolvers)
 
-  ips = lib.resolve_nodes_to_ip(resolvers)
-  info['nameservers'].extend([ips[x][0] for x in resolvers])
+    info['nameservers'] = []
 
-  # Default to Google DNS
-  info['nameservers'].extend(['8.8.8.8', '8.8.4.4'])
+    # Do not use ourself if we are a resolver.
+    if host in resolvers:
+        resolvers.remove(host)
+        # Use an external resolver by default so we do not create deadlocks
+        # when bootstrapping the environment from scratch.
+        info['nameservers'].append('8.8.8.8')
 
-  # Only three, no support for more in Linux
-  info['nameservers'] = info['nameservers'][:3]
-  return {'resolvconf': info}
+    ips = lib.resolve_nodes_to_ip(resolvers)
+    info['nameservers'].extend([ips[x][0] for x in resolvers])
+
+    # Default to Google DNS
+    info['nameservers'].extend(['8.8.8.8', '8.8.4.4'])
+
+    # Only three, no support for more in Linux
+    info['nameservers'] = info['nameservers'][:3]
+    return {'resolvconf': info}

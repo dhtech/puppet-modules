@@ -4,6 +4,7 @@
 # license that can be found in the LICENSE file
 import lib
 
+
 def generate(host, *args):
-  root_ca = lib.read_secret('ca-pki/cert/ca')
-  return {'system': {'ca': root_ca['certificate']}}
+    root_ca = lib.read_secret('ca-pki/cert/ca')
+    return {'system': {'ca': root_ca['certificate']}}

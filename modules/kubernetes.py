@@ -4,6 +4,7 @@
 # license that can be found in the LICENSE file
 import lib
 
+
 def generate(host, *args):
     info = {}
 
@@ -15,8 +16,8 @@ def generate(host, *args):
             }
         else:
             info['kubernetes::install'] = {}
-            #TODO(ventris): check if STO2 or BOGAL to the right keys
-            #info['kubernetes::worker']
+            # TODO(ventris): check if STO2 or BOGAL to the right keys
+            # info['kubernetes::worker']
     if 'master' in args:
         info['kubernetes::install'] = {}
         info['kubernetes::master'] = {}

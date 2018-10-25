@@ -4,11 +4,12 @@
 # license that can be found in the LICENSE file
 import lib
 
+
 def generate(host, *args):
 
-  # Get current event, used to get up-to-date switch conf
-  current_event = lib.get_current_event()
+    # Get current event, used to get up-to-date switch conf
+    current_event = lib.get_current_event()
 
-  info = {}
-  info['current_event'] = current_event
-  return {'dnsstat_web': info}
+    info = {}
+    info['current_event'] = current_event
+    return {'dnsstat_web': info}
