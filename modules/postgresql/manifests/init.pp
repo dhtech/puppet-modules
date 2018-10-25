@@ -22,7 +22,7 @@
 #   Used for naming databases.
 #
 
-class postgresql($allowed_hosts, $db_list = [], $current_event, $domain) {
+class postgresql($allowed_hosts, $db_list, $current_event, $domain) {
   package {'postgresql':
     ensure => 'installed',
   }
@@ -101,9 +101,10 @@ class postgresql($allowed_hosts, $db_list = [], $current_event, $domain) {
     cwd     => '/var/lib/postgresql',
     command => "/bin/echo 'CREATE USER root SUPERUSER' | /usr/bin/psql",
     unless  => '/opt/postgresql/bin/psql_database_exists root',
-    require => [ Package['postgresql'],
-                     File['/opt/postgresql/bin/psql_user_exists'],
-               ],
+    require => [
+      Package['postgresql'],
+      File['/opt/postgresql/bin/psql_user_exists'],
+    ],
   }
 
   exec { 'create_database_root':
@@ -111,9 +112,10 @@ class postgresql($allowed_hosts, $db_list = [], $current_event, $domain) {
     cwd     => '/var/lib/postgresql',
     command => '/usr/bin/createdb root',
     unless  => '/opt/postgresql/bin/psql_database_exists root',
-    require => [ Exec['create_user_root'],
-                 File['/opt/postgresql/bin/psql_database_exists'],
-               ],
+    require => [
+      Exec['create_user_root'],
+      File['/opt/postgresql/bin/psql_database_exists'],
+    ],
   }
 
   each($db_list) |$db| {
@@ -139,11 +141,11 @@ class postgresql($allowed_hosts, $db_list = [], $current_event, $domain) {
       cwd     => '/var/lib/postgresql',
       command => "/usr/bin/createdb ${dbname}",
       unless  => "/opt/postgresql/bin/psql_database_exists ${dbname}",
-      notify  => [ Exec["initialize_${dbname}"],
-                 ],
-      require => [ File['/opt/postgresql/bin/psql_database_exists'],
-                   Exec['create_user_root'],
-                 ],
+      notify  => Exec["initialize_${dbname}"],
+      require => [
+        File['/opt/postgresql/bin/psql_database_exists'],
+        Exec['create_user_root'],
+      ],
     }
 
     exec { "initialize_${dbname}":
@@ -161,7 +163,10 @@ class postgresql($allowed_hosts, $db_list = [], $current_event, $domain) {
     }
 
     exec { "alter_user_${db}":
-      command     => "/usr/local/bin/dh-create-service-account --type postgresql --product ${db} --format \"ALTER USER {username} ENCRYPTED PASSWORD '{password}'\" | /usr/bin/psql",
+      command     => '/usr/local/bin/dh-create-service-account ' +
+                      "--type postgresql --product ${db} ' +
+                      '--format "ALTER USER {username} ENCRYPTED PASSWORD \'{password}\'" ' +
+                      '| /usr/bin/psql',
       onlyif      => "/opt/postgresql/bin/psql_user_exists ${db}",
       refreshonly => true,
     }
@@ -176,12 +181,16 @@ class postgresql($allowed_hosts, $db_list = [], $current_event, $domain) {
     }
 
     exec { "create_user_${db}":
-      command     => "/usr/local/bin/dh-create-service-account --type postgresql --product ${db} --format \"CREATE USER {username} ENCRYPTED PASSWORD '{password}'\" | /usr/bin/psql",
-      notify      => Exec["set_permissions_for_${db}"],
-      require     => [ Exec['create_database_root'],
-                       Exec["create_${dbname}"],
-                     ],
       refreshonly => true,
+      command     => '/usr/local/bin/dh-create-service-account ' +
+                  "--type postgresql --product ${db} " +
+                  '--format "CREATE USER {username} ENCRYPTED PASSWORD \'{password}\'"' +
+                  ' | /usr/bin/psql',
+      notify      => Exec["set_permissions_for_${db}"],
+      require     => [
+        Exec['create_database_root'],
+        Exec["create_${dbname}"],
+      ],
     }
 
     exec { "check_permissions_for_${db}":
@@ -197,9 +206,10 @@ class postgresql($allowed_hosts, $db_list = [], $current_event, $domain) {
       user        => 'postgres',
       cwd         => '/var/lib/postgresql',
       command     => "/opt/postgresql/bin/psql_set_user_permissions ${dbusername} ${dbname}",
-      require     => [ File['/opt/postgresql/bin/psql_set_user_permissions'],
-                       Exec["initialize_${dbname}"]
-                     ],
+      require     => [
+        File['/opt/postgresql/bin/psql_set_user_permissions'],
+        Exec["initialize_${dbname}"]
+      ],
       refreshonly => true,
     }
   }
