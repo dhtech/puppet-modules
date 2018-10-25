@@ -18,31 +18,31 @@ class dhmon::prometheus ($scrape_configs) {
   #Create user/group for Prometheus
   group { 'prometheus':
     ensure => 'present',
-  }->
-  user { 'prometheus':
-   ensure => 'present',
-   system => true,
-  }->
+  }
+  -> user { 'prometheus':
+    ensure => 'present',
+    system => true,
+  }
   #Create directories for prometheus and metric storage
-  file { '/opt/prometheus':
-   ensure => 'directory',
-   owner  => 'prometheus',
-   group  => 'prometheus',
-   mode   => '0700',
-  }->
-  file { '/srv/metrics':
-    content  => template('dhmon/prometheus.yaml.erb'),
-    ensure   => directory,
-    owner    => 'prometheus',
-    group    => 'prometheus',
-    mode     => '0700',
-  }->
+  -> file { '/opt/prometheus':
+    ensure => 'directory',
+    owner  => 'prometheus',
+    group  => 'prometheus',
+    mode   => '0700',
+  }
+  -> file { '/srv/metrics':
+    ensure  => directory,
+    content => template('dhmon/prometheus.yaml.erb'),
+    owner   => 'prometheus',
+    group   => 'prometheus',
+    mode    => '0700',
+  }
 
   #Copy prometheus tar bundle to the server
   file { '/tmp/prometheus.tar.gz':
-    source  => 'puppet:///data/prometheus-2.3.0.linux-amd64.tar.gz',
-    ensure  => file,
-    notify  => Exec[ 'untar-prometheus' ],
+    ensure => file,
+    source => 'puppet:///data/prometheus-2.3.0.linux-amd64.tar.gz',
+    notify => Exec[ 'untar-prometheus' ],
   }
   #Unpackage prometheus
   exec { 'untar-prometheus':
@@ -52,39 +52,35 @@ class dhmon::prometheus ($scrape_configs) {
   }
 
   file { '/opt/prometheus/prometheus.yml':
-    content  => template('dhmon/prometheus.yaml.erb'),
-    ensure   => file,
-    notify   => Exec['prometheus-hup'],
-  }->
-
-  file { '/etc/systemd/system/prometheus.service':
-    content => template('dhmon/prometheus.service.erb'),
     ensure  => file,
-    notify  => Exec["systemctl-daemon-reload"],
-  }->
-
-  file { '/etc/default/prometheus':
-    content  => template('dhmon/prometheus.default.erb'),
-    ensure   => file,
-  }->
+    content => template('dhmon/prometheus.yaml.erb'),
+    notify  => Exec['prometheus-hup'],
+  }
+  -> file { '/etc/systemd/system/prometheus.service':
+    ensure  => file,
+    content => template('dhmon/prometheus.service.erb'),
+    notify  => Exec['systemctl-daemon-reload'],
+  }
+  -> file { '/etc/default/prometheus':
+    ensure  => file,
+    content => template('dhmon/prometheus.default.erb'),
+  }
 
   file { 'rules':
-    path     => '/opt/prometheus/rules',
-    ensure   => directory,
-    recurse  => true,
-    owner    => 'prometheus',
-    group    => 'prometheus',
-    purge    => true,
-    source   => 'puppet:///svn/allevents/dhmon/rules/',
-    notify   => Exec['prometheus-hup'],
-  }->
-
-  service { 'prometheus':
+    ensure  => directory,
+    path    => '/opt/prometheus/rules',
+    recurse => true,
+    owner   => 'prometheus',
+    group   => 'prometheus',
+    purge   => true,
+    source  => 'puppet:///svn/allevents/dhmon/rules/',
+    notify  => Exec['prometheus-hup'],
+  }
+  -> service { 'prometheus':
     ensure  => running,
-    require => File["/etc/systemd/system/prometheus.service"]
-  }->
-
-  exec { 'systemctl-enable':
+    require => File['/etc/systemd/system/prometheus.service']
+  }
+  -> exec { 'systemctl-enable':
     command     => '/bin/systemctl enable prometheus',
     refreshonly => true,
   }
@@ -105,9 +101,9 @@ class dhmon::prometheus ($scrape_configs) {
   }
 
   file { 'prometheus-presence-exporter':
-    path    => '/usr/local/bin/prometheus-presence-exporter',
-    ensure  => file,
-    source  => 'puppet:///modules/dhmon/prometheus-exporter-presence.py',
+    ensure => file,
+    path   => '/usr/local/bin/prometheus-presence-exporter',
+    source => 'puppet:///modules/dhmon/prometheus-exporter-presence.py',
   }
 
   cron { 'prometheus-presence-exporter-cron':
