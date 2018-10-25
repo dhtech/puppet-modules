@@ -27,17 +27,17 @@ class supervisor {
   }
 
   file { 'supervisord.conf':
-    path    => "$conf_dir/supervisord.conf",
     ensure  => file,
+    path    => "${conf_dir}/supervisord.conf",
     content => template('supervisor/supervisord.conf.erb'),
     notify  => Service['supervisord'],
     require => Package['supervisor'],
   }
 
   service { 'supervisord':
-    name => "$rc_name",
-    ensure => 'running',
-    enable => true,
+    ensure  => 'running',
+    name    => $rc_name,
+    enable  => true,
     require => Package['supervisor'],
   }
 

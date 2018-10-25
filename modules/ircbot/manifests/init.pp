@@ -16,86 +16,86 @@
 class ircbot($admins=[]) {
 
   group{'ircbot':
-     ensure => "present",
+     ensure => 'present',
   }
 
   user {'ircbot':
-    home        => '/opt/ircbot',
-    managehome  => true,
-    gid         => 'ircbot',
-    ensure      => 'present',
+    ensure     => 'present',
+    managehome => true,
+    gid        => 'ircbot',
+    home       => '/opt/ircbot',
   }
 
   file { '/opt/ircbot':
-    ensure  => 'directory',
-    mode    => '0750',
-    owner   => 'ircbot',
-    group   => 'ircbot',
+    ensure => 'directory',
+    mode   => '0750',
+    owner  => 'ircbot',
+    group  => 'ircbot',
   }
 
   file { '/opt/ircbot/run':
-    path    => '/opt/ircbot/run',
+    ensure  => 'directory',
     owner   => 'ircbot',
     group   => 'ircbot',
     mode    => '0754',
-    ensure  => 'directory',
+    path    => '/opt/ircbot/run',
     require => File['/opt/ircbot'],
   }
 
   file { '/opt/ircbot/dh-syslog-ircbot.conf':
-    content => template('ircbot/dh-syslog-ircbot.conf.erb'),
+    ensure  => 'file',
     owner   => 'ircbot',
     group   => 'ircbot',
     mode    => '0754',
-    ensure  => 'file',
+    content => template('ircbot/dh-syslog-ircbot.conf.erb'),
     require => File['/opt/ircbot'],
     notify  => Supervisor::Restart['ircbot'],
   }
 
   file { '/opt/ircbot/dh-syslog-ircbot.py':
-    source  => "puppet:///scripts/ircbot_syslog/dh-syslog-ircbot.py",
+    ensure  => 'file',
     owner   => 'ircbot',
     group   => 'ircbot',
     mode    => '0754',
-    ensure  => 'file',
+    source  => 'puppet:///scripts/ircbot_syslog/dh-syslog-ircbot.py',
     require => File['/opt/ircbot'],
     notify  => Supervisor::Restart['ircbot'],
   }
 
   file { '/opt/ircbot/irclib.py':
-    source  => "puppet:///scripts/ircbot_syslog/irclib.py",
+    ensure  => 'file',
     owner   => 'ircbot',
     group   => 'ircbot',
     mode    => '0754',
-    ensure  => 'file',
+    source  => 'puppet:///scripts/ircbot_syslog/irclib.py',
     require => File['/opt/ircbot'],
     notify  => Supervisor::Restart['ircbot'],
   }
 
   file {'/opt/ircbot/ircbot.py':
-    source  => "puppet:///scripts/ircbot_syslog/ircbot.py",
+    ensure  => 'file',
     owner   => 'ircbot',
     group   => 'ircbot',
     mode    => '0754',
-    ensure  => 'file',
+    source  => 'puppet:///scripts/ircbot_syslog/ircbot.py',
     require => File['/opt/ircbot'],
     notify  => Supervisor::Restart['ircbot'],
   }
-  
+
   file {'/opt/ircbot/start.py':
-    source  => "puppet:///scripts/ircbot_syslog/start.py",
+    ensure  => 'file',
     owner   => 'ircbot',
     group   => 'ircbot',
     mode    => '0754',
-    ensure  => 'file',
+    source  => 'puppet:///scripts/ircbot_syslog/start.py',
     require => File['/opt/ircbot'],
     notify  => Supervisor::Restart['ircbot'],
   }
   supervisor::register { 'ircbot':
     command     => '/opt/ircbot/dh-syslog-ircbot.py',
     directory   => '/opt/ircbot',
-    stopasgroup => 'true',
-    require => [ File['/opt/ircbot'],
+    stopasgroup => true,
+    require     => [ File['/opt/ircbot'],
                  File['/opt/ircbot/run'],
                  File['/opt/ircbot/dh-syslog-ircbot.conf'],
                  File['/opt/ircbot/dh-syslog-ircbot.py'],
