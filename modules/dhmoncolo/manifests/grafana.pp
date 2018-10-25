@@ -19,21 +19,21 @@ class dhmon::grafana($current_event) {
     # Adding the apt repository
     package { 'apt-transport-https':
         ensure => installed,
-    }~>
-    file { 'grafana-source-add':
+    }
+    ~> file { 'grafana-source-add':
       ensure  => file,
       path    => '/etc/apt/sources.list.d/grafana.list',
       content => 'deb http://packagecloud.io/grafana/stable/debian/ jessie main',
       notify  => Exec['grafana-source-key'],
-    }~>
-    exec { 'grafana-source-key':
+    }
+    ~> exec { 'grafana-source-key':
       command     => '/usr/bin/curl https://packagecloud.io/gpg.key | apt-key add -',
       logoutput   => 'on_failure',
       try_sleep   => 1,
       refreshonly => true,
       notify      => Exec['grafana-source-update'],
-    }~>
-    exec { 'grafana-source-update':
+    }
+    ~> exec { 'grafana-source-update':
       command     => '/usr/bin/apt-get update',
       logoutput   => 'on_failure',
       try_sleep   => 1,

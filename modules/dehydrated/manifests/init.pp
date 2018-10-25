@@ -42,7 +42,7 @@ class dehydrated($hostname_list = []) {
     require => Package['apache2'],
     mode    => '0755',
     content => template('dehydrated/dehydrated-apache.conf.erb'),
-    notify    => Service['apache2'],
+    notify  => Service['apache2'],
   }
 
   file { '/etc/dehydrated/config':
@@ -51,7 +51,7 @@ class dehydrated($hostname_list = []) {
     content => template('dehydrated/config.erb'),
   }
   file { 'dehydrated-update':
-    ensure    => file,
+    ensure  => file,
     path    => '/usr/local/bin/dehydrated-update',
     mode    => '0755',
     content => template('dehydrated/dehydrated-update.erb'),
@@ -61,7 +61,7 @@ class dehydrated($hostname_list = []) {
     command => '/usr/local/bin/dehydrated-update',
     user    => 'root',
     hour    => '2',
-    minute    => '10',
+    minute  => '10',
     require => File['dehydrated-update'],
   }
 
@@ -70,7 +70,7 @@ class dehydrated($hostname_list = []) {
     require     => File['/var/www/dehydrated',
           '/etc/dehydrated/config',
           '/etc/dehydrated/domains.txt'],
-    refreshonly  => true,
+    refreshonly => true,
   }
 
 

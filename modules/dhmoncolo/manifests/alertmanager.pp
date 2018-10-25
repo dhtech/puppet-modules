@@ -13,31 +13,31 @@
 class dhmon::alertmanager {
 
   file { '/opt/alertmanager':
-  ensure  => 'directory',
+  ensure => 'directory',
   owner  => 'prometheus',
   group  => 'prometheus',
   }
 
   file { '/tmp/alertmanager.tar.gz':
-  ensure  => file,
-  source  => 'puppet:///data/alertmanager-0.7.1.linux-amd64.tar.gz',
+  ensure => file,
+  source => 'puppet:///data/alertmanager-0.7.1.linux-amd64.tar.gz',
   }
 
   file { 'untar':
-  command  => '/bin/tar -zxvf /tmp/alertmanager.tar.gz -C /opt/alertmanager',
+  command => '/bin/tar -zxvf /tmp/alertmanager.tar.gz -C /opt/alertmanager',
   user    => 'prometheus',
-  require  => File['/opt/alertmanager'],
+  require => File['/opt/alertmanager'],
   require => File['/tmp/alertmanager.tar.gz'],
   }
 
   file { '/opt/alertmanager.yml':
   ensure  => file,
-  content  => template('dhmon/alertmanager.yaml.erb'),
+  content => template('dhmon/alertmanager.yaml.erb'),
   }
 
   file { '/etc/systemd/system/alertmanager.service':
   ensure  => file,
-  content  => template('dhmoncolo/alertmanager.service.erb'),
+  content => template('dhmoncolo/alertmanager.service.erb'),
   notify  => Exec['systemctl-daemon-reload'],
   }
 
@@ -47,6 +47,6 @@ class dhmon::alertmanager {
 
   apache::proxy { 'alertmanager':
   url     => '/alertmanager',
-  backend  => 'http://localhost:9093/alertmanager',
+  backend => 'http://localhost:9093/alertmanager',
   }
 }

@@ -17,15 +17,15 @@ define dhmon::package {
 
   $deb = $debs[$name]
 
-  exec { "fetch-$name":
-    command  =>
+  exec { "fetch-${name}":
+    command =>
       "/usr/bin/wget https://github.com/dhtech/dhmon/releases/download/${release}/${deb} -O /var/cache/apt/archives/${deb}",
     creates => "/var/cache/apt/archives/${deb}",
   }
-  package { "$name":
-    provider => dpkg,
+  package { $name:
     ensure   => installed,
+    provider => dpkg,
     source   => "/var/cache/apt/archives/${deb}",
-    require  => Exec["fetch-$name"],
+    require  => Exec["fetch-${name}"],
   }
 }

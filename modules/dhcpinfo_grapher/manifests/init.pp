@@ -17,20 +17,20 @@
 class dhcpinfo_grapher {
 
   file { '/opt/dhcpinfo/daemons':
-    path    => "/opt/dhcpinfo/daemons",
-    owner   => "root",
-    group   => "root",
-    mode    => "750",
-    ensure  => "directory",
+    ensure => 'directory',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0750',
+    path   => '/opt/dhcpinfo/daemons',
   }
 
   file { '/opt/dhcpinfo/daemons/grapherd.rb':
-    path    => "/opt/dhcpinfo/daemons/grapherd.rb",
-    owner   => "root",
-    group   => "root",
-    mode    => "750",
-    ensure  => "file",
-    source  => "puppet:///scripts/dhcpinfo/daemons/grapherd.rb",
+    ensure  => 'file',
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0750',
+    path    => '/opt/dhcpinfo/daemons/grapherd.rb',
+    source  => 'puppet:///scripts/dhcpinfo/daemons/grapherd.rb',
     require => [ File['/opt/dhcpinfo/daemons'],
                  Package['ruby-rrd'],
                  Package['ruby-file-tail'],

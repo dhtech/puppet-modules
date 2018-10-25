@@ -22,33 +22,33 @@ class nginx {
   }
 
   file { 'tele_www_index':
-    path    => "$tele_www_dir/index.html",
     ensure  => file,
+    path    => "${tele_www_dir}/index.html",
     content => template('nginx/dh-tele-index.html.conf.erb'),
     notify  => Service['nginx'],
     require => Package['nginx'],
   }
 
   file { 'dh-tele':
-    path    => "$conf_dir/dh-tele",
     ensure  => file,
+    path    => "${conf_dir}/dh-tele",
     content => template('nginx/dh-tele.conf.erb'),
     notify  => Service['nginx'],
     require => Package['nginx'],
   }
 
   file { 'dh-public-www':
-    path    => "$conf_dir/dh-public-www",
     ensure  => file,
+    path    => "${conf_dir}/dh-public-www",
     content => template('nginx/dh-public-www.conf.erb'),
     notify  => Service['nginx'],
     require => Package['nginx'],
   }
 
   service { 'nginx':
-    name => "$rc_name",
-    ensure => 'running',
-    enable => true,
+    ensure  => 'running',
+    name    => $rc_name,
+    enable  => true,
     require => Package['nginx'],
   }
 }

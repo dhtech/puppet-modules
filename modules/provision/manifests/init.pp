@@ -23,12 +23,12 @@
 #   Each element should contain: ip, fqdn, domain
 #
 # [*mgmt_if*]
-# 	Used to set ip and prefix for the mgmt interface. Default: []
+#   Used to set ip and prefix for the mgmt interface. Default: []
 #   Object should contain: ip, prefix
 #
 # [*deploy_conf*]
-# 	Used to get what network conf to use for the internal deploy network
-# 	Object should contain: network, prefix
+#   Used to get what network conf to use for the internal deploy network
+#   Object should contain: network, prefix
 
 class provision ($vault_mount, $esxi = [], $c7000 = [], $domain, $mgmt_if = {},
              $deploy_conf, $ocp, $ocp_domain, $ocp_machines) {

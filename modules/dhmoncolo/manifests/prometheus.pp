@@ -17,37 +17,37 @@ class dhmon::prometheus ($scrape_configs) {
 
 
   file { '/opt/prometheus':
-  ensure  => 'directory',
+  ensure => 'directory',
   owner  => 'prometheus',
   group  => 'prometheus',
   }
 
   file { '/tmp/prometheus.tar.gz':
-  ensure  => file,
-  source  => 'puppet:///data/prometheus-2.0.0.linux-amd64.tar.gz',
+  ensure => file,
+  source => 'puppet:///data/prometheus-2.0.0.linux-amd64.tar.gz',
   }
 
   file { 'untar':
-  command  => '/bin/tar -zxvf /tmp/prometheus.tar.gz -C /opt/prometheus',
+  command => '/bin/tar -zxvf /tmp/prometheus.tar.gz -C /opt/prometheus',
   user    => 'prometheus',
-  require  => File['/opt/prometheus'],
-  require  => File['/tmp/prometheus.tar.gz'],
+  require => File['/opt/prometheus'],
+  require => File['/tmp/prometheus.tar.gz'],
   }
 
   # Fix variable to get what instance prometheus is running, eg colo/event
   file { '/etc/systemd/system/prometheus.service':
   ensure  => file,
-  content  => template('dhmoncolo/prometheus.service.erb'),
+  content => template('dhmoncolo/prometheus.service.erb'),
   notify  => Exec['systemctl-daemon-reload'],
   }
 
   file { '/opt/prometheus/prometheus.yml':
   ensure  => file,
-  content  => template('dhmon/prometheus.yaml.erb'),
+  content => template('dhmon/prometheus.yaml.erb'),
   }
 
   file { '/srv/metrics/prometheus':
-  ensure  => directory,
+  ensure => directory,
   owner  => 'prometheus',
   group  => 'prometheus',
   mode   => '0700',
@@ -57,9 +57,9 @@ class dhmon::prometheus ($scrape_configs) {
   }
 
 file { 'rules':
-  path    => '/opt/prometheus/rules',
   ensure  => directory,
-  recurse  => true,
+  path    => '/opt/prometheus/rules',
+  recurse => true,
   purge   => true,
   source  => 'puppet:///svn/allevents/dhmon/colo-rules/',
   notify  => Exec['prometheus-hup'],
@@ -67,12 +67,12 @@ file { 'rules':
 
   exec { 'prometheus-hup':
   command     => '/usr/bin/pkill -SIGHUP prometheus',
-  refreshonly  => true,
+  refreshonly => true,
   }
 
   apache::proxy { 'prometheus-backend':
   url     => '/prometheus/',
-  backend  => 'http://localhost:9090/prometheus/',
+  backend => 'http://localhost:9090/prometheus/',
   }
 
 }

@@ -9,12 +9,12 @@
 #
 
 class obelix {
-	package { "asterisk":	
-		ensure	=> installed,
-	}
-	service { "asterisk":
-		ensure 	=> running,
-		require	=> Package['asterisk'],	
-		enable	=> true,
-	}
+  package { 'asterisk':
+    ensure  => installed,
+  }
+  service { 'asterisk':
+    ensure  => running,
+    require => Package['asterisk'],
+    enable  => true,
+  }
 }

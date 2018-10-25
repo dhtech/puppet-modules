@@ -21,17 +21,17 @@ class postfix($mailer_type = 'local', $relay_host = '[mail.tech.dreamhack.se]') 
   }
 
   file { 'main.cf':
-    path    => '/etc/postfix/main.cf',
     ensure  => file,
+    path    => '/etc/postfix/main.cf',
     content => template('postfix/main.cf.erb'),
     notify  => Service['postfix'],
     require => Package['postfix'],
   }
 
   service { 'postfix':
-    name => 'postfix',
-    ensure => 'running',
-    enable => true,
+    ensure  => 'running',
+    name    => 'postfix',
+    enable  => true,
     require => Package['postfix'],
   }
 

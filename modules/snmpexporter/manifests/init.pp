@@ -35,15 +35,15 @@ class snmpexporter($layers) {
 
   # Configure MIB lookup
   file { 'snmp.conf':
-    path    => '/etc/snmp/snmp.conf',
-    content => template('snmpexporter/snmp.conf.erb'),
     ensure  => present,
+    content => template('snmpexporter/snmp.conf.erb'),
+    path    => '/etc/snmp/snmp.conf',
   }
 
   # Install DH MIBs
   file { 'other-mibs':
-    path    => '/var/lib/mibs/other',
     ensure  => directory,
+    path    => '/var/lib/mibs/other',
     recurse => remote,
     source  => 'puppet:///svn/allevents/mibs/'
   }
@@ -54,19 +54,19 @@ class snmpexporter($layers) {
   }
 
   file { '/opt/librenms.zip':
-    ensure    => present,
-    replace   => no,
-    source    => 'https://github.com/librenms/librenms/archive/master.zip',
-  }~>
-  exec { 'unzip librenms':
-    creates     => '/opt/librenms-master/mibs/',
-    command     => '/usr/bin/unzip /opt/librenms.zip librenms-master/mibs/*',
-    cwd         => '/opt',
-  }~>
-  exec { 'copy mibs':
-    command     => '/bin/cp -r /opt/librenms-master/mibs/* /var/lib/mibs/std/',
-    creates     => '/var/lib/mibs/std/TCP-MIB',
-    require     => File['/var/lib/mibs/std/'],
+    ensure  => present,
+    replace => no,
+    source  => 'https://github.com/librenms/librenms/archive/master.zip',
+  }
+  ~> exec { 'unzip librenms':
+    creates => '/opt/librenms-master/mibs/',
+    command => '/usr/bin/unzip /opt/librenms.zip librenms-master/mibs/*',
+    cwd     => '/opt',
+  }
+  ~> exec { 'copy mibs':
+    command => '/bin/cp -r /opt/librenms-master/mibs/* /var/lib/mibs/std/',
+    creates => '/var/lib/mibs/std/TCP-MIB',
+    require => File['/var/lib/mibs/std/'],
   }
 
   user { 'prober-user':
@@ -83,21 +83,21 @@ class snmpexporter($layers) {
   }
 
   file { 'auth.yaml':
-    path    => '/etc/snmpexporter/auth.yaml',
-    content => template('snmpexporter/auth.yaml.erb'),
     ensure  => present,
+    content => template('snmpexporter/auth.yaml.erb'),
+    path    => '/etc/snmpexporter/auth.yaml',
   }
 
   file { 'snmpexporter.yaml':
-    path    => '/etc/snmpexporter/snmpexporter.yaml',
-    source  => 'puppet:///scripts/snmpexporter/etc/snmpexporter.yaml',
-    ensure  => present,
+    ensure => present,
+    source => 'puppet:///scripts/snmpexporter/etc/snmpexporter.yaml',
+    path   => '/etc/snmpexporter/snmpexporter.yaml',
   }
 
   file { 'snmpexporterd.service':
-    path    => '/etc/systemd/system/snmpexporterd@.service',
-    content => template('snmpexporter/snmpexporterd@.service.erb'),
     ensure  => present,
+    content => template('snmpexporter/snmpexporterd@.service.erb'),
+    path    => '/etc/systemd/system/snmpexporterd@.service',
   }
 
   # Since the python snmpexporter only scales so far, run multiple ones and
@@ -116,24 +116,24 @@ class snmpexporter($layers) {
   }
 
   file { 'nginx.conf':
-    path    => '/etc/nginx/nginx.conf',
-    content => template('snmpexporter/nginx.conf.erb'),
     ensure  => present,
+    content => template('snmpexporter/nginx.conf.erb'),
+    path    => '/etc/nginx/nginx.conf',
     notify  => Service['nginx'],
   }
 
   service { 'nginx':
-    ensure    => 'running',
-    enable    => true,
-    require   => [File['nginx.conf']],
+    ensure  => 'running',
+    enable  => true,
+    require => [File['nginx.conf']],
   }
 
   file { '/opt/snmpexporter.src':
     ensure  => directory,
     recurse => remote,
     source  => 'puppet:///scripts/snmpexporter/',
-  }~>
-  exec { 'make-snmpexporter':
+  }
+  ~> exec { 'make-snmpexporter':
     command     => '/usr/bin/make all install',
     cwd         => '/opt/snmpexporter.src',
     refreshonly => true,
