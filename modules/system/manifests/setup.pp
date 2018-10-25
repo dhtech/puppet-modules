@@ -7,7 +7,7 @@
 
 class system::setup {
 
-  if $operatingsystem == 'Debian' and $operatingsystemmajrelease == '8' {
+  if $::operatingsystem == 'Debian' and $::operatingsystemmajrelease == '8' {
     file { 'testing-preference':
       ensure  => file,
       path    => '/etc/apt/preferences.d/testing',
@@ -31,7 +31,7 @@ class system::setup {
     ensure_packages(['python-requests-whl'])
   }
 
-  if $operatingsystem == 'Debian' or $operatingsystem == 'Ubuntu' {
+  if $::operatingsystem == 'Debian' or $::operatingsystem == 'Ubuntu' {
     service { 'systemd-modules-load':
       provider => systemd,
     }

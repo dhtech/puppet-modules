@@ -15,7 +15,7 @@
 class system($ca) {
   include stdlib::stages
 
-  if $operatingsystem == 'OpenBSD' {
+  if $::operatingsystem == 'OpenBSD' {
     $git_binary  = '/usr/local/bin/git'
     $pip_package = 'py-pip'
   }
@@ -85,7 +85,7 @@ class system($ca) {
     $pip_package,
   ])
 
-  if $operatingsystem == 'OpenBSD' {
+  if $::operatingsystem == 'OpenBSD' {
     file {'/usr/local/bin/pip':
       ensure  => link,
       target  => '/usr/local/bin/pip2.7',
