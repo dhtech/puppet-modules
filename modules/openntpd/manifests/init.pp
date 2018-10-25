@@ -18,15 +18,15 @@
 class openntpd ($servers = [], $server = 0) {
 
   file { 'ntpd.conf':
-    path    => '/etc/ntpd.conf',
     ensure  => file,
+    path    => '/etc/ntpd.conf',
     content => template('openntpd/ntpd.conf.erb'),
-    notify  => Service["ntpd"],
+    notify  => Service['ntpd'],
   }
 
   service { 'ntpd':
-    name => 'ntpd',
     ensure => 'running',
+    name   => 'ntpd',
     enable => true,
   }
 }

@@ -11,34 +11,34 @@
 class facter {
 
   file { '/etc/puppetlabs':
-    owner   => "root",
-    group   => "root",
-    mode    => "655",
-    ensure  => "directory",
+    ensure => 'directory',
+    group  => 'root',
+    mode   => '0655',
+    owner  => 'root',
   }
 
   file { '/etc/puppetlabs/facter':
-    owner   => "root",
-    group   => "root",
-    mode    => "655",
-    ensure  => "directory",
+    ensure  => 'directory',
+    group   => 'root',
+    mode    => '0655',
+    owner   => 'root',
     require => File['/etc/puppetlabs'],
   }
 
   file { '/etc/puppetlabs/facter/facts.d':
-    owner   => "root",
-    group   => "root",
-    mode    => "655",
-    ensure  => "directory",
+    ensure  => 'directory',
+    group   => 'root',
+    mode    => '0655',
+    owner   => 'root',
     require => File['/etc/puppetlabs/facter'],
   }
 
   file { 'dh_egress_interface':
-    path    => "/etc/puppetlabs/facter/facts.d/dh_egress_interface",
-    owner   => "root",
-    group   => "root",
-    mode    => "755",
-    ensure  => "file",
+    ensure  => 'file',
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0755',
+    path    => '/etc/puppetlabs/facter/facts.d/dh_egress_interface',
     content => template('facter/dh_egress_interface.erb'),
     require => File['/etc/puppetlabs/facter/facts.d'],
   }

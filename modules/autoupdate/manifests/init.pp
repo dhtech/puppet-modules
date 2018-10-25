@@ -26,13 +26,13 @@ class autoupdate ($blacklist, $email) {
       ensure  => installed,
     }
     file { 'apt-autoupdate':
-      path    => '/etc/apt/apt.conf.d/20auto-upgrades',
       ensure  => file,
+      path    => '/etc/apt/apt.conf.d/20auto-upgrades',
       content => template('autoupdate/debian-auto-upgrades.erb'),
     }
     file { 'apt-unattended-upgrades':
-      path    => '/etc/apt/apt.conf.d/50unattended-upgrades',
       ensure  => file,
+      path    => '/etc/apt/apt.conf.d/50unattended-upgrades',
       content => template('autoupdate/debian-unattended-upgrades.erb'),
     }
   }

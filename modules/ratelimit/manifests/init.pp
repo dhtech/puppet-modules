@@ -25,40 +25,40 @@ class ratelimit ($ports, $hitcount = 5, $seconds = 60) {
     $proto = $entry[0]
     $port = $entry[1]
     firewall {
-      "600 v4 drop excessive $proto $port":
+      "600 v4 drop excessive ${proto} ${port}":
         recent    => 'update',
         rseconds  => $seconds,
         rhitcount => $hitcount,
-        rname     => "ratelimit-v4-$proto-$port",
+        rname     => "ratelimit-v4-${proto}-${port}",
         rsource   => true,
         proto     => $proto,
         dport     => $port,
         action    => 'drop';
-      "601 v4 accept $proto $port":
-        recent    => 'set',
-        rname     => "ratelimit-v4-$proto-$port",
-        rsource   => true,
-        proto     => $proto,
-        dport     => $port,
-        action    => 'accept';
-      "600 v6 drop excessive $proto $port":
+      "601 v4 accept ${proto} ${port}":
+        recent  => 'set',
+        rname   => "ratelimit-v4-${proto}-${port}",
+        rsource => true,
+        proto   => $proto,
+        dport   => $port,
+        action  => 'accept';
+      "600 v6 drop excessive ${proto} ${port}":
         recent    => 'update',
         rseconds  => $seconds,
         rhitcount => $hitcount,
-        rname     => "ratelimit-v6-$proto-$port",
+        rname     => "ratelimit-v6-${proto}-${port}",
         rsource   => true,
         proto     => $proto,
         dport     => $port,
         action    => 'drop',
         provider  => 'ip6tables';
-      "601 v6 accept $proto $port":
-        recent    => 'set',
-        rname     => "ratelimit-v6-$proto-$port",
-        rsource   => true,
-        proto     => $proto,
-        dport     => $port,
-        action    => 'accept',
-        provider  => 'ip6tables';
+      "601 v6 accept ${proto} ${port}":
+        recent   => 'set',
+        rname    => "ratelimit-v6-${proto}-${port}",
+        rsource  => true,
+        proto    => $proto,
+        dport    => $port,
+        action   => 'accept',
+        provider => 'ip6tables';
     }
   }
 

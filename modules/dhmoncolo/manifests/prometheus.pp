@@ -17,63 +17,62 @@ class dhmon::prometheus ($scrape_configs) {
 
 
   file { '/opt/prometheus':
-	ensure	=> 'directory',
-	owner	=> 'prometheus',
-	group	=> 'prometheus',
+  ensure  => 'directory',
+  owner  => 'prometheus',
+  group  => 'prometheus',
   }
 
   file { '/tmp/prometheus.tar.gz':
-	source	=> 'puppet:///data/prometheus-2.0.0.linux-amd64.tar.gz',
-	ensure	=> file,
+  ensure  => file,
+  source  => 'puppet:///data/prometheus-2.0.0.linux-amd64.tar.gz',
   }
 
   file { 'untar':
-	command	=> '/bin/tar -zxvf /tmp/prometheus.tar.gz -C /opt/prometheus',
-	user	=> 'prometheus',
-	require	=> File["/opt/prometheus"],
-	require	=> File["/tmp/prometheus.tar.gz"],
+  command  => '/bin/tar -zxvf /tmp/prometheus.tar.gz -C /opt/prometheus',
+  user    => 'prometheus',
+  require  => File['/opt/prometheus'],
+  require  => File['/tmp/prometheus.tar.gz'],
   }
 
   # Fix variable to get what instance prometheus is running, eg colo/event
   file { '/etc/systemd/system/prometheus.service':
-	content	=> template('dhmoncolo/prometheus.service.erb'),
-	ensure	=> file,
-	notify	=> Exec["systemctl-daemon-reload"],
+  ensure  => file,
+  content  => template('dhmoncolo/prometheus.service.erb'),
+  notify  => Exec['systemctl-daemon-reload'],
   }
 
   file { '/opt/prometheus/prometheus.yml':
-	content	=> template('dhmon/prometheus.yaml.erb'),
-	ensure	=> file,
+  ensure  => file,
+  content  => template('dhmon/prometheus.yaml.erb'),
   }
 
   file { '/srv/metrics/prometheus':
-	ensure	=> directory,
-	owner	=> 'prometheus',
-	group	=> 'prometheus',
-	mode	=> '0700',
-  }->
-
-  service { 'prometheus':
-	ensure	=> running,
+  ensure  => directory,
+  owner  => 'prometheus',
+  group  => 'prometheus',
+  mode   => '0700',
+  }
+  -> service { 'prometheus':
+  ensure  => running,
   }
 
 file { 'rules':
-	path	=> '/opt/prometheus/rules',
-	ensure	=> directory,
-	recurse	=> true,
-	purge	=> true,
-	source	=> 'puppet:///svn/allevents/dhmon/colo-rules/',
-	notify	=> Exec['prometheus-hup'],
+  path    => '/opt/prometheus/rules',
+  ensure  => directory,
+  recurse  => true,
+  purge   => true,
+  source  => 'puppet:///svn/allevents/dhmon/colo-rules/',
+  notify  => Exec['prometheus-hup'],
  }
 
   exec { 'prometheus-hup':
-	command		=> '/usr/bin/pkill -SIGHUP prometheus',
-	refreshonly	=> true,
+  command     => '/usr/bin/pkill -SIGHUP prometheus',
+  refreshonly  => true,
   }
 
   apache::proxy { 'prometheus-backend':
-	url		=> '/prometheus/',
-	backend	=> 'http://localhost:9090/prometheus/',
+  url     => '/prometheus/',
+  backend  => 'http://localhost:9090/prometheus/',
   }
 
 }
