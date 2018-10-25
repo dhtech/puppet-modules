@@ -22,6 +22,9 @@
 #   C7000 AMMCs we're handling. Default: []
 #   Each element should contain: ip, fqdn, domain
 #
+# [*domain*]
+#   Provisioning domain in use for ESXi and C7000. Default: ""
+#
 # [*mgmt_if*]
 #   Used to set ip and prefix for the mgmt interface. Default: []
 #   Object should contain: ip, prefix
@@ -29,9 +32,18 @@
 # [*deploy_conf*]
 #   Used to get what network conf to use for the internal deploy network
 #   Object should contain: network, prefix
+#
+# [*ocp*]
+#   Boolean if this node handles OCP gear. Default: false
+#
+# [*ocp_domain*]
+#   Provisioning domain in use for OCP. Default: ""
+#
+# [*ocp_machines*]
+#   List of {'name', 'macshort', 'mgmt-mac', 'ip'}. Default: []
 
-class provision ($vault_mount, $esxi = [], $c7000 = [], $domain, $mgmt_if = {},
-             $deploy_conf, $ocp, $ocp_domain, $ocp_machines) {
+class provision ($vault_mount, $esxi = [], $c7000 = [], $domain = '', $mgmt_if = {},
+                $deploy_conf = {}, $ocp = false, $ocp_domain = '', $ocp_machines = []) {
   ensure_packages([
     'apg',
     'python-netsnmp',
@@ -43,76 +55,80 @@ class provision ($vault_mount, $esxi = [], $c7000 = [], $domain, $mgmt_if = {},
     'liblzma-dev'
   ])
 
-  $redis_secret =  vault("provision-redis")
+  $redis_secret =  vault('provision-redis')
   $esxi_secret =  vault("login:esxi-${domain}")
-  $c7000_secret =  vault("login:c7000")
-  $vc_secret = vault("vc.event.dreamhack.se")
+  $c7000_secret =  vault('login:c7000')
+  $vc_secret = vault('vc.event.dreamhack.se')
   $deploy_gateway = $deploy_conf['gateway']
   $deploy_network = $deploy_conf['network']
   $deploy_prefix = $deploy_conf['prefix']
 
   package { 'pysphere':
     provider => 'pip',
-  }->
-  package { 'pyghmi':
+  }
+  -> package { 'pyghmi':
     provider => 'pip',
-  }->
-  exec { 'install-hvac':
+  }
+  -> exec { 'install-hvac':
     creates => '/usr/local/lib/python2.7/dist-packages/hvac',
     command => '/usr/bin/pip install hvac';
-  }->
-  file { 'stunnel.conf':
-    path    => '/etc/stunnel/provision.conf',
-    ensure  => file,
-    source  => 'puppet:///scripts/deploy/stunnel/provision.conf',
-    notify  => Service['stunnel4'],
-  }->
-  file { 'stunnel-defaults':
-    path => '/etc/default/stunnel4',
+  }
+  -> file { 'stunnel.conf':
     ensure => file,
+    path   => '/etc/stunnel/provision.conf',
+    source => 'puppet:///scripts/deploy/stunnel/provision.conf',
+    notify => Service['stunnel4'],
+  }
+  file { 'stunnel-defaults':
+    ensure  => file,
+    path    => '/etc/default/stunnel4',
     content => template('provision/stunnel.erb'),
     notify  => Service['stunnel4'],
-  }->
-  service { 'stunnel4':
+  }
+  -> service { 'stunnel4':
     ensure => running,
-  }->
-  file { 'bin:provisiond':
-    path    => '/usr/local/bin/provisiond',
-    ensure  => file,
-    mode    => '0755',
-    source  => 'puppet:///scripts/deploy-github/provisiond/provisiond',
-    notify  => Supervisor::Restart['provisiond'],
-  }->
+  }
+  -> file { 'bin:provisiond':
+    ensure => file,
+    path   => '/usr/local/bin/provisiond',
+    mode   => '0755',
+    source => 'puppet:///scripts/deploy-github/provisiond/provisiond',
+    notify => Supervisor::Restart['provisiond'],
+  }
   file { 'lib:provisiond':
     path    => '/usr/local/lib/python2.7/dist-packages/provision',
     source  => 'puppet:///scripts/deploy-github/provisiond/provision',
     recurse => true,
     notify  => Supervisor::Restart['provisiond'],
-  }->
-  file { 'provision-etc':
-    path => '/etc/provision/',
+  }
+  -> file { 'provision-etc':
     ensure => directory,
-  }->
-  file { 'provision.yaml':
-    path => '/etc/provision/config.yaml',
-    ensure => file,
+    path   => '/etc/provision/',
+  }
+  -> file { 'provision.yaml':
+    ensure  => file,
+    path    => '/etc/provision/config.yaml',
     content => template('provision/provision.yaml.erb'),
-    notify => Supervisor::Restart['provisiond'],
-  }->
-  file { 'data:vsphere_esxi.iso':
-    path    => '/srv/vmware-esxi.iso',
+    notify  => Supervisor::Restart['provisiond'],
+  }
+  -> file { 'data:vsphere_esxi.iso':
     ensure => file,
-    source  => "puppet:///data/VMware-VMvisor-Installer-6.5.0.update02-8294253.x86_64.iso",
-  }->
+    path   => '/srv/vmware-esxi.iso',
+    source => 'puppet:///data/VMware-VMvisor-Installer-6.5.0.update02-8294253.x86_64.iso',
+  }
   file { 'data:vsphere_vcsa.iso':
-    path    => '/srv/vmware-vcenter.iso',
     ensure => file,
-    source  => "puppet:///data/VMware-VCSA-all-6.5.0-8307201.iso",
-  }->
-  supervisor::register { 'provisiond':
-    command => '/usr/local/bin/provisiond',
+    path   => '/srv/vmware-vcenter.iso',
+    source => 'puppet:///data/VMware-VCSA-all-6.5.0-8307201.iso',
+  }
+  -> supervisor::register { 'provisiond':
+    command     => '/usr/local/bin/provisiond',
     environment =>
-      "VAULT_MOUNT=\"${vault_mount}\",VAULT_CERT=\"/var/lib/puppet/ssl/certs/${fqdn}.pem\",VAULT_KEY=\"/var/lib/puppet/ssl/private_keys/${fqdn}.pem\",VMWARE_VCENTER_ISO=\"/srv/vmware-vcenter.iso\",VMWARE_ESXI_ISO=\"/srv/vmware-esxi.iso\"",
+      "VAULT_MOUNT=\"${vault_mount}\"," +
+      "VAULT_CERT=\"/var/lib/puppet/ssl/certs/${::fqdn}.pem\"," +
+      "VAULT_KEY=\"/var/lib/puppet/ssl/private_keys/${::fqdn}.pem\","
+      "VMWARE_VCENTER_ISO=\"/srv/vmware-vcenter.iso\"," +
+      "VMWARE_ESXI_ISO=\"/srv/vmware-esxi.iso\"",
   }
 
   # The idea here is that if you don't have to need for a specific interface
@@ -127,8 +143,8 @@ class provision ($vault_mount, $esxi = [], $c7000 = [], $domain, $mgmt_if = {},
       ensure  => file,
       content => template('provision/interface-ens224.erb'),
       notify  => Exec['restart-ens224'],
-    }->
-    exec { 'restart-ens224':
+    }
+    -> exec { 'restart-ens224':
       command     => '/sbin/ifdown ens224; /sbin/ifup ens224',
       refreshonly => true,
     }
@@ -140,8 +156,8 @@ class provision ($vault_mount, $esxi = [], $c7000 = [], $domain, $mgmt_if = {},
       ensure  => file,
       content => template('provision/interface-ens256.erb'),
       notify  => Exec['restart-ens256'],
-    }->
-    exec { 'restart-ens256':
+    }
+    -> exec { 'restart-ens256':
       command     => '/sbin/ifdown ens256; /sbin/ifup ens256',
       refreshonly => true,
     }
@@ -178,8 +194,8 @@ class provision ($vault_mount, $esxi = [], $c7000 = [], $domain, $mgmt_if = {},
     file { '/etc/sysctl.d/dh-provision.conf':
       ensure  => 'file',
       content => 'net.ipv4.ip_forward=1',
-    }~>
-    exec { 'refresh-sysctl-provision':
+    }
+    ~> exec { 'refresh-sysctl-provision':
       command     => '/sbin/sysctl --system',
       refreshonly => true,
     }
@@ -190,4 +206,4 @@ class provision ($vault_mount, $esxi = [], $c7000 = [], $domain, $mgmt_if = {},
       ensure  => purged,
     }
   }
-}
+-> -> -> }
