@@ -15,12 +15,12 @@
 
 class swbootd($current_event) {
 
-  $secret_radius_access   = vault("radius:access", {})
-  $secret_snmpv2_access   = vault("snmpv2:access", {})
-  $secret_snmpsalt_access = vault("snmpsalt:access", {})
-  $secret_enable_access   = vault("enable:access", {})
-  $secret_login_access    = vault("login:access", {})
-  $secret_login_svn       = vault("login:svn", {})
+  $secret_radius_access   = vault('radius:access', {})
+  $secret_snmpv2_access   = vault('snmpv2:access', {})
+  $secret_snmpsalt_access = vault('snmpsalt:access', {})
+  $secret_enable_access   = vault('enable:access', {})
+  $secret_login_access    = vault('login:access', {})
+  $secret_login_svn       = vault('login:svn', {})
 
   ensure_packages([
     'isc-dhcp-server',
@@ -35,10 +35,10 @@ class swbootd($current_event) {
 
   # The default configuration file
   file { 'default-isc-dhcp-server':
-    path    => "/etc/default/isc-dhcp-server",
     ensure  => file,
-    content => template("swbootd/default-isc-dhcp-server.erb"),
-    notify  => Service["isc-dhcp-server"],
+    path    => '/etc/default/isc-dhcp-server',
+    content => template('swbootd/default-isc-dhcp-server.erb'),
+    notify  => Service['isc-dhcp-server'],
   }
 
   file { '/etc/dhcp/dhcpd.conf':
@@ -74,9 +74,9 @@ class swbootd($current_event) {
   }
 
   file { '/scripts/swboot/switchconfig':
-    ensure => directory,
+    ensure  => directory,
     recurse => remote,
-    source => "puppet:///svn/${current_event}/access/switchconfig",
+    source  => "puppet:///svn/${current_event}/access/switchconfig",
     notify  => Supervisor::Restart['swtftpd'],
   }
 }

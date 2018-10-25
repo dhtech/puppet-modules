@@ -19,17 +19,17 @@ class ldap ($master) {
   # We want to run before 'ldaplogin' and other
   class {
     'ldap::setup':
-      stage => 'setup',
+      stage  => 'setup',
       master => $master;
   }
 
   # TODO(klump) Make this a real exporter which can run as often as prometheus
   # polls.
   file { 'prometheus-ldapsync-exporter':
-    path    => '/usr/local/bin/prometheus-ldapsync-exporter',
-    ensure  => file,
-    mode    => '0755',
-    source  => 'puppet:///modules/ldap/prometheus-exporter-ldapsync.sh',
+    ensure => file,
+    path   => '/usr/local/bin/prometheus-ldapsync-exporter',
+    mode   => '0755',
+    source => 'puppet:///modules/ldap/prometheus-exporter-ldapsync.sh',
   }
 
   cron { 'prometheus-syslog-exporter-cron':
