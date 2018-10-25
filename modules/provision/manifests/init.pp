@@ -206,4 +206,4 @@ class provision ($vault_mount, $esxi = [], $c7000 = [], $domain = '', $mgmt_if =
       ensure  => purged,
     }
   }
--> -> -> }
+}
