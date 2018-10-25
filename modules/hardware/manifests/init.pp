@@ -3,6 +3,9 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file
 #
+
+include apt
+
 # == Class: hardware
 #
 # Install hardware specific packages and configs.
@@ -11,12 +14,9 @@
 #
 # None. Everything is driven by facts.
 #
-
-include apt
-
 class hardware {
 
-  if $productname == 'VMware Virtual Platform' {
+  if $::productname == 'VMware Virtual Platform' {
     # OpenBSD does not use open-vm-tools, see the vmt(4) driver.
     if $::operatingsystem != 'OpenBSD' {
       package { 'open-vm-tools':
@@ -24,7 +24,7 @@ class hardware {
       }
     }
   } else {
-    if $manufacturer == 'HP' {
+    if $::manufacturer == 'HP' {
       package { 'gnupg':
         ensure => installed
       }
@@ -51,9 +51,10 @@ class hardware {
 
       package { 'ssacli':
         ensure  => installed,
-        require => [ File['hp-source'],
-                     Exec['apt_update'],
-                   ],
+        require => [
+          File['hp-source'],
+          Exec['apt_update'],
+        ],
       }
       -> package { 'hponcfg':
         ensure => installed
