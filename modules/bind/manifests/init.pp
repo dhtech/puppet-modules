@@ -30,7 +30,7 @@
 
 class bind($role='resolver', $networks = [], $zones = [], $private_zones = [], $allow_transfer = [], $also_notify = [], $rfc_1918_resolvers = []) {
 
-  if $operatingsystem == 'OpenBSD' {
+  if $::operatingsystem == 'OpenBSD' {
     $named_user = '_bind'
     $conf_dir = '/var/named/etc'
     $conf_cfg = 'etc'
@@ -98,7 +98,7 @@ class bind($role='resolver', $networks = [], $zones = [], $private_zones = [], $
 
   # We need a managed-keys directory on OpenBSD where BIND has write
   # permissions for use with "dnssec-validation auto;"
-  if $operatingsystem == 'OpenBSD' {
+  if $::operatingsystem == 'OpenBSD' {
     file { 'managed-keys-dir':
       ensure  => 'directory',
       owner   => 'root',

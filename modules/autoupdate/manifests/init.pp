@@ -18,7 +18,7 @@
 
 class autoupdate ($blacklist, $email) {
 
-  if $operatingsystem == 'Debian' or $operatingsystem == 'Ubuntu' {
+  if $::operatingsystem == 'Debian' or $::operatingsystem == 'Ubuntu' {
     package { 'apt-listchanges':
       ensure  => installed,
     }

@@ -217,7 +217,7 @@ class ldaplogin ($ca, $logon, $sudo, $ldap, $ssh_ports, $panic_users,
     content => template('ldaplogin/panic.bash_aliases.erb'),
   }
 
-  if $operatingsystem == 'Debian' and $operatingsystemmajrelease == '8' {
+  if $::operatingsystem == 'Debian' and $::operatingsystemmajrelease == '8' {
     # SSSD in Debian 8 is not able to read our sshPublicKeys for some reason
     # so we take it from testing. openssh-server doesn't work with *that*
     # sssd version, so we take that one from testing also.
@@ -227,7 +227,7 @@ class ldaplogin ($ca, $logon, $sudo, $ldap, $ssh_ports, $panic_users,
     -> package { 'sssd':
         ensure => installed,
     }
-  } elsif $operatingsystem == 'Debian' and $operatingsystemmajrelease == '7' {
+  } elsif $::operatingsystem == 'Debian' and $::operatingsystemmajrelease == '7' {
     ensure_packages([
       'python-fuse',
       'python-yaml',
@@ -261,7 +261,7 @@ class ldaplogin ($ca, $logon, $sudo, $ldap, $ssh_ports, $panic_users,
       command => "/bin/sed -i 's/^exit 0/mount ${escaped_mount}\\nexit 0/' /etc/rc.local",
       unless  => "/bin/grep -q 'mount ${ldap['mount']}' /etc/rc.local",
     }
-  } elsif $operatingsystem == 'Debian' or $operatingsystem == 'Ubuntu' {
+  } elsif $::operatingsystem == 'Debian' or $::operatingsystem == 'Ubuntu' {
     package {
       'sssd':
         ensure => installed,

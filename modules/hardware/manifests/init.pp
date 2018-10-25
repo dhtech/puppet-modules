@@ -18,7 +18,7 @@ class hardware {
 
   if $productname == 'VMware Virtual Platform' {
     # OpenBSD does not use open-vm-tools, see the vmt(4) driver.
-    if $operatingsystem != 'OpenBSD' {
+    if $::operatingsystem != 'OpenBSD' {
       package { 'open-vm-tools':
         ensure => installed
       }

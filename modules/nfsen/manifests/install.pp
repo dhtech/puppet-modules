@@ -5,7 +5,7 @@
 #
 class nfsen::install {
 
-    if $operatingsystem == 'Debian' {
+    if $::operatingsystem == 'Debian' {
 
         # The nfsen config file, needs to be in place before running install script
         file { 'nfsen.conf':

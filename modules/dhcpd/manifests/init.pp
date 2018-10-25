@@ -42,7 +42,7 @@
 
 class dhcpd ($active = 0, $active_node = '', $scopes = '', $local_subnet = '', $local_netmask = '', $domain_name_servers = '', $next_server = '', $ntp_servers = '', $tftp_server_name='', $current_event) {
 
-  if $operatingsystem == 'OpenBSD' {
+  if $::operatingsystem == 'OpenBSD' {
     $conf_dir = '/etc'
     $package_name = 'isc-dhcp-server'
     $rc_name = 'isc_dhcpd'
@@ -106,7 +106,7 @@ class dhcpd ($active = 0, $active_node = '', $scopes = '', $local_subnet = '', $
 
   # Install the dhcp_leased utility and dependencies. Currently only supported
   # on Debian
-  if $operatingsystem == 'Debian' {
+  if $::operatingsystem == 'Debian' {
 
     package { 'libpq5':
       ensure => installed,
@@ -178,7 +178,7 @@ class dhcpd ($active = 0, $active_node = '', $scopes = '', $local_subnet = '', $
     }
 
     # NOTE: The dhcp_leased parts currently only work on Debian
-    if $operatingsystem == 'Debian' {
+    if $::operatingsystem == 'Debian' {
       exec { 'start_dhcp_leased':
         command => '/usr/bin/supervisorctl start dhcp_leased',
         onlyif  => '/usr/local/sbin/dhcp_leased_ready',
@@ -230,7 +230,7 @@ class dhcpd ($active = 0, $active_node = '', $scopes = '', $local_subnet = '', $
       name   => $rc_name,
       enable => false,
     }
-    if $operatingsystem == 'Debian' {
+    if $::operatingsystem == 'Debian' {
       # Install the sync-leases utility
       file { 'sync-leases':
         ensure  => file,

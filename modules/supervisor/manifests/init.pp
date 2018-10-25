@@ -13,7 +13,7 @@
 
 class supervisor {
 
-  if $operatingsystem == 'OpenBSD' {
+  if $::operatingsystem == 'OpenBSD' {
     $conf_dir = '/etc'
     $rc_name = 'supervisord'
   }

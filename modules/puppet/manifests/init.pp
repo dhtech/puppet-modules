@@ -27,7 +27,7 @@ class puppet ($master, $environment, $sourceaddress) {
     enable => true,
   }
 
-  if $operatingsystem == 'Debian' and $lsbmajdistrelease == 'testing' {
+  if $::operatingsystem == 'Debian' and $lsbmajdistrelease == 'testing' {
     file { 'puppet-conf':
       ensure  => file,
       path    => '/etc/puppet/puppet.conf',
@@ -44,7 +44,7 @@ class puppet ($master, $environment, $sourceaddress) {
       path   => '/etc/apt/sources.list.d/puppetlabs-pc1.list'
     }
   }
-  if $operatingsystem == 'Debian' and $operatingsystemmajrelease == '8' {
+  if $::operatingsystem == 'Debian' and $::operatingsystemmajrelease == '8' {
     file { 'bashrc':
       ensure  => file,
       path    => '/root/.bashrc',

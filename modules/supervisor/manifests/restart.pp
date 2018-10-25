@@ -7,7 +7,7 @@
 define supervisor::restart() {
   require supervisor
 
-  if $operatingsystem == 'OpenBSD' {
+  if $::operatingsystem == 'OpenBSD' {
     $supervisorctl = '/usr/local/bin/supervisorctl'
   }
   else {

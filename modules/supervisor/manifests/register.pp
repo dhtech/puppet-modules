@@ -7,7 +7,7 @@
 define supervisor::register($command, $user='', $directory='', $autostart='', $stopasgroup='', $environment='') {
   require supervisor
 
-  if $operatingsystem == 'OpenBSD' {
+  if $::operatingsystem == 'OpenBSD' {
     $include_dir = '/etc/supervisord.d'
     $supervisorctl = '/usr/local/bin/supervisorctl'
   }

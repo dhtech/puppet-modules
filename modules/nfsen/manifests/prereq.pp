@@ -5,7 +5,7 @@
 #
 class nfsen::prereq {
 
-    if $operatingsystem == 'Debian' {
+    if $::operatingsystem == 'Debian' {
 
         exec {'mkdir':
             command => '/bin/mkdir -p /opt/nfsen/etc',

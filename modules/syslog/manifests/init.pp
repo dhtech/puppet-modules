@@ -17,7 +17,7 @@
 
 class syslog ($syslog_servers = '') {
 
-  if $operatingsystem == 'OpenBSD' {
+  if $::operatingsystem == 'OpenBSD' {
     $service = 'syslogd'
     $conf_file = 'syslog.conf'
     $conf_dir = '/etc'
