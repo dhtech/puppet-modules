@@ -9,14 +9,14 @@ class system::setup {
 
   if $operatingsystem == 'Debian' and $operatingsystemmajrelease == '8' {
     file { 'testing-preference':
-      path    => '/etc/apt/preferences.d/testing',
       ensure  => file,
+      path    => '/etc/apt/preferences.d/testing',
       content => template('system/apt.testing.pref.erb'),
       notify  => Exec['system:apt_update'],
-    }->
-    file { 'testing-source':
-      path    => '/etc/apt/sources.list.d/testing.list',
+    }
+    -> file { 'testing-source':
       ensure  => file,
+      path    => '/etc/apt/sources.list.d/testing.list',
       content => template('system/apt.testing.erb'),
       notify  => Exec['system:apt_update'],
     }
@@ -36,8 +36,8 @@ class system::setup {
       provider => systemd,
     }
     file { 'modules':
-      path    => '/etc/modules-load.d/dreamhack.conf',
       ensure  => file,
+      path    => '/etc/modules-load.d/dreamhack.conf',
       content => template('system/modules.erb'),
       notify  => Service['systemd-modules-load'],
     }

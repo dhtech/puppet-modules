@@ -44,15 +44,15 @@ class ldaplogin ($ca, $logon, $sudo, $ldap, $ssh_ports, $panic_users,
                  $use_otp = false, $gitshell = '', $host_cert = '') {
 
   service { 'sssd':
-    name => 'sssd',
-    ensure => 'running',
-    enable => true,
+    ensure  => 'running',
+    name    => 'sssd',
+    enable  => true,
     require => Package['sssd'],
   }
 
   service { 'openssh-server':
-    name => 'ssh',
     ensure => 'running',
+    name   => 'ssh',
     enable => true,
   }
 
@@ -82,14 +82,14 @@ class ldaplogin ($ca, $logon, $sudo, $ldap, $ssh_ports, $panic_users,
   }
 
   file { 'access.conf':
-    path    => '/etc/security/access.conf',
     ensure  => file,
+    path    => '/etc/security/access.conf',
     content => template('ldaplogin/access.conf.erb'),
   }
 
   file { 'sssd.conf':
-    path    => '/etc/sssd/sssd.conf',
     ensure  => file,
+    path    => '/etc/sssd/sssd.conf',
     content => template('ldaplogin/sssd.conf.erb'),
     notify  => Service['sssd'],
     require => Package['sssd'],
@@ -97,104 +97,104 @@ class ldaplogin ($ca, $logon, $sudo, $ldap, $ssh_ports, $panic_users,
   }
 
   file { 'ldap.conf':
-    path    => '/etc/ldap/ldap.conf',
     ensure  => file,
+    path    => '/etc/ldap/ldap.conf',
     content => template('ldaplogin/ldap.conf.erb'),
   }
 
   file { 'dreamhack.issue':
-    path    => '/etc/dreamhack',
     ensure  => file,
+    path    => '/etc/dreamhack',
     content => template('ldaplogin/issue.erb'),
   }
 
   file { 'motd':
-    path    => '/etc/motd',
     ensure  => file,
+    path    => '/etc/motd',
     content => '',
   }
 
   file { 'motd.tail':
-    path    => '/etc/motd.tail',
     ensure  => file,
+    path    => '/etc/motd.tail',
     content => '',
   }
 
   file { 'sshd_config':
-    path    => '/etc/ssh/sshd_config',
     ensure  => file,
+    path    => '/etc/ssh/sshd_config',
     content => template('ldaplogin/sshd_config.erb'),
     notify  => Service['openssh-server'],
   }
 
   file { 'ssh_known_hosts':
-    path    => '/etc/ssh/ssh_known_hosts',
     ensure  => file,
+    path    => '/etc/ssh/ssh_known_hosts',
     content => template('ldaplogin/ssh_known_hosts.erb'),
   }
 
   if $host_cert != '' {
     file { 'ssh_host_ecdsa_key.crt':
-      path    => '/etc/ssh/ssh_host_ecdsa_key.crt',
       ensure  => 'present',
-      content => "$host_cert",
+      path    => '/etc/ssh/ssh_host_ecdsa_key.crt',
+      content => $host_cert,
       mode    => '0644',
       notify  => Service['openssh-server'],
     }
   }
 
   file { 'ssh_ca.pub':
-    path    => '/etc/ssh/ssh_ca.pub',
     ensure  => 'present',
-    content => "$ca",
+    path    => '/etc/ssh/ssh_ca.pub',
+    content => $ca,
     mode    => '0644',
   }
 
   file { 'common-account':
-    path    => '/etc/pam.d/common-account',
     ensure  => file,
+    path    => '/etc/pam.d/common-account',
     content => template('ldaplogin/common-account.erb'),
     require => Package['libpam-sss'],
   }
 
   file { 'common-session':
-    path    => '/etc/pam.d/common-session',
     ensure  => file,
+    path    => '/etc/pam.d/common-session',
     content => template('ldaplogin/common-session.erb'),
     require => Package['libpam-sss'],
   }
 
   file { 'common-auth':
-    path    => '/etc/pam.d/common-auth',
     ensure  => file,
+    path    => '/etc/pam.d/common-auth',
     content => template('ldaplogin/common-auth.erb'),
     require => Package['libpam-sss'],
   }
 
   file { 'pam-sshd':
-    path    => '/etc/pam.d/sshd',
     ensure  => file,
+    path    => '/etc/pam.d/sshd',
     content => template('ldaplogin/sshd.erb'),
   }
 
   file { 'sudoers':
-    path    => '/etc/sudoers.d/dreamhack',
     ensure  => file,
+    path    => '/etc/sudoers.d/dreamhack',
     mode    => '0440',
     content => template('ldaplogin/sudoers.erb'),
-    require  => Package['sudo'],
+    require => Package['sudo'],
   }
 
   file { 'dh-principals':
-    path    => '/sbin/dh-principals',
-    ensure  => file,
-    mode    => '0755',
-    source  => 'puppet:///modules/ldaplogin/dh-principals.sh',
+    ensure => file,
+    path   => '/sbin/dh-principals',
+    mode   => '0755',
+    source => 'puppet:///modules/ldaplogin/dh-principals.sh',
   }
 
   file { 'panic-users':
-    path    => '/etc/panic.users',
     ensure  => file,
+    path    => '/etc/panic.users',
     content => template('ldaplogin/panic.users.erb'),
   }
 
@@ -205,14 +205,14 @@ class ldaplogin ($ca, $logon, $sudo, $ldap, $ssh_ports, $panic_users,
     password       => '*',
     purge_ssh_keys => true,
     shell          => '/bin/bash',
-  }->
-  file { '/home/dhtech':
+  }
+  -> file { '/home/dhtech':
     ensure => 'directory',
     owner  => 'dhtech',
     group  => 'dhtech',
     mode   => '0700',
-  }->
-  file { '/home/dhtech/.bash_aliases':
+  }
+  -> file { '/home/dhtech/.bash_aliases':
     ensure  => file,
     content => template('ldaplogin/panic.bash_aliases.erb'),
   }
@@ -223,8 +223,8 @@ class ldaplogin ($ca, $logon, $sudo, $ldap, $ssh_ports, $panic_users,
     # sssd version, so we take that one from testing also.
     exec { '/usr/bin/apt-get -y -t testing install openssh-server sssd libc6-dev > /var/tmp/new-ssh':
       creates => '/var/tmp/new-ssh',
-    }->
-    package { 'sssd':
+    }
+    -> package { 'sssd':
         ensure => installed,
     }
   } elsif $operatingsystem == 'Debian' and $operatingsystemmajrelease == '7' {
@@ -234,16 +234,16 @@ class ldaplogin ($ca, $logon, $sudo, $ldap, $ssh_ports, $panic_users,
       'python-ldap'])
 
     file { 'ldapfuse.py':
-      path    => '/usr/bin/ldapfuse.py',
       ensure  => file,
+      path    => '/usr/bin/ldapfuse.py',
       mode    => '0755',
       source  => 'puppet:///scripts/ldapfuse/ldapfuse.py',
       require => [Package['python-ldap'], Package['python-yaml']],
     }
 
     file { 'ldap-mount-point':
-      path    => $ldap['mount'],
-      ensure  => directory,
+      ensure => directory,
+      path   => $ldap['mount'],
     }
 
     mount { 'ldapfuse':
@@ -251,7 +251,7 @@ class ldaplogin ($ca, $logon, $sudo, $ldap, $ssh_ports, $panic_users,
       name     => $ldap['mount'],
       device   => "ldapfuse.py#ldaps://${ldap['server']}/${ldap['base']}",
       fstype   => 'fuse',
-      remounts => 'false',
+      remounts => false,
       options  => 'noauto,allow_other',
       require  => [File['ldap-mount-point'], File['ldapfuse.py']],
     }
@@ -259,7 +259,7 @@ class ldaplogin ($ca, $logon, $sudo, $ldap, $ssh_ports, $panic_users,
     $escaped_mount = regsubst($ldap['mount'], '\/', '\\/', 'G')
     exec { 'boot-ldap':
       command => "/bin/sed -i 's/^exit 0/mount ${escaped_mount}\\nexit 0/' /etc/rc.local",
-      unless => "/bin/grep -q 'mount ${ldap['mount']}' /etc/rc.local",
+      unless  => "/bin/grep -q 'mount ${ldap['mount']}' /etc/rc.local",
     }
   } elsif $operatingsystem == 'Debian' or $operatingsystem == 'Ubuntu' {
     package {

@@ -19,11 +19,11 @@
 #   list of resolvers. order in which to use a certain resolver.
 #
 
-class resolvconf ($domain, $search, $nameservers) { 
+class resolvconf ($domain, $search, $nameservers) {
 
   file { 'resolv.conf':
-    path    => '/etc/resolv.conf',
     ensure  => file,
+    path    => '/etc/resolv.conf',
     content => template('resolvconf/resolv.conf.erb'),
   }
 

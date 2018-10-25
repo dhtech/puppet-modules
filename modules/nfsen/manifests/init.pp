@@ -9,6 +9,6 @@
 #
 
 class nfsen {
-    class {'nfsen::prereq': } ->
-    class {'nfsen::install': }
+    class {'nfsen::prereq': }
+    -> class {'nfsen::install': }
 }

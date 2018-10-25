@@ -14,15 +14,15 @@
 class obsdprofile {
 
   file { 'profile':
-    path    => '/etc/profile',
     ensure  => file,
+    path    => '/etc/profile',
     content => template('obsdprofile/profile.erb'),
     require => File['profile.d']
   }
 
   file { 'profile.d':
-    path    => '/etc/profile.d',
-    ensure  => directory,
+    ensure => directory,
+    path   => '/etc/profile.d',
   }
 
 }

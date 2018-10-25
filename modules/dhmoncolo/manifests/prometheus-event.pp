@@ -17,37 +17,37 @@ class dhmon::prometheus ($scrape_configs) {
 
 
   file { '/opt/prometheus-event':
-  ensure  => 'directory',
+  ensure => 'directory',
   owner  => 'prometheus',
   group  => 'prometheus',
   }
 
   file { '/tmp/prometheus.tar.gz':
-  ensure  => file,
-  source  => 'puppet:///data/prometheus-2.0.0.linux-amd64.tar.gz',
+  ensure => file,
+  source => 'puppet:///data/prometheus-2.0.0.linux-amd64.tar.gz',
   }
 
   file { 'untar':
-  command  => '/bin/tar -zxvf /tmp/prometheus.tar.gz -C /opt/prometheus-event',
+  command => '/bin/tar -zxvf /tmp/prometheus.tar.gz -C /opt/prometheus-event',
   user    => 'prometheus',
-  require  => File['/opt/prometheus-event'],
-  require  => File['/tmp/prometheus.tar.gz'],
+  require => File['/opt/prometheus-event'],
+  require => File['/tmp/prometheus.tar.gz'],
   }
 
   # Fix variable to get what instance prometheus is running, eg colo/event
   file { '/etc/systemd/system/prometheus-event.service':
   ensure  => file,
-  content  => template('dhmoncolo/prometheus-event.service.erb'),
+  content => template('dhmoncolo/prometheus-event.service.erb'),
   notify  => Exec['systemctl-daemon-reload'],
   }
 
   file { '/opt/prometheus-event/prometheus.yml':
   ensure  => file,
-  content  => template('dhmon/prometheus-event.yaml.erb'),
+  content => template('dhmon/prometheus-event.yaml.erb'),
   }
 
   file { '/srv/metrics/prometheus-event':
-  ensure  => directory,
+  ensure => directory,
   owner  => 'prometheus',
   group  => 'prometheus',
   mode   => '0700',
@@ -58,12 +58,12 @@ class dhmon::prometheus ($scrape_configs) {
 
   exec { 'prometheus-hup':
   command     => '/usr/bin/pkill -SIGHUP prometheus-event',
-  refreshonly  => true,
+  refreshonly => true,
   }
 
   apache::proxy { 'prometheus-backend':
   url     => '/prometheus-event/',
-  backend  => 'http://localhost:9094/prometheus-event/',
+  backend => 'http://localhost:9094/prometheus-event/',
   }
 
 }

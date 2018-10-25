@@ -28,52 +28,52 @@
 # [*rfc_1918_resolvers*]
 #   Machines that are allowed to query for reverse records in RFC1918 networks.
 
-class bind($role="resolver", $networks = [], $zones = [], $private_zones = [], $allow_transfer = [], $also_notify = [], $rfc_1918_resolvers = []) {
+class bind($role='resolver', $networks = [], $zones = [], $private_zones = [], $allow_transfer = [], $also_notify = [], $rfc_1918_resolvers = []) {
 
   if $operatingsystem == 'OpenBSD' {
-    $named_user = "_bind"
+    $named_user = '_bind'
     $conf_dir = '/var/named/etc'
     $conf_cfg = 'etc'
     $package_name = 'isc-bind'
     $rc_name = 'isc_named'
     $needs_tools = 0
     $needs_slave_dir = 0
-    $standard_zone_dir = "/var/named/standard"
-    $standard_zone_cfg = "standard"
-    $slave_zone_dir = "/var/named/slave"
-    $slave_zone_cfg = "slave"
-    $master_zone_dir = "/var/named/master"
-    $master_zone_cfg = "master"
-    $dump_dir = "/var/named/tmp/dump"
-    $dump_dir_cfg = "tmp/dump"
-    $stats_dir = "/var/named/tmp/stats"
-    $stats_dir_cfg = "tmp/stats"
+    $standard_zone_dir = '/var/named/standard'
+    $standard_zone_cfg = 'standard'
+    $slave_zone_dir = '/var/named/slave'
+    $slave_zone_cfg = 'slave'
+    $master_zone_dir = '/var/named/master'
+    $master_zone_cfg = 'master'
+    $dump_dir = '/var/named/tmp/dump'
+    $dump_dir_cfg = 'tmp/dump'
+    $stats_dir = '/var/named/tmp/stats'
+    $stats_dir_cfg = 'tmp/stats'
   }
   else {
-    $named_user = "bind"
+    $named_user = 'bind'
     $conf_dir = '/etc/bind'
     $conf_cfg = '/etc/bind'
     $package_name = 'bind9'
     $rc_name = 'bind9'
     $needs_tools = 1
     $needs_slave_dir = 1
-    $standard_zone_dir = "/etc/bind"
-    $standard_zone_cfg = "/etc/bind"
-    $slave_zone_dir = "/etc/bind/slave"
-    $slave_zone_cfg = "/etc/bind/slave"
-    $master_zone_dir = "/etc/bind/master"
-    $master_zone_cfg = "/etc/bind/master"
-    $dump_dir = "/var/cache/bind/dump"
-    $dump_dir_cfg = "/var/cache/bind/dump"
-    $stats_dir = "/var/cache/bind/stats"
-    $stats_dir_cfg = "/var/cache/bind/stats"
+    $standard_zone_dir = '/etc/bind'
+    $standard_zone_cfg = '/etc/bind'
+    $slave_zone_dir = '/etc/bind/slave'
+    $slave_zone_cfg = '/etc/bind/slave'
+    $master_zone_dir = '/etc/bind/master'
+    $master_zone_cfg = '/etc/bind/master'
+    $dump_dir = '/var/cache/bind/dump'
+    $dump_dir_cfg = '/var/cache/bind/dump'
+    $stats_dir = '/var/cache/bind/stats'
+    $stats_dir_cfg = '/var/cache/bind/stats'
   }
 
-  package { "$package_name":
+  package { $package_name:
     ensure => installed,
   }
 
-  package { "dnstop":
+  package { 'dnstop':
     ensure => installed,
   }
 
@@ -87,12 +87,12 @@ class bind($role="resolver", $networks = [], $zones = [], $private_zones = [], $
   # Make sure the slave directory exists
   if $needs_slave_dir == 1 {
     file { 'slavedir':
-      path    => "$slave_zone_dir",
-      owner   => "root",
+      ensure  => 'directory',
+      owner   => 'root',
       group   => $named_user,
-      mode    => "770",
-      ensure  => "directory",
-      require => Package["$package_name"],
+      mode    => '0770',
+      path    => $slave_zone_dir,
+      require => Package[$package_name],
     }
   }
 
@@ -100,98 +100,98 @@ class bind($role="resolver", $networks = [], $zones = [], $private_zones = [], $
   # permissions for use with "dnssec-validation auto;"
   if $operatingsystem == 'OpenBSD' {
     file { 'managed-keys-dir':
-      path    => "/var/named/managed-keys",
-      owner   => "root",
+      ensure  => 'directory',
+      owner   => 'root',
       group   => $named_user,
-      mode    => "770",
-      ensure  => "directory",
-      require => Package["$package_name"],
+      mode    => '0770',
+      path    => '/var/named/managed-keys',
+      require => Package[$package_name],
     }
   }
 
   # Make sure the dump directory exists
   file { 'dumpdir':
-    path    => "$dump_dir",
-    owner   => "root",
+    ensure  => 'directory',
+    owner   => 'root',
     group   => $named_user,
-    mode    => "770",
-    ensure  => "directory",
-    require => Package["$package_name"],
+    mode    => '0770',
+    path    => $dump_dir,
+    require => Package[$package_name],
   }
 
   # Make sure the stats directory exists
   file { 'statsdir':
-    path    => "$stats_dir",
-    owner   => "root",
+    ensure  => 'directory',
+    owner   => 'root',
     group   => $named_user,
-    mode    => "770",
-    ensure  => "directory",
-    require => Package["$package_name"],
+    mode    => '0770',
+    path    => $stats_dir,
+    require => Package[$package_name],
   }
 
   file { 'named.conf':
-    path    => "$conf_dir/named.conf",
     ensure  => file,
+    path    => "${conf_dir}/named.conf",
     content => template('bind/named.conf.erb'),
-    notify  => Service["named"],
-    require => Package["$package_name"],
+    notify  => Service['named'],
+    require => Package[$package_name],
   }
 
   file { 'named.conf.slave':
-    path    => "$conf_dir/named.conf.slave",
     ensure  => file,
+    path    => "${conf_dir}/named.conf.slave",
     content => template('bind/named.conf.slave.erb'),
-    notify  => Service["named"],
-    require => Package["$package_name"],
+    notify  => Service['named'],
+    require => Package[$package_name],
   }
 
   if $role == 'resolver' {
 
     file { 'db.0':
-      path    => "$standard_zone_dir/db.0",
       ensure  => file,
+      path    => "${standard_zone_dir}/db.0",
       content => template('bind/db.0.erb'),
-      notify  => Service["named"],
-      require => Package["$package_name"],
+      notify  => Service['named'],
+      require => Package[$package_name],
     }
 
     file { 'db.127':
-      path    => "$standard_zone_dir/db.127",
       ensure  => file,
+      path    => "${standard_zone_dir}/db.127",
       content => template('bind/db.127.erb'),
-      notify  => Service["named"],
-      require => Package["$package_name"],
+      notify  => Service['named'],
+      require => Package[$package_name],
     }
 
     file { 'db.255':
-      path    => "$standard_zone_dir/db.255",
       ensure  => file,
+      path    => "${standard_zone_dir}/db.255",
       content => template('bind/db.255.erb'),
-      notify  => Service["named"],
-      require => Package["$package_name"],
+      notify  => Service['named'],
+      require => Package[$package_name],
     }
 
     file { 'db.local':
-      path    => "$standard_zone_dir/db.local",
       ensure  => file,
+      path    => "${standard_zone_dir}/db.local",
       content => template('bind/db.local.erb'),
-      notify  => Service["named"],
-      require => Package["$package_name"],
+      notify  => Service['named'],
+      require => Package[$package_name],
     }
 
     file { 'db.loopback6.arpa':
-      path    => "$standard_zone_dir/db.loopback6.arpa",
       ensure  => file,
+      path    => "${standard_zone_dir}/db.loopback6.arpa",
       content => template('bind/db.loopback6.arpa.erb'),
-      notify  => Service["named"],
-      require => Package["$package_name"],
+      notify  => Service['named'],
+      require => Package[$package_name],
     }
   }
 
   service { 'named':
-    name => "$rc_name",
-    ensure => 'running',
-    enable => true,
-    require => Package["$package_name"],
+    ensure  => 'running',
+    name    => $rc_name,
+    enable  => true,
+    require => Package[$package_name],
   }
 }
