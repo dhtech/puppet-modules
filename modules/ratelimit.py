@@ -4,7 +4,6 @@
 # license that can be found in the LICENSE file
 
 def generate(host, *args):
-
   info = {}
   info['ports'] = [x.split('/') for x in args]
   return {'ratelimit': info}
