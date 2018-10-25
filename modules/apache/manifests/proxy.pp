@@ -6,12 +6,12 @@
 define apache::proxy($url, $backend) {
   exec { "apache_proxy_reload_${name}":
     command     => '/usr/sbin/apachectl graceful',
-    refreshonly => 'true',
+    refreshonly => true,
   }
 
   file { "proxy_${name}":
-    path    => "/etc/apache2/site.d/$name.conf",
     ensure  => file,
+    path    => "/etc/apache2/site.d/${name}.conf",
     content => template('apache/proxy.conf.erb'),
     notify  => Exec["apache_proxy_reload_${name}"],
   }

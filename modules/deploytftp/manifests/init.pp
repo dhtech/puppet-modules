@@ -12,15 +12,15 @@
 class deploytftp {
 
   file { '/usr/bin/hooktftp':
-    source   => 'puppet:///data/hooktftp-1d238815/hooktftp',
-    ensure   => file,
-    mode     => '0755',
-  }->
-  file { '/etc/hooktftp.yml':
-    content  => template('deploytftp/hooktftp.yml.erb'),
-    ensure   => file,
-  }->
-  supervisor::register { 'hooktftp':
+    ensure => file,
+    source => 'puppet:///data/hooktftp-1d238815/hooktftp',
+    mode   => '0755',
+  }
+  -> file { '/etc/hooktftp.yml':
+    ensure  => file,
+    content => template('deploytftp/hooktftp.yml.erb'),
+  }
+  -> supervisor::register { 'hooktftp':
     command  => '/usr/bin/hooktftp',
   }
 }

@@ -20,53 +20,53 @@ include wget
 
 class pxe {
   package {
-    "tftpd-hpa":
+    'tftpd-hpa':
       ensure => present,
   }
 
   package {
-    "nginx":
+    'nginx':
       ensure => present,
   }
 
   file {
-    "/srv/tftp/ipxe.pxe":
+    '/srv/tftp/ipxe.pxe':
       ensure => present,
-      source => "puppet:///modules/pxe/ipxe.pxe",
+      source => 'puppet:///modules/pxe/ipxe.pxe',
   }
 
   file {
-    "/srv/tftp/ipxe.efi":
+    '/srv/tftp/ipxe.efi':
       ensure => present,
-      source => "puppet:///modules/pxe/ipxe.efi",
+      source => 'puppet:///modules/pxe/ipxe.efi',
   }
 
   service {
-    "tftpd-hpa":
+    'tftpd-hpa':
       ensure => running,
   }
 
   service {
-    "nginx":
+    'nginx':
       ensure => running,
   }
 
   file {
-    "/srv/www/":
-      ensure => directory,
+    '/srv/www/':
+      ensure  => directory,
       recurse => true,
-      source => 'puppet:///modules/pxe/www',
+      source  => 'puppet:///modules/pxe/www',
   }
 
   file {
-    "/etc/nginx/sites-enabled/pxe":
+    '/etc/nginx/sites-enabled/pxe':
       ensure => file,
       source => 'puppet:///modules/pxe/nginx-pxe',
       notify => Service['nginx'],
   }
 
   file {
-    "/etc/nginx/sites-enabled/default":
+    '/etc/nginx/sites-enabled/default':
       ensure => absent,
       notify => Service['nginx'],
   }

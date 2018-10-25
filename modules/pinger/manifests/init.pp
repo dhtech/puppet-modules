@@ -15,13 +15,13 @@ class pinger {
 
   package { 'prometheus_client':
     provider => 'pip',
-  }->
-  dhmon::package {
+  }
+  -> dhmon::package {
     'pinger':
   }
 
   supervisor::register { 'pinger':
-    command   => '/usr/bin/pingerd',
-    require   => Package['pinger'],
+    command => '/usr/bin/pingerd',
+    require => Package['pinger'],
   }
 }

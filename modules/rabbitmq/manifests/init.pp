@@ -17,15 +17,15 @@ class rabbitmq {
   $mq_password = vault("rabbitmq:${fqdn}")
 
   service { 'rabbitmq-server':
-    ensure => running,
+    ensure  => running,
     require => Package['rabbitmq-server'],
   }
 
   exec { 'enable-rabbitmq-admin':
-    command => '/usr/sbin/rabbitmq-plugins enable rabbitmq_management',
+    command     => '/usr/sbin/rabbitmq-plugins enable rabbitmq_management',
     environment => 'HOME=/var/lib/rabbitmq',
-    creates => '/etc/rabbitmq/enabled_plugins',
-    notify  => Service['rabbitmq-server'],
+    creates     => '/etc/rabbitmq/enabled_plugins',
+    notify      => Service['rabbitmq-server'],
   }
 
   if $mq_password == {} {
@@ -33,8 +33,8 @@ class rabbitmq {
       path    => '/tmp/setup_rabbitmq.sh',
       content => template('rabbitmq/setup_rabbitmq.sh.erb'),
       mode    => '0500',
-    }->
-    exec { 'setup-rabbitmq':
+    }
+    -> exec { 'setup-rabbitmq':
       command => "/tmp/setup_rabbitmq.sh ${mq_username}",
       notify  => Service['rabbitmq-server'],
       require => Package['rabbitmq-server'],

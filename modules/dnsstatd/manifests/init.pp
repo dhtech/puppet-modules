@@ -15,7 +15,7 @@
 
 class dnsstatd($current_event) {
 
-  $secret_db_dnsstatd   = vault("postgresql:dnsstatd", {})
+  $secret_db_dnsstatd   = vault('postgresql:dnsstatd', {})
 
   ensure_packages([
     'python-netifaces',

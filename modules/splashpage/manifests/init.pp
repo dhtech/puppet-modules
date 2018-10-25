@@ -29,36 +29,36 @@ class splashpage {
   }
 
   file { '/var/www/html':
-    path    => '/var/www/html/',
     ensure  => directory,
+    path    => '/var/www/html/',
     require => Package['apache2'],
   }
 
-  file { "/var/www/html/index.php":
-    source  => "puppet:///scripts/splashpage/public/index.php",
+  file { '/var/www/html/index.php':
+    source  => 'puppet:///scripts/splashpage/public/index.php',
     mode    => '0755',
     owner   => 'root',
     group   => 'root',
     require => File['/var/www/html/'],
   }
 
-  file { "/var/www/html/eurostile.ttf":
-    source  => "puppet:///scripts/splashpage/public/eurostile.ttf",
+  file { '/var/www/html/eurostile.ttf':
+    source  => 'puppet:///scripts/splashpage/public/eurostile.ttf',
     mode    => '0755',
     owner   => 'root',
     group   => 'root',
     require => File['/var/www/html/'],
   }
 
-  file { "/var/www/html/favicon-32x32.png":
-    source  => "puppet:///scripts/splashpage/public/favicon-32x32.png",
+  file { '/var/www/html/favicon-32x32.png':
+    source  => 'puppet:///scripts/splashpage/public/favicon-32x32.png',
     mode    => '0755',
     owner   => 'root',
     group   => 'root',
     require => File['/var/www/html/'],
   }
 
-  file { "/var/www/html/index.html":
+  file { '/var/www/html/index.html':
     ensure  => absent,
   }
 }

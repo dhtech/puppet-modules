@@ -40,23 +40,23 @@ class iptables ($rules, $log_fallthrough, $forward_policy = 'drop') {
     'firewall':
       stage => 'setup';
     'iptables::pre':
-      stage => 'setup',
+      stage          => 'setup',
       forward_policy => $forward_policy;
     'iptables::post':
       stage => 'deploy',
-      log => $log_fallthrough;
+      log   => $log_fallthrough;
   }
 
   each($rules['v4']) |$rule| {
     $name = $rule['name']
     $proto = $rule['proto']
     firewall {
-      "500 v4 $name $proto":
-        source    => $rule['src'],
-        proto     => $rule['proto'],
-        dport     => $rule['dports'],
-        sport     => $rule['sports'],
-        action    => 'accept';
+      "500 v4 ${name} ${proto}":
+        source => $rule['src'],
+        proto  => $rule['proto'],
+        dport  => $rule['dports'],
+        sport  => $rule['sports'],
+        action => 'accept';
     }
   }
 
@@ -64,13 +64,13 @@ class iptables ($rules, $log_fallthrough, $forward_policy = 'drop') {
     $name = $rule['name']
     $proto = $rule['proto']
     firewall {
-      "500 v6 $name $proto":
-        source    => $rule['src'],
-        proto     => $rule['proto'],
-        dport     => $rule['dports'],
-        sport     => $rule['sports'],
-        action    => 'accept',
-        provider  => 'ip6tables';
+      "500 v6 ${name} ${proto}":
+        source   => $rule['src'],
+        proto    => $rule['proto'],
+        dport    => $rule['dports'],
+        sport    => $rule['sports'],
+        action   => 'accept',
+        provider => 'ip6tables';
     }
   }
 }

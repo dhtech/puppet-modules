@@ -39,39 +39,39 @@ class rancid($current_event = '', $router_db_lines = []) {
   }
 
   user { 'rancid':
-    name   => 'rancid',
-    home   => '/var/lib/rancid',
-    ensure => present,
+    ensure  => present,
+    home    => '/var/lib/rancid',
+    name    => 'rancid',
     require => Package['rancid'],
   }
 
   file { 'rancid.conf':
-    path    => '/etc/rancid/rancid.conf',
     ensure  => file,
+    path    => '/etc/rancid/rancid.conf',
     content => template('rancid/rancid.conf.erb'),
     require => Package['rancid'],
   }
 
   file { '/var/lib/rancid/.subversion':
     ensure  => directory,
-    owner   => "rancid",
-    group   => "rancid",
+    owner   => 'rancid',
+    group   => 'rancid',
     mode    => '0750',
     require => User['rancid'],
   }
 
   file { '/var/lib/rancid/.subversion/auth':
     ensure  => directory,
-    owner   => "rancid",
-    group   => "rancid",
+    owner   => 'rancid',
+    group   => 'rancid',
     mode    => '0750',
     require => File['/var/lib/rancid/.subversion'],
   }
 
   file { '/var/lib/rancid/.subversion/auth/svn.simple':
     ensure  => directory,
-    owner   => "rancid",
-    group   => "rancid",
+    owner   => 'rancid',
+    group   => 'rancid',
     mode    => '0750',
     require => File['/var/lib/rancid/.subversion/auth'],
   }
@@ -83,58 +83,58 @@ class rancid($current_event = '', $router_db_lines = []) {
   # $ echo -n '<https://doc.tech.dreamhack.se:443> Dreamhack network conf Subversion Repository' | md5sum
   # 7ca2d15a7b1a01e62c9ca3fc9f84cf2c  -
   file { 'subversion-auth-file':
-    path    => '/var/lib/rancid/.subversion/auth/svn.simple/7ca2d15a7b1a01e62c9ca3fc9f84cf2c',
     ensure  => file,
-    owner   => "rancid",
-    group   => "rancid",
+    path    => '/var/lib/rancid/.subversion/auth/svn.simple/7ca2d15a7b1a01e62c9ca3fc9f84cf2c',
+    owner   => 'rancid',
+    group   => 'rancid',
     mode    => '0640',
     content => template('rancid/subversion-auth-file.erb'),
     require => [ User['rancid'],
-                 Exec['rancid-event-checkout'],
-                 File['/var/lib/rancid/.subversion/auth/svn.simple'],
-               ],
+                Exec['rancid-event-checkout'],
+                File['/var/lib/rancid/.subversion/auth/svn.simple'],
+              ],
 
   }
 
   file { '.clogin.rc':
-    path    => '/var/lib/rancid/.cloginrc',
+    ensure  => file,
     owner   => 'rancid',
     group   => 'rancid',
     mode    => '0640',
-    ensure  => file,
+    path    => '/var/lib/rancid/.cloginrc',
     content => template('rancid/cloginrc.conf.erb'),
     require => [ Package['rancid'], User['rancid'] ],
   }
 
   file { 'router.db':
-    path    => "/var/lib/rancid/$current_event/router.db",
+    ensure  => file,
     owner   => 'rancid',
     group   => 'rancid',
-    ensure  => file,
+    path    => "/var/lib/rancid/${current_event}/router.db",
     content => template('rancid/router.db.erb'),
     require => [ Package['rancid'], User['rancid'], Exec['rancid-event-checkout'] ],
   }
 
   file_line { 'aliases_rancid-admin-dreamhack':
     path   => '/etc/aliases',
-    line   => "rancid-admin-$current_event: noc@tech.dreamhack.se",
+    line   => "rancid-admin-${current_event}: noc@tech.dreamhack.se",
     notify => Exec['postalias'],
   }
 
   file_line { 'aliases_rancid-current_event':
     path   => '/etc/aliases',
-    line   => "rancid-$current_event:       noc@tech.dreamhack.se",
+    line   => "rancid-${current_event}:       noc@tech.dreamhack.se",
     notify => Exec['postalias'],
   }
 
   exec {'postalias':
-    command => '/usr/sbin/postalias /etc/aliases',
+    command     => '/usr/sbin/postalias /etc/aliases',
     refreshonly => true
   }
 
   exec {'rancid-event-checkout':
-    command => "/usr/bin/svn co --non-interactive --username ${username} --password ${password} https://doc.tech.dreamhack.se/netconf/$current_event /var/lib/rancid/$current_event",
-    creates => "/var/lib/rancid/$current_event",
+    command => "/usr/bin/svn co --non-interactive --username ${username} --password ${password} https://doc.tech.dreamhack.se/netconf/${current_event} /var/lib/rancid/${current_event}",
+    creates => "/var/lib/rancid/${current_event}",
     require => Package['rancid'],
     notify  => [ Exec['rancid-lib-perms'], Exec['rancid-log-perms'] ],
   }
@@ -152,43 +152,44 @@ class rancid($current_event = '', $router_db_lines = []) {
   }
 
   file { 'rancid-configs':
-    path    => "/var/lib/rancid/$current_event/configs",
+    ensure  => directory,
     owner   => 'rancid',
     group   => 'rancid',
-    ensure  => directory,
+    path    => "/var/lib/rancid/${current_event}/configs",
     require => Exec['rancid-event-checkout'],
     notify  => Exec['rancid-configs-add'],
   }
 
   exec { 'rancid-configs-add':
-    command => "/usr/bin/svn add /var/lib/rancid/$current_event/configs && /usr/bin/svn commit -m \"add configs directory for $current_event\"",
-    cwd => "/var/lib/rancid/$current_event/",
-    require => File['rancid-configs'],
-    user    => 'rancid',
+    command     => "/usr/bin/svn add /var/lib/rancid/${current_event}/configs
+                    && /usr/bin/svn commit -m \"add configs directory for ${current_event}\"",
+    cwd         => "/var/lib/rancid/${current_event}/",
+    require     => File['rancid-configs'],
+    user        => 'rancid',
     refreshonly => true,
   }
 
   file { 'rancid-routers.all':
-    path    => "/var/lib/rancid/$current_event/routers.all",
+    ensure  => file,
     owner   => 'rancid',
     group   => 'rancid',
-    ensure  => file,
+    path    => "/var/lib/rancid/${current_event}/routers.all",
     require => Exec['rancid-event-checkout'],
   }
 
   file { 'rancid-routers.down':
-    path    => "/var/lib/rancid/$current_event/routers.down",
+    ensure  => file,
     owner   => 'rancid',
     group   => 'rancid',
-    ensure  => file,
+    path    => "/var/lib/rancid/${current_event}/routers.down",
     require => Exec['rancid-event-checkout'],
   }
 
   file { 'rancid-routers.up':
-    path    => "/var/lib/rancid/$current_event/routers.up",
+    ensure  => file,
     owner   => 'rancid',
     group   => 'rancid',
-    ensure  => file,
+    path    => "/var/lib/rancid/${current_event}/routers.up",
     require => Exec['rancid-event-checkout'],
   }
 
@@ -205,9 +206,9 @@ class rancid($current_event = '', $router_db_lines = []) {
   }
 
   file { 'prometheus-rancid-exporter':
-    path    => '/usr/local/bin/prometheus-exporter-rancid',
-    content => template('rancid/prometheus-exporter-rancid.erb'),
     ensure  => file,
+    content => template('rancid/prometheus-exporter-rancid.erb'),
+    path    => '/usr/local/bin/prometheus-exporter-rancid',
     mode    => '0755',
   }
 
@@ -216,21 +217,22 @@ class rancid($current_event = '', $router_db_lines = []) {
   }
 
   exec { 'prometheus-exporter-distconfcheck-venv':
-    command => '/usr/bin/virtualenv /var/local/prometheus-exporter-distconfcheck-venv; /var/local/prometheus-exporter-distconfcheck-venv/bin/pip install ciscoconfparse',
+    command => '/usr/bin/virtualenv /var/local/prometheus-exporter-distconfcheck-venv;
+                /var/local/prometheus-exporter-distconfcheck-venv/bin/pip install ciscoconfparse',
     require => Package['virtualenv'],
-    unless => '/usr/bin/test -d /var/local/prometheus-exporter-distconfcheck-venv',
+    unless  => '/usr/bin/test -d /var/local/prometheus-exporter-distconfcheck-venv',
   }
 
   file { '/usr/local/bin/prometheus-exporter-distconfcheck':
-    content => template('rancid/prometheus-exporter-distconfcheck.erb'),
     ensure  => file,
+    content => template('rancid/prometheus-exporter-distconfcheck.erb'),
     mode    => '0755',
     require => Exec['prometheus-exporter-distconfcheck-venv'],
   }
 
   cron { 'prometheus-exporter-distconfcheck':
     command => '/var/local/prometheus-exporter-distconfcheck-venv/bin/python /usr/local/bin/prometheus-exporter-distconfcheck',
-    minute => '*',
+    minute  => '*',
     require => File['/usr/local/bin/prometheus-exporter-distconfcheck'],
   }
 }

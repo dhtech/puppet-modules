@@ -31,14 +31,14 @@ class dhcpinfo_web {
   }
 
   file { '/etc/apache2/sites-available/dhcpinfo.event.dreamhack.se.conf':
-    path    => "/etc/apache2/sites-available/dhcpinfo.event.dreamhack.se.conf",
-    ensure  => "file",
-    owner   => "root",
-    group   => "root",
-    mode    => "644",
-    source  => "puppet:///scripts/dhcpinfo/apache_proxy/dhcpinfo.event.dreamhack.se",
+    ensure  => 'file',
+    path    => '/etc/apache2/sites-available/dhcpinfo.event.dreamhack.se.conf',
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    source  => 'puppet:///scripts/dhcpinfo/apache_proxy/dhcpinfo.event.dreamhack.se',
     require => Package['apache2'],
-    notify  => Service["apache2"],
+    notify  => Service['apache2'],
   }
 
   package { 'thin':
@@ -46,69 +46,69 @@ class dhcpinfo_web {
   }
 
   file { '/opt/dhcpinfo/thin':
-    path    => "/opt/dhcpinfo/thin",
-    ensure  => "directory",
-    owner   => "root",
-    group   => "root",
-    mode    => "755",
+    ensure => 'directory',
+    path   => '/opt/dhcpinfo/thin',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
   }
 
   file { '/opt/dhcpinfo/public/bootstrap':
-    recurse => "true",
-    owner   => "root",
-    group   => "root",
-    source  => "puppet:///scripts/dhcpinfo/public/bootstrap",
+    recurse => true,
+    owner   => 'root',
+    group   => 'root',
+    source  => 'puppet:///scripts/dhcpinfo/public/bootstrap',
   }
 
   file { '/opt/dhcpinfo/public/jquery.min.js':
-    ensure  => "file",
-    owner   => "root",
-    group   => "root",
-    mode    => "644",
-    source  => "puppet:///scripts/dhcpinfo/public/jquery.min.js",
+    ensure => 'file',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0644',
+    source => 'puppet:///scripts/dhcpinfo/public/jquery.min.js',
   }
 
   file { '/opt/dhcpinfo/public/jquery.tablesorter.min.js':
-    ensure  => "file",
-    owner   => "root",
-    group   => "root",
-    mode    => "644",
-    source  => "puppet:///scripts/dhcpinfo/public/jquery.tablesorter.min.js",
+    ensure => 'file',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0644',
+    source => 'puppet:///scripts/dhcpinfo/public/jquery.tablesorter.min.js',
   }
 
   file { '/opt/dhcpinfo/views':
-    recurse => "true",
-    owner   => "root",
-    group   => "root",
-    source  => "puppet:///scripts/dhcpinfo/views",
+    recurse => true,
+    owner   => 'root',
+    group   => 'root',
+    source  => 'puppet:///scripts/dhcpinfo/views',
   }
 
   file { '/opt/dhcpinfo/lib':
-    path    => "/opt/dhcpinfo/lib",
-    ensure  => "directory",
-    owner   => "root",
-    group   => "root",
-    mode    => "755",
+    ensure => 'directory',
+    path   => '/opt/dhcpinfo/lib',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
   }
 
   file { '/opt/dhcpinfo/thin/production_config.yml':
-    path    => "/opt/dhcpinfo/thin/production_config.yml",
-    ensure  => "file",
-    owner   => "root",
-    group   => "root",
-    mode    => "755",
+    ensure  => 'file',
+    path    => '/opt/dhcpinfo/thin/production_config.yml',
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0755',
     content => template('dhcpinfo_web/production_config.yml.erb'),
     require => File['/opt/dhcpinfo/thin'],
   }
 
   file { '/opt/dhcpinfo/config.ru':
-    path    => "/opt/dhcpinfo/config.ru",
-    ensure  => "file",
-    owner   => "root",
-    group   => "root",
-    mode    => "644",
-    source  => "puppet:///scripts/dhcpinfo/config.ru",
-    notify  => Supervisor::Restart['dhcpinfo_web_thin'],
+    ensure => 'file',
+    path   => '/opt/dhcpinfo/config.ru',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0644',
+    source => 'puppet:///scripts/dhcpinfo/config.ru',
+    notify => Supervisor::Restart['dhcpinfo_web_thin'],
   }
 
   package { ['ruby-sinatra', 'ruby-netaddr']:
@@ -116,28 +116,28 @@ class dhcpinfo_web {
   }
 
   file { '/opt/dhcpinfo/app.rb':
-    path    => "/opt/dhcpinfo/app.rb",
-    ensure  => "file",
-    owner   => "root",
-    group   => "root",
-    mode    => "644",
-    source  => "puppet:///scripts/dhcpinfo/app.rb",
+    ensure => 'file',
+    path   => '/opt/dhcpinfo/app.rb',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0644',
+    source => 'puppet:///scripts/dhcpinfo/app.rb',
   }
 
   file { '/opt/dhcpinfo/lib/GetActiveLease.rb':
-    path    => "/opt/dhcpinfo/lib/GetActiveLease.rb",
-    owner   => "root",
-    group   => "root",
-    mode    => "750",
-    ensure  => "file",
-    source  => "puppet:///scripts/dhcpinfo/lib/GetActiveLease.rb",
+    ensure  => 'file',
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0750',
+    path    => '/opt/dhcpinfo/lib/GetActiveLease.rb',
+    source  => 'puppet:///scripts/dhcpinfo/lib/GetActiveLease.rb',
     require => File['/opt/dhcpinfo/lib'],
   }
 
   supervisor::register { 'dhcpinfo_web_thin':
     command   => 'thin -C thin/production_config.yml -R config.ru start',
     directory => '/opt/dhcpinfo',
-    require => [ File['/opt/dhcpinfo/thin'],
+    require   => [ File['/opt/dhcpinfo/thin'],
                  File['/opt/dhcpinfo/thin/production_config.yml'],
                  File['/opt/dhcpinfo/config.ru'],
                  Package['thin'],
@@ -150,21 +150,21 @@ class dhcpinfo_web {
       command => '/usr/sbin/a2enmod ssl',
       creates => '/etc/apache2/mods-enabled/ssl.load',
       require => Package['apache2'],
-      notify  => Service["apache2"],
+      notify  => Service['apache2'],
   }
 
   exec { 'a2enmod_rewrite':
       command => '/usr/sbin/a2enmod rewrite',
       creates => '/etc/apache2/mods-enabled/rewrite.load',
       require => Package['apache2'],
-      notify  => Service["apache2"],
+      notify  => Service['apache2'],
   }
 
   exec { 'a2enmod_proxy_http':
       command => '/usr/sbin/a2enmod proxy_http',
       creates => '/etc/apache2/mods-enabled/proxy_http.load',
       require => Package['apache2'],
-      notify  => Service["apache2"],
+      notify  => Service['apache2'],
   }
 
   exec { 'a2ensite_dhcpinfo':
@@ -175,7 +175,7 @@ class dhcpinfo_web {
                    Exec['a2enmod_rewrite'],
                    Exec['a2enmod_proxy_http'],
                   ],
-      notify  => Service["apache2"],
+      notify  => Service['apache2'],
   }
 
   exec {'mkdir':
@@ -187,20 +187,20 @@ class dhcpinfo_web {
   ensure_packages(['ssl-cert'])
 
   file { '/etc/ssl/certs/dhcpinfo.event.dreamhack.se.crt':
-    ensure  => file,
-    owner   => 'root',
-    group   => 'ssl-cert',
-    mode    => '0644',
-    source  => 'puppet:///letsencrypt/fullchain.pem',
-    links   => 'follow',
+    ensure => file,
+    owner  => 'root',
+    group  => 'ssl-cert',
+    mode   => '0644',
+    source => 'puppet:///letsencrypt/fullchain.pem',
+    links  => 'follow',
   }
 
   file { '/etc/ssl/private/dhcpinfo.event.dreamhack.se.key':
-    ensure  => file,
-    owner   => 'root',
-    group   => 'ssl-cert',
-    mode    => '0640',
-    source  => 'puppet:///letsencrypt/privkey.pem',
-    links   => 'follow',
+    ensure => file,
+    owner  => 'root',
+    group  => 'ssl-cert',
+    mode   => '0640',
+    source => 'puppet:///letsencrypt/privkey.pem',
+    links  => 'follow',
   }
 }

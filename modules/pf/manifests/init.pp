@@ -20,13 +20,13 @@ class pf ($rules, $forward_policy) {
   $pf_conf_path = '/etc/pf.conf'
 
   file { 'pf.conf':
-    path    => $pf_conf_path,
     ensure  => file,
+    path    => $pf_conf_path,
     content => template('pf/pf.conf.erb'),
   }
 
-  exec { "/sbin/pfctl -f $pf_conf_path":
-    subscribe   => File["pf.conf"],
+  exec { "/sbin/pfctl -f ${pf_conf_path}":
+    subscribe   => File['pf.conf'],
     refreshonly => true
   }
 }

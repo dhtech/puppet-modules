@@ -15,7 +15,7 @@
 class system($ca) {
   include stdlib::stages
 
-  if $operatingsystem == 'OpenBSD' {
+  if $::operatingsystem == 'OpenBSD' {
     $git_binary  = '/usr/local/bin/git'
     $pip_package = 'py-pip'
   }
@@ -34,27 +34,27 @@ class system($ca) {
   }
 
   file { 'old-ca.crt':
-    path    => '/usr/share/ca-certificates/dhtech-ca-r0.crt',
-    ensure  => file,
-    source  => 'puppet:///modules/system/old-ca.crt',
-    notify  => Exec['update-ca'],
-  }->
-  file_line { 'dhtech-ca-r0.crt trust':
-    path => '/etc/ca-certificates.conf',
-    line => 'dhtech-ca-r0.crt',
-    notify  => Exec['update-ca'],
+    ensure => file,
+    path   => '/usr/share/ca-certificates/dhtech-ca-r0.crt',
+    source => 'puppet:///modules/system/old-ca.crt',
+    notify => Exec['update-ca'],
+  }
+  -> file_line { 'dhtech-ca-r0.crt trust':
+    path   => '/etc/ca-certificates.conf',
+    line   => 'dhtech-ca-r0.crt',
+    notify => Exec['update-ca'],
   }
 
   file { 'ca.crt':
-    path    => '/usr/share/ca-certificates/dhtech-ca.crt',
     ensure  => file,
-    content => "$ca",
+    path    => '/usr/share/ca-certificates/dhtech-ca.crt',
+    content => $ca,
     notify  => Exec['update-ca'],
-  }->
-  file_line { 'dhtech-ca.crt trust':
-    path => '/etc/ca-certificates.conf',
-    line => 'dhtech-ca.crt',
-    notify  => Exec['update-ca'],
+  }
+  -> file_line { 'dhtech-ca.crt trust':
+    path   => '/etc/ca-certificates.conf',
+    line   => 'dhtech-ca.crt',
+    notify => Exec['update-ca'],
   }
 
   # Legacy path for old CA cert
@@ -70,7 +70,8 @@ class system($ca) {
 
   # older, less clear syntax
   file { '/tmp/link-to-motd':
-    ensure => '/etc/motd',
+    ensure => symlink,
+    target => '/etc/motd',
   }
 
   # TODO(bluecmd): Move whatever we can from preseed to here.
@@ -84,20 +85,20 @@ class system($ca) {
     $pip_package,
   ])
 
-  if $operatingsystem == 'OpenBSD' {
+  if $::operatingsystem == 'OpenBSD' {
     file {'/usr/local/bin/pip':
       ensure  => link,
       target  => '/usr/local/bin/pip2.7',
-      require => Package["$pip_package"],
+      require => Package[$pip_package],
     }
     exec { 'update-ca':
       command     => '/bin/true',
-      refreshonly => 'true',
+      refreshonly => true,
     }
   } else {
     exec { 'update-ca':
       command     => '/usr/sbin/update-ca-certificates',
-      refreshonly => 'true',
+      refreshonly => true,
     }
   }
 
@@ -105,8 +106,8 @@ class system($ca) {
     command => "${git_binary} clone https://${username}:${password}@doc.tech.dreamhack.se/git/scripts",
     cwd     => '/',
     creates => '/scripts',
-  }->
-  exec {'git-scripts-submodules':
+  }
+  -> exec {'git-scripts-submodules':
     command => "${git_binary} submodule init && ${git_binary} submodule update --recursive --remote",
     cwd     => '/scripts/',
     creates => '/scripts/.git/modules',

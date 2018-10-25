@@ -27,8 +27,8 @@ class kubernetes::install {
     path    => '/etc/apt/sources.list.d/docker.list',
     content => 'deb [arch=amd64] https://download.docker.com/linux/debian buster stable',
     notify  => Exec['docker-source-key'],
-  }->
-  exec { 'docker-source-key':
+  }
+  -> exec { 'docker-source-key':
     command     => '/usr/bin/curl -fsSL https://download.docker.com/linux/ubuntu/gpg | /usr/bin/apt-key add -',
     logoutput   => 'on_failure',
     try_sleep   => 1,
@@ -92,8 +92,8 @@ class kubernetes::install {
   file { '/etc/sysctl.d/dh-kubernetes.conf':
     ensure  => 'file',
     content => 'net.bridge.bridge-nf-call-iptables=1',
-  }~>
-  exec { 'refresh-sysctl':
+  }
+  ~> exec { 'refresh-sysctl':
     command     => '/sbin/sysctl --system',
     refreshonly => true,
   }
@@ -103,12 +103,12 @@ class kubernetes::install {
     command =>  '/bin/sed -i "s/--kubeconfig=\/etc\/kubernetes\/kubelet.conf/--kubeconfig=\/etc\/kubernetes\/kubelet.conf --cgroup-driver=cgroupfs/g" /etc/systemd/system/kubelet.service.d/10-kubeadm.conf',
     unless  =>  '/bin/grep cgroup-driver /etc/systemd/system/kubelet.service.d/10-kubeadm.conf',
     onlyif  =>  '/usr/bin/test -f /etc/systemd/system/kubelet.service.d/10-kubeadm.conf',
-  }~>
-  exec { 'systemctl-reload':
+  }
+  ~> exec { 'systemctl-reload':
     command     =>  '/bin/systemctl daemon-reload',
     refreshonly => true,
-  }~>
-  exec { 'restart-kubelet':
+  }
+  ~> exec { 'restart-kubelet':
     command     => '/bin/systemctl restart kubelet',
     logoutput   => 'on_failure',
     try_sleep   => 1,

@@ -20,13 +20,13 @@
 class install ($install = [], $purge = []) {
 
   each($install) |$pkg| {
-    package { "$pkg":
+    package { $pkg:
       ensure => installed,
     }
   }
 
   each($purge) |$pkg| {
-    package { "$pkg":
+    package { $pkg:
       ensure => purged,
     }
   }

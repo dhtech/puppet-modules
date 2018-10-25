@@ -14,38 +14,38 @@
 #
 
 class asterisktftp($current_event) {
-	package { "python-jinja2":
-		ensure	=> installed,
-	}
-	file { "/srv/asterisk_bootfiles":
-		ensure		=> directory,
-		recurse		=> true,
-		source		=> "puppet:///svn/allevents/tftpboot",
-	}
-	file { "/srv/tftp/":
-		ensure		=> directory,
-	}
-	file { "/etc/asterisk":
-		ensure		=> directory,
-	}
-	exec { "merge_tftpboot_tree":
-		refreshonly 	=> true,
-		command		=> "cp /tmp/hardwareconfigs/* /srv/asterisk_bootfiles/* /srv/tftp/",	
-		path 		=> '/usr/bin:/bin',
-		require		=> [File['/srv/tftp'], File['/srv/asterisk_bootfiles'], File['/etc/asterisk']],
-	}
-	exec { "update_configuration_files":
-		notify		=> Exec['merge_tftpboot_tree'],
-		refreshonly	=> true,
-		command		=> "python run.py /etc/voipplan",
-		cwd		=> "/scripts/voip-parse",
-		path    	=> '/usr/bin/:/bin/',
-	}
-	file { "/etc/voipplan":	
-		notify	=> Exec['update_configuration_files'],
-		mode	=> '644',
-		owner	=> 'tftp',
-		group	=> 'tftp',
-		source	=> "puppet:///svn/$current_event/services/voipplan",
-	}
+  package { 'python-jinja2':
+    ensure => installed,
+  }
+  file { '/srv/asterisk_bootfiles':
+    ensure  => directory,
+    recurse => true,
+    source  => 'puppet:///svn/allevents/tftpboot',
+  }
+  file { '/srv/tftp/':
+    ensure => directory,
+  }
+  file { '/etc/asterisk':
+    ensure => directory,
+  }
+  exec { 'merge_tftpboot_tree':
+    refreshonly => true,
+    command     => 'cp /tmp/hardwareconfigs/* /srv/asterisk_bootfiles/* /srv/tftp/',
+    path        => '/usr/bin:/bin',
+    require     => [File['/srv/tftp'], File['/srv/asterisk_bootfiles'], File['/etc/asterisk']],
+  }
+  exec { 'update_configuration_files':
+    notify      => Exec['merge_tftpboot_tree'],
+    refreshonly => true,
+    command     => 'python run.py /etc/voipplan',
+    cwd         => '/scripts/voip-parse',
+    path        => '/usr/bin/:/bin/',
+  }
+  file { '/etc/voipplan':
+    notify => Exec['update_configuration_files'],
+    mode   => '0644',
+    owner  => 'tftp',
+    group  => 'tftp',
+    source => 'puppet:///svn/$current_event/services/voipplan',
+  }
 }

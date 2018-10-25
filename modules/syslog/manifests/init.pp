@@ -17,7 +17,7 @@
 
 class syslog ($syslog_servers = '') {
 
-  if $operatingsystem == 'OpenBSD' {
+  if $::operatingsystem == 'OpenBSD' {
     $service = 'syslogd'
     $conf_file = 'syslog.conf'
     $conf_dir = '/etc'
@@ -29,15 +29,15 @@ class syslog ($syslog_servers = '') {
   }
 
   service { 'syslog':
-    name => $service,
     ensure => 'running',
+    name   => $service,
     enable => true,
   }
 
   file { 'syslog.conf':
-    path    => "$conf_dir/$conf_file",
     ensure  => file,
-    content => template("syslog/$conf_file.erb"),
-    notify  => Service["syslog"],
+    path    => "${conf_dir}/${conf_file}",
+    content => template("syslog/${conf_file}.erb"),
+    notify  => Service['syslog'],
   }
 }

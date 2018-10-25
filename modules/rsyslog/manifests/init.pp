@@ -11,23 +11,23 @@
 class rsyslog {
 
   service { 'rsyslog':
-    name => 'rsyslog',
     ensure => 'running',
+    name   => 'rsyslog',
     enable => true,
   }
 
   file { 'receiver.conf':
-    path    => "/etc/rsyslog.d/receiver.conf",
     ensure  => file,
-    content => template("rsyslog/receiver.conf.erb"),
-    notify  => Service["rsyslog"],
+    path    => '/etc/rsyslog.d/receiver.conf',
+    content => template('rsyslog/receiver.conf.erb'),
+    notify  => Service['rsyslog'],
   }
 
   file { 'prometheus-syslog-exporter':
-    path    => '/usr/local/bin/prometheus-syslog-exporter',
-    ensure  => file,
-    mode    => '0755',
-    source  => 'puppet:///modules/rsyslog/prometheus-exporter-rsyslog.sh',
+    ensure => file,
+    path   => '/usr/local/bin/prometheus-syslog-exporter',
+    mode   => '0755',
+    source => 'puppet:///modules/rsyslog/prometheus-exporter-rsyslog.sh',
   }
 
   cron { 'prometheus-syslog-exporter-cron':

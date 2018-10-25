@@ -33,8 +33,8 @@ class gitlab_runner {
     path    => '/etc/apt/sources.list.d/docker.list',
     content => 'deb [arch=amd64] https://download.docker.com/linux/debian buster stable',
     notify  => Exec['docker-source-key'],
-  }->
-  exec { 'docker-source-key':
+  }
+  -> exec { 'docker-source-key':
     command     => '/usr/bin/curl -fsSL https://download.docker.com/linux/ubuntu/gpg | /usr/bin/apt-key add -',
     logoutput   => 'on_failure',
     try_sleep   => 1,
@@ -59,8 +59,8 @@ class gitlab_runner {
     path    => '/etc/apt/sources.list.d/gitlab_runner.list',
     content => 'deb https://packages.gitlab.com/runner/gitlab-runner/debian/ buster main',
     notify  => Exec['gitlab_runner-source-key'],
-  }->
-  exec { 'gitlab_runner-source-key':
+  }
+  -> exec { 'gitlab_runner-source-key':
     command     => '/usr/bin/curl -fsSL https://packages.gitlab.com/runner/gitlab-runner/gpgkey | /usr/bin/apt-key add -',
     logoutput   => 'on_failure',
     try_sleep   => 1,

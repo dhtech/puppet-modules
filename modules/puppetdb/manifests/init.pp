@@ -11,10 +11,10 @@
 class puppetdb {
 
   file { 'prometheus-puppetdb-exporter':
-    path    => '/usr/local/bin/prometheus-puppetdb-exporter',
-    ensure  => file,
-    mode    => '0755',
-    source  => 'puppet:///modules/puppetdb/prometheus-exporter-puppetdb.py',
+    ensure => file,
+    path   => '/usr/local/bin/prometheus-puppetdb-exporter',
+    mode   => '0755',
+    source => 'puppet:///modules/puppetdb/prometheus-exporter-puppetdb.py',
   }
 
   cron { 'prometheus-puppetdb-exporter-cron':

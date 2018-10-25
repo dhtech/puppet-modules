@@ -53,63 +53,63 @@ class jumpgate {
 
   file {
     '/usr/local/bin/access_ssh_checker.py':
-      ensure => file,
-      mode => '0755',
-      source => 'puppet:///scripts/access_ssh_checker/access_ssh_checker.py',
+      ensure  => file,
+      mode    => '0755',
+      source  => 'puppet:///scripts/access_ssh_checker/access_ssh_checker.py',
       require => [Package['python-paramiko'], Package['python-paramiko']],
   }
 
   file { 'dhssh':
-    path    => '/usr/local/bin/dhssh.py',
-    ensure  => file,
-    mode    => '0755',
-    source  => 'puppet:///scripts/dhssh/dhssh.py',
+    ensure => file,
+    path   => '/usr/local/bin/dhssh.py',
+    mode   => '0755',
+    source => 'puppet:///scripts/dhssh/dhssh.py',
   }
 
   file { 'ssh_config':
-    path    => '/etc/ssh/ssh_config',
-    ensure  => file,
-    source  => 'puppet:///modules/jumpgate/ssh_config',
+    ensure => file,
+    path   => '/etc/ssh/ssh_config',
+    source => 'puppet:///modules/jumpgate/ssh_config',
   }
 
   file { 'dreamhack-profile':
-    path    => '/etc/profile.d/dreamhack.sh',
-    ensure  => file,
-    source  => 'puppet:///modules/jumpgate/dreamhack.sh',
+    ensure => file,
+    path   => '/etc/profile.d/dreamhack.sh',
+    source => 'puppet:///modules/jumpgate/dreamhack.sh',
   }
 
   file { 'ipplan-completion.py':
-    path    => '/usr/local/bin/ipplan-completion.py',
-    ensure  => file,
-    mode    => '0755',
-    source  => 'puppet:///scripts/ipplan-completion/ipplan-completion.py',
+    ensure => file,
+    path   => '/usr/local/bin/ipplan-completion.py',
+    mode   => '0755',
+    source => 'puppet:///scripts/ipplan-completion/ipplan-completion.py',
   }
 
   file { 'ipplan-completion.sh':
-    path    => '/etc/bash_completion.d/ipplan-completion.sh',
-    ensure  => file,
-    source  => 'puppet:///scripts/ipplan-completion/ipplan-completion.sh',
+    ensure => file,
+    path   => '/etc/bash_completion.d/ipplan-completion.sh',
+    source => 'puppet:///scripts/ipplan-completion/ipplan-completion.sh',
   }
 
-  $redis_secret =  vault("provision-redis")
+  $redis_secret =  vault('provision-redis')
 
   file { 'deploy.yaml':
-    path => '/etc/deploy.yaml',
-    ensure => file,
+    ensure  => file,
+    path    => '/etc/deploy.yaml',
     content => template('jumpgate/deploy.yaml.erb'),
   }
 
   file { 'deploy-vm':
-    path    => '/usr/local/bin/deploy-vm',
-    ensure  => file,
-    mode    => '0755',
-    source  => 'puppet:///scripts/deploy-github/utils/deploy-vm',
+    ensure => file,
+    path   => '/usr/local/bin/deploy-vm',
+    mode   => '0755',
+    source => 'puppet:///scripts/deploy-github/utils/deploy-vm',
   }
 
   file { 'deploy-bay':
-    path    => '/usr/local/bin/deploy-bay',
-    ensure  => file,
-    mode    => '0755',
-    source  => 'puppet:///scripts/deploy-github/utils/deploy-bay',
+    ensure => file,
+    path   => '/usr/local/bin/deploy-bay',
+    mode   => '0755',
+    source => 'puppet:///scripts/deploy-github/utils/deploy-bay',
   }
 }

@@ -18,24 +18,24 @@ class ipplan {
   # mount directories rather than files. To keep things similar, make sure
   # that path exists on normal VMs as well.
   file { 'ipplan-dir':
-    path   => '/etc/ipplan/',
     ensure => directory,
+    path   => '/etc/ipplan/',
   }
   file { 'ipplan-symlink':
-    path   => '/etc/ipplan/ipplan.db',
     ensure => 'link',
+    path   => '/etc/ipplan/ipplan.db',
     target => '/etc/ipplan.db',
   }
 
   file { 'ipplan-cron':
-    path    => '/usr/local/bin/ipplan-cron.sh',
-    ensure  => file,
-    mode    => '0755',
-    source  => 'puppet:///scripts/ipplan/ipplan-cron.sh',
+    ensure => file,
+    path   => '/usr/local/bin/ipplan-cron.sh',
+    mode   => '0755',
+    source => 'puppet:///scripts/ipplan/ipplan-cron.sh',
   }
 
   cron { 'ipplan-crontab':
-    command => "/usr/local/bin/ipplan-cron.sh",
+    command => '/usr/local/bin/ipplan-cron.sh',
     user    => root,
     minute  => '*',
     require => File['ipplan-cron'],

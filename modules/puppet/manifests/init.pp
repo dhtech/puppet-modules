@@ -22,15 +22,15 @@
 class puppet ($master, $environment, $sourceaddress) {
 
   service { 'puppet':
-    name => 'puppet',
     ensure => 'running',
+    name   => 'puppet',
     enable => true,
   }
 
-  if $operatingsystem == 'Debian' and $lsbmajdistrelease == 'testing' {
+  if $::operatingsystem == 'Debian' and $lsbmajdistrelease == 'testing' {
     file { 'puppet-conf':
-      path    => '/etc/puppet/puppet.conf',
       ensure  => file,
+      path    => '/etc/puppet/puppet.conf',
       content => template('puppet/puppet.conf.erb'),
     }
     package { 'puppet':
@@ -40,16 +40,16 @@ class puppet ($master, $environment, $sourceaddress) {
       ensure  => absent,
     }
     file { 'puppetlabs-pc1.list':
-      ensure  => absent,
-      path    => '/etc/apt/sources.list.d/puppetlabs-pc1.list'
+      ensure => absent,
+      path   => '/etc/apt/sources.list.d/puppetlabs-pc1.list'
     }
   }
-  if $operatingsystem == 'Debian' and $operatingsystemmajrelease == '8' {
+  if $::operatingsystem == 'Debian' and $::operatingsystemmajrelease == '8' {
     file { 'bashrc':
-      path    => '/root/.bashrc',
       ensure  => file,
+      path    => '/root/.bashrc',
       content => template('puppet/bashrc.erb'),
-      mode    => '644',
+      mode    => '0644',
     }
   }
 }

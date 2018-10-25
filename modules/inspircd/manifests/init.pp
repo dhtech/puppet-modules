@@ -20,8 +20,8 @@
 #
 
 class inspircd ($peers, $sid) {
-  $secret = vault("ircd:secret", {})
-  $rocketchatsecret = vault("ircd:rocketchat", {})
+  $secret = vault('ircd:secret', {})
+  $rocketchatsecret = vault('ircd:rocketchat', {})
 
   package { 'inspircd':
     ensure  => 'installed',
@@ -40,7 +40,7 @@ class inspircd ($peers, $sid) {
     ensure  => running,
     enable  => true,
     restart => 'service inspircd reload',
-    require => [ 
+    require => [
                  Package['inspircd'],
                  File['/etc/inspircd/dhtech.helpop'],
                  File['/etc/inspircd/dhtech.motd'],
@@ -58,52 +58,52 @@ class inspircd ($peers, $sid) {
   }
 
   file { '/etc/inspircd/dhtech.helpop':
-    ensure  => present,
-    source  => 'puppet:///modules/inspircd/dhtech.helpop',
-    mode    => '0640',
-    owner   => 'irc',
-    group   => 'irc',
-    notify  => Service['inspircd'],
+    ensure => present,
+    source => 'puppet:///modules/inspircd/dhtech.helpop',
+    mode   => '0640',
+    owner  => 'irc',
+    group  => 'irc',
+    notify => Service['inspircd'],
   }
-  
+
   file { '/etc/inspircd/dhtech.motd':
     ensure => present,
     source => 'puppet:///modules/inspircd/dhtech.motd',
-    mode    => '0640',
-    owner   => 'irc',
-    group   => 'irc',
-    notify  => Service['inspircd'],
+    mode   => '0640',
+    owner  => 'irc',
+    group  => 'irc',
+    notify => Service['inspircd'],
   }
-  
+
   file { '/etc/inspircd/dhtech.rules':
     ensure => present,
     source => 'puppet:///modules/inspircd/dhtech.rules',
-    mode    => '0640',
-    owner   => 'irc',
-    group   => 'irc',
-    notify  => Service['inspircd'],
+    mode   => '0640',
+    owner  => 'irc',
+    group  => 'irc',
+    notify => Service['inspircd'],
   }
-  
+
   file { '/etc/inspircd/inspircd.conf':
-    ensure => present,
+    ensure  => present,
     content => template('inspircd/inspircd.conf.erb'),
     mode    => '0640',
     owner   => 'irc',
     group   => 'irc',
     notify  => Service['inspircd'],
   }
- 
+
   file { '/etc/inspircd/modules.conf':
     ensure => present,
     source => 'puppet:///modules/inspircd/modules.conf',
-    mode    => '0640',
-    owner   => 'irc',
-    group   => 'irc',
-    notify  => Service['inspircd'],
+    mode   => '0640',
+    owner  => 'irc',
+    group  => 'irc',
+    notify => Service['inspircd'],
   }
 
   file { '/etc/inspircd/opers.conf':
-    ensure => present,
+    ensure  => present,
     content => template('inspircd/opers.conf.erb'),
     mode    => '0640',
     owner   => 'irc',

@@ -30,8 +30,8 @@ class apache($ldap = nil) {
   }
 
   file { 'default-ssl.conf':
-    path    => '/etc/apache2/sites-enabled/default-ssl.conf',
     ensure  => present,
+    path    => '/etc/apache2/sites-enabled/default-ssl.conf',
     content => template('apache/default-ssl.conf.erb'),
     notify  => Service['apache2'],
     require => [
@@ -41,31 +41,31 @@ class apache($ldap = nil) {
   }
 
   file { 'apache-ports.conf':
-    path    => '/etc/apache2/ports.conf',
     ensure  => present,
+    path    => '/etc/apache2/ports.conf',
     content => template('apache/ports.conf.erb'),
     notify  => Service['apache2'],
   }
 
   if $::fqdn == 'dhmon.event.dreamhack.se' {
     file { 'apache-security.conf':
-        path    => '/etc/apache2/conf-available/security.conf',
         ensure  => present,
+        path    => '/etc/apache2/conf-available/security.conf',
         notify  => Service['apache2'],
         content => template('apache/security-dhmon.conf.erb'),
     }
   } else {
     file { 'apache-security.conf':
-        path    => '/etc/apache2/conf-available/security.conf',
         ensure  => present,
+        path    => '/etc/apache2/conf-available/security.conf',
         notify  => Service['apache2'],
         content => template('apache/security.conf.erb'),
     }
   }
 
   file { 'site.d':
-    path    => '/etc/apache2/site.d',
-    ensure  => directory,
+    ensure => directory,
+    path   => '/etc/apache2/site.d',
   }
 
   exec { 'a2enmod_proxy_http':
@@ -93,8 +93,8 @@ class apache($ldap = nil) {
   }
 
   file { '000-default.conf':
-    path   => '/etc/apache2/sites-enabled/000-default.conf',
     ensure => absent,
+    path   => '/etc/apache2/sites-enabled/000-default.conf',
     notify => Service['apache2'],
   }
 
@@ -106,30 +106,30 @@ class apache($ldap = nil) {
       Exec['a2enmod_ssl'],
       Exec['a2enmod_proxy_http'],
     ],
-    notify => Service['apache2'],
+    notify  => Service['apache2'],
   }
 
   # Needed for 'ssl-cert' group
   ensure_packages(['ssl-cert'])
 
   file { '/etc/ssl/certs/server-fullchain.crt':
-    ensure  => file,
-    owner   => 'root',
-    group   => 'ssl-cert',
-    mode    => '0644',
-    source  => 'puppet:///letsencrypt/fullchain.pem',
-    links   => 'follow',
-    notify  => Service['apache2'],
+    ensure => file,
+    owner  => 'root',
+    group  => 'ssl-cert',
+    mode   => '0644',
+    source => 'puppet:///letsencrypt/fullchain.pem',
+    links  => 'follow',
+    notify => Service['apache2'],
   }
 
   file { '/etc/ssl/private/server.key':
-    ensure  => file,
-    owner   => 'root',
-    group   => 'ssl-cert',
-    mode    => '0640',
-    source  => 'puppet:///letsencrypt/privkey.pem',
-    links   => 'follow',
-    notify  => Service['apache2'],
+    ensure => file,
+    owner  => 'root',
+    group  => 'ssl-cert',
+    mode   => '0640',
+    source => 'puppet:///letsencrypt/privkey.pem',
+    links  => 'follow',
+    notify => Service['apache2'],
   }
 
 }

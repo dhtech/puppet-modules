@@ -88,34 +88,34 @@ class dhmon::grafana($current_event) {
       ensure => 'directory',
     }
     file { '/var/lib/grafana/dashboards/overview.json':
-      path    => "/var/lib/grafana/dashboards/overview.json",
-      source  => 'puppet:///scripts/grafana/overview.json',
-      mode    => '0444',
-      ensure  => file,
+      ensure => file,
+      source => 'puppet:///scripts/grafana/overview.json',
+      mode   => '0444',
+      path   => '/var/lib/grafana/dashboards/overview.json',
     }
     file { '/var/lib/grafana/dashboards/elmia-dist.json':
-      path    => "/var/lib/grafana/dashboards/elmia-dist.json",
-      source  => 'puppet:///scripts/grafana/elmia-dist.json',
-      mode    => '0444',
-      ensure  => file,
+      ensure => file,
+      source => 'puppet:///scripts/grafana/elmia-dist.json',
+      mode   => '0444',
+      path   => '/var/lib/grafana/dashboards/elmia-dist.json',
     }
     file { '/var/lib/grafana/dashboards/server.json':
-      path    => "/var/lib/grafana/dashboards/server.json",
-      source  => 'puppet:///scripts/grafana/server.json',
-      mode    => '0444',
-      ensure  => file,
+      ensure => file,
+      source => 'puppet:///scripts/grafana/server.json',
+      mode   => '0444',
+      path   => '/var/lib/grafana/dashboards/server.json',
     }
     file { '/var/lib/grafana/dashboards/switch-details.json':
-      path    => "/var/lib/grafana/dashboards/switch-details.json",
-      source  => 'puppet:///scripts/grafana/switch-details.json',
-      mode    => '0444',
-      ensure  => file,
+      ensure => file,
+      source => 'puppet:///scripts/grafana/switch-details.json',
+      mode   => '0444',
+      path   => '/var/lib/grafana/dashboards/switch-details.json',
     }
     file { '/var/lib/grafana/dashboards/phones.json':
-      path    => "/var/lib/grafana/dashboards/phones.json",
-      source  => 'puppet:///scripts/grafana/phones.json',
-      mode    => '0444',
-      ensure  => file,
+      ensure => file,
+      source => 'puppet:///scripts/grafana/phones.json',
+      mode   => '0444',
+      path   => '/var/lib/grafana/dashboards/phones.json',
     }
 
     # Making sure the server is enabled and running

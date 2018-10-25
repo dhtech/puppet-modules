@@ -16,7 +16,7 @@
 #   e.g. "Specify one or more upstream ntp servers as an array."
 #
 
-class CHANGEME {
+class changeme {
 
 
 }

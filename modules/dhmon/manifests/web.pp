@@ -18,44 +18,44 @@ class dhmon::web {
     ensure => 'directory',
   }
   file { 'index.html':
-    path    => "/var/www/html/index.html",
-    source  => 'puppet:///scripts/dhmon-web/index.html',
-    mode    => '0444',
-    ensure  => file,
+    ensure => file,
+    source => 'puppet:///scripts/dhmon-web/index.html',
+    mode   => '0444',
+    path   => '/var/www/html/index.html',
   }
   file { 'style.css':
-    path    => "/var/www/html/css/style.css",
+    ensure  => file,
     source  => 'puppet:///scripts/dhmon-web/css/style.css',
     mode    => '0444',
-    ensure  => file,
+    path    => '/var/www/html/css/style.css',
     require => File['/var/www/html/css']
   }
   file { 'alertmanager.png':
-    path    => "/var/www/html/img/alertmanager.png",
+    ensure  => file,
     source  => 'puppet:///scripts/dhmon-web/img/alertmanager.png',
     mode    => '0444',
-    ensure  => file,
+    path    => '/var/www/html/img/alertmanager.png',
     require => File['/var/www/html/img']
   }
   file { 'dhmap.png':
-    path    => "/var/www/html/img/dhmap.png",
+    ensure  => file,
     source  => 'puppet:///scripts/dhmon-web/img/dhmap.png',
     mode    => '0444',
-    ensure  => file,
+    path    => '/var/www/html/img/dhmap.png',
     require => File['/var/www/html/img']
   }
   file { 'gafana.png':
-    path    => "/var/www/html/img/gafana.png",
+    ensure  => file,
     source  => 'puppet:///scripts/dhmon-web/img/gafana.png',
     mode    => '0444',
-    ensure  => file,
+    path    => '/var/www/html/img/gafana.png',
     require => File['/var/www/html/img']
   }
   file { 'k8s.svg':
-    path    => "/var/www/html/img/k8s.svg",
+    ensure  => file,
     source  => 'puppet:///scripts/dhmon-web/img/k8s.svg',
     mode    => '0444',
-    ensure  => file,
+    path    => '/var/www/html/img/k8s.svg',
     require => File['/var/www/html/img']
   }
 
@@ -66,13 +66,13 @@ class dhmon::web {
   }
 
   file { 'dhmap':
-    path    => '/var/www/html/dhmap',
-    ensure  => link,
-    target  => '/scripts/dhmap/',
+    ensure => link,
+    path   => '/var/www/html/dhmap',
+    target => '/scripts/dhmap/',
   }
 
   cron { 'update-seatmap':
-    command => "/scripts/dhmap/src/ipplan2dhmap.py /etc/ipplan.db > /var/www/html/dhmap/data.json",
+    command => '/scripts/dhmap/src/ipplan2dhmap.py /etc/ipplan.db > /var/www/html/dhmap/data.json',
     user    => root,
     minute  => '*/10',
     require => File['dhmap'],

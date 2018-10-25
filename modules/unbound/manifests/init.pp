@@ -31,13 +31,13 @@ class unbound ($local = 0, $private_zones = [], $stub_hosts = []) {
     }
 
     file { 'unbound.conf':
-      path    => "/etc/unbound/unbound.conf",
-      owner   => "root",
-      group   => "root",
-      mode    => "640",
       ensure  => file,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0640',
+      path    => '/etc/unbound/unbound.conf',
       content => template('unbound/unbound.conf.erb'),
-      require => Package["unbound"],
+      require => Package['unbound'],
     }
   }
 }

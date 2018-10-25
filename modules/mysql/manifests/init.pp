@@ -23,24 +23,27 @@ class mysql {
 
   service {
     'mysql':
-      ensure => running,
-      enable => true,
+      ensure  => running,
+      enable  => true,
       require => Package['mysql-server'],
   }
 
   file_line {
     'listen-all-interfaces':
-      path => '/etc/mysql/my.cnf',
-      line => 'bind-address = 0.0.0.0',
-      match => '^bind-address',
+      path   => '/etc/mysql/my.cnf',
+      line   => 'bind-address = 0.0.0.0',
+      match  => '^bind-address',
       notify => Service['mysql'],
   }
 
   exec {
     'generate and store mysql root password':
-      command => "(tr -dc 'A-Za-z0-9' | fold -w 20 | head -n1) < /dev/urandom > /root/mysql_root_password.txt; chmod 600 /root/mysql_root_password.txt; mysql -u root -e \"UPDATE mysql.user SET password=PASSWORD('`cat /root/mysql_root_password.txt`') WHERE user='root'; FLUSH PRIVILEGES;\"",
-      creates => '/root/mysql_root_password.txt',
-      require => Service['mysql'],
+      command  => "(tr -dc 'A-Za-z0-9' | fold -w 20 | head -n1) < /dev/urandom >
+                  /root/mysql_root_password.txt; chmod 600 /root/mysql_root_password.txt;
+                  mysql -u root -e \"UPDATE mysql.user SET password=PASSWORD('`cat
+                  /root/mysql_root_password.txt`') WHERE user='root'; FLUSH PRIVILEGES;\"",
+      creates  => '/root/mysql_root_password.txt',
+      require  => Service['mysql'],
       provider => 'shell',
   }
 

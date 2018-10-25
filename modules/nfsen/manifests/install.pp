@@ -5,25 +5,25 @@
 #
 class nfsen::install {
 
-    if $operatingsystem == 'Debian' {
+    if $::operatingsystem == 'Debian' {
 
         # The nfsen config file, needs to be in place before running install script
         file { 'nfsen.conf':
             path    => '/opt/nfsen/etc/nfsen.conf',
             content => template('nfsen/nfsen.conf.erb'),
-        }->
+        }
         # Running nfsen install.pl script
-        exec { 'install-nfsen':
-            command     => '/usr/bin/touch /opt/nfsen/.installed; /usr/bin/yes "" | ./install.pl /opt/nfsen/etc/nfsen.conf',
-            cwd         => '/var/www/html/nfsen',
-            creates     => '/opt/nfsen/.installed',
-            require     => Exec['move-nfsen'],
-            before      => Service['nfsen'],
+        -> exec { 'install-nfsen':
+            command => '/usr/bin/touch /opt/nfsen/.installed; /usr/bin/yes "" | ./install.pl /opt/nfsen/etc/nfsen.conf',
+            cwd     => '/var/www/html/nfsen',
+            creates => '/opt/nfsen/.installed',
+            require => Exec['move-nfsen'],
+            before  => Service['nfsen'],
         }
 
         service { 'nfsen':
-            enable => true,
             ensure => running,
+            enable => true,
         }
 
         # Run nfsen reconfig if config file changes

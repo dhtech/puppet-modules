@@ -22,7 +22,7 @@
 #   Used for naming databases.
 #
 
-class postgresql($allowed_hosts, $db_list = [], $current_event, $domain) {
+class postgresql($allowed_hosts, $db_list, $current_event, $domain) {
   package {'postgresql':
     ensure => 'installed',
   }
@@ -50,10 +50,10 @@ class postgresql($allowed_hosts, $db_list = [], $current_event, $domain) {
   }
 
   file { '/opt/postgresql':
-    ensure  => 'directory',
-    mode    => '0750',
-    owner   => 'postgres',
-    group   => 'postgres',
+    ensure => 'directory',
+    mode   => '0750',
+    owner  => 'postgres',
+    group  => 'postgres',
   }
 
   file { '/opt/postgresql/bin':
@@ -64,70 +64,72 @@ class postgresql($allowed_hosts, $db_list = [], $current_event, $domain) {
     require => File['/opt/postgresql'],
   }
 
-  file { "/opt/postgresql/bin/psql_database_exists":
-    content => template("postgresql/psql_database_exists.erb"),
+  file { '/opt/postgresql/bin/psql_database_exists':
+    content => template('postgresql/psql_database_exists.erb'),
     mode    => '0755',
     owner   => 'postgres',
     group   => 'postgres',
     require => File['/opt/postgresql/bin'],
   }
 
-  file { "/opt/postgresql/bin/psql_user_exists":
-    content => template("postgresql/psql_user_exists.erb"),
+  file { '/opt/postgresql/bin/psql_user_exists':
+    content => template('postgresql/psql_user_exists.erb'),
     mode    => '0755',
     owner   => 'postgres',
     group   => 'postgres',
     require => File['/opt/postgresql/bin'],
   }
 
-  file { "/opt/postgresql/bin/psql_user_permissions":
-    content => template("postgresql/psql_user_permissions.erb"),
+  file { '/opt/postgresql/bin/psql_user_permissions':
+    content => template('postgresql/psql_user_permissions.erb'),
     mode    => '0755',
     owner   => 'postgres',
     group   => 'postgres',
     require => File['/opt/postgresql/bin'],
   }
 
-  file { "/opt/postgresql/bin/psql_set_user_permissions":
-    content => template("postgresql/psql_set_user_permissions.erb"),
+  file { '/opt/postgresql/bin/psql_set_user_permissions':
+    content => template('postgresql/psql_set_user_permissions.erb'),
     mode    => '0755',
     owner   => 'postgres',
     group   => 'postgres',
     require => File['/opt/postgresql/bin'],
   }
 
-  exec { "create_user_root":
+  exec { 'create_user_root':
     user    => 'postgres',
     cwd     => '/var/lib/postgresql',
     command => "/bin/echo 'CREATE USER root SUPERUSER' | /usr/bin/psql",
     unless  => '/opt/postgresql/bin/psql_database_exists root',
-    require => [ Package['postgresql'],
-                     File['/opt/postgresql/bin/psql_user_exists'],
-               ],
+    require => [
+      Package['postgresql'],
+      File['/opt/postgresql/bin/psql_user_exists'],
+    ],
   }
 
-  exec { "create_database_root":
+  exec { 'create_database_root':
     user    => 'postgres',
     cwd     => '/var/lib/postgresql',
-    command => "/usr/bin/createdb root",
-    unless  => "/opt/postgresql/bin/psql_database_exists root",
-    require => [ Exec['create_user_root'],
-                 File['/opt/postgresql/bin/psql_database_exists'],
-               ],
+    command => '/usr/bin/createdb root',
+    unless  => '/opt/postgresql/bin/psql_database_exists root',
+    require => [
+      Exec['create_user_root'],
+      File['/opt/postgresql/bin/psql_database_exists'],
+    ],
   }
 
   each($db_list) |$db| {
     $secret = vault("postgresql:${db}")
     $dbusername = $secret['username']
 
-    if $domain == "EVENT" {
+    if $domain == 'EVENT' {
       $dbname = "${db}_${current_event}"
     } else {
-      $dbname = "${db}"
+      $dbname = $db
     }
 
-    file { "/opt/postgresql/$db.sql":
-      content => template("postgresql/$db.sql.erb"),
+    file { "/opt/postgresql/${db}.sql":
+      content => template("postgresql/${db}.sql.erb"),
       mode    => '0640',
       owner   => 'postgres',
       group   => 'postgres',
@@ -139,17 +141,17 @@ class postgresql($allowed_hosts, $db_list = [], $current_event, $domain) {
       cwd     => '/var/lib/postgresql',
       command => "/usr/bin/createdb ${dbname}",
       unless  => "/opt/postgresql/bin/psql_database_exists ${dbname}",
-      notify  => [ Exec["initialize_${dbname}"],
-                 ],
-      require => [ File['/opt/postgresql/bin/psql_database_exists'],
-                   Exec['create_user_root'],
-                 ],
+      notify  => Exec["initialize_${dbname}"],
+      require => [
+        File['/opt/postgresql/bin/psql_database_exists'],
+        Exec['create_user_root'],
+      ],
     }
 
     exec { "initialize_${dbname}":
       user        => 'postgres',
       cwd         => '/var/lib/postgresql',
-      command     => "/usr/bin/psql ${dbname} < /opt/postgresql/$db.sql",
+      command     => "/usr/bin/psql ${dbname} < /opt/postgresql/${db}.sql",
       refreshonly => true,
     }
 
@@ -161,7 +163,10 @@ class postgresql($allowed_hosts, $db_list = [], $current_event, $domain) {
     }
 
     exec { "alter_user_${db}":
-      command     => "/usr/local/bin/dh-create-service-account --type postgresql --product ${db} --format \"ALTER USER {username} ENCRYPTED PASSWORD '{password}'\" | /usr/bin/psql",
+      command     => '/usr/local/bin/dh-create-service-account ' +
+                      "--type postgresql --product ${db} ' +
+                      '--format "ALTER USER {username} ENCRYPTED PASSWORD \'{password}\'" ' +
+                      '| /usr/bin/psql',
       onlyif      => "/opt/postgresql/bin/psql_user_exists ${db}",
       refreshonly => true,
     }
@@ -169,25 +174,29 @@ class postgresql($allowed_hosts, $db_list = [], $current_event, $domain) {
     exec { "check_user_${db}":
       user    => 'postgres',
       cwd     => '/var/lib/postgresql',
-      command => "/bin/true",
+      command => '/bin/true',
       unless  => "/opt/postgresql/bin/psql_user_exists ${dbusername}",
       require => File['/opt/postgresql/bin/psql_user_exists'],
       notify  => Exec["create_user_${db}"],
     }
 
     exec { "create_user_${db}":
-      command     => "/usr/local/bin/dh-create-service-account --type postgresql --product ${db} --format \"CREATE USER {username} ENCRYPTED PASSWORD '{password}'\" | /usr/bin/psql",
-      notify      => Exec["set_permissions_for_${db}"],
-      require     => [ Exec["create_database_root"],
-                       Exec["create_${dbname}"],
-                     ],
       refreshonly => true,
+      command     => '/usr/local/bin/dh-create-service-account ' +
+                  "--type postgresql --product ${db} " +
+                  '--format "CREATE USER {username} ENCRYPTED PASSWORD \'{password}\'"' +
+                  ' | /usr/bin/psql',
+      notify      => Exec["set_permissions_for_${db}"],
+      require     => [
+        Exec['create_database_root'],
+        Exec["create_${dbname}"],
+      ],
     }
 
     exec { "check_permissions_for_${db}":
       user    => 'postgres',
       cwd     => '/var/lib/postgresql',
-      command => "/bin/true",
+      command => '/bin/true',
       unless  => "/opt/postgresql/bin/psql_user_permissions ${dbusername} ${dbname}",
       require => File['/opt/postgresql/bin/psql_user_permissions'],
       notify  => Exec["set_permissions_for_${db}"],
@@ -197,9 +206,10 @@ class postgresql($allowed_hosts, $db_list = [], $current_event, $domain) {
       user        => 'postgres',
       cwd         => '/var/lib/postgresql',
       command     => "/opt/postgresql/bin/psql_set_user_permissions ${dbusername} ${dbname}",
-      require     => [ File['/opt/postgresql/bin/psql_set_user_permissions'],
-                       Exec["initialize_${dbname}"]
-                     ],
+      require     => [
+        File['/opt/postgresql/bin/psql_set_user_permissions'],
+        Exec["initialize_${dbname}"]
+      ],
       refreshonly => true,
     }
   }
