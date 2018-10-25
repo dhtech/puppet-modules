@@ -8,7 +8,7 @@
 #
 # Full description of class factorio here.
 #
-class factorio ($admins = [], $password, $world_name) {
+class factorio ($password, $world_name, $admins = []) {
 
   include factorio::user
   include factorio::install

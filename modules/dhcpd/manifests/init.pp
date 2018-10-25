@@ -40,7 +40,9 @@
 #   The current event, used to decide the name of the dhcpinfo database
 #
 
-class dhcpd ($active = 0, $active_node = '', $scopes = '', $local_subnet = '', $local_netmask = '', $domain_name_servers = '', $next_server = '', $ntp_servers = '', $tftp_server_name='', $current_event) {
+class dhcpd ($current_event, $active = 0, $active_node = '', $scopes = '', $local_subnet = '',
+              $local_netmask = '', $domain_name_servers = '', $next_server = '',
+              $ntp_servers = '', $tftp_server_name = '')  {
 
   if $::operatingsystem == 'OpenBSD' {
     $conf_dir = '/etc'
@@ -122,14 +124,14 @@ class dhcpd ($active = 0, $active_node = '', $scopes = '', $local_subnet = '', $
 
     file { '/usr/local/sbin/dhcp_leased':
       ensure => file,
-      source => "puppet:///scripts/dhcp_leased/bin/${operatingsystem}-${facts['os']['release']['major']}-${hardwaremodel}/dhcp_leased",
+      source => "puppet:///scripts/dhcp_leased/bin/${::operatingsystem}-${facts['os']['release']['major']}-${::hardwaremodel}/dhcp_leased",
       mode   => '0755',
       path   => '/usr/local/sbin/dhcp_leased',
     }
 
     file { 'dhcp_populate_scopes':
       ensure => file,
-      source => "puppet:///scripts/dhcp_leased/bin/${operatingsystem}-${facts['os']['release']['major']}-${hardwaremodel}/dhcp_populate_scopes",
+      source => "puppet:///scripts/dhcp_leased/bin/${::operatingsystem}-${facts['os']['release']['major']}-${::hardwaremodel}/dhcp_populate_scopes",
       mode   => '0755',
       path   => '/usr/local/sbin/dhcp_populate_scopes',
     }
@@ -193,7 +195,8 @@ class dhcpd ($active = 0, $active_node = '', $scopes = '', $local_subnet = '', $
       # dhcp_populate_scopes when the scopes file is modified, which might not occur
       # after the point where db.event.dreamhack.se is available.
       exec { 'dhcp_populate_scopes_first_time':
-        command => '/usr/local/sbin/dhcp_populate_scopes /etc/dhcp/dhcpd.conf.scopes && /usr/bin/touch /root/.puppet_dhcp_populate_scopes_first_time',
+        command => '/usr/local/sbin/dhcp_populate_scopes /etc/dhcp/dhcpd.conf.scopes
+                    && /usr/bin/touch /root/.puppet_dhcp_populate_scopes_first_time',
         require => [
           File['dhcpd.conf.scopes'],
           File['dhcp_populate_scopes'],
@@ -205,9 +208,10 @@ class dhcpd ($active = 0, $active_node = '', $scopes = '', $local_subnet = '', $
       exec { 'dhcp_populate_scopes':
         command     => '/usr/local/sbin/dhcp_populate_scopes /etc/dhcp/dhcpd.conf.scopes',
         refreshonly => true,
-        require     => [ File['dhcpd.conf.scopes'],
-                         File['dhcp_populate_scopes'],
-                       ],
+        require     => [
+          File['dhcpd.conf.scopes'],
+          File['dhcp_populate_scopes'],
+        ],
         subscribe   => File['dhcpd.conf.scopes'],
       }
 
@@ -219,7 +223,8 @@ class dhcpd ($active = 0, $active_node = '', $scopes = '', $local_subnet = '', $
         path   => '/usr/local/sbin/dhcpsync',
       }
       -> supervisor::register{ 'dhcpsync':
-        command   => "/usr/local/sbin/dhcpsync -ca ${cert_dir}/certs/ca.pem -cert ${cert_dir}/certs/${fqdn}.pem -key ${cert_dir}/private_keys/${fqdn}.pem",
+        command   => "/usr/local/sbin/dhcpsync -ca ${cert_dir}/certs/ca.pem
+                    -cert ${cert_dir}/certs/${::fqdn}.pem -key ${cert_dir}/private_keys/${::fqdn}.pem",
         autostart => true,
       }
     }

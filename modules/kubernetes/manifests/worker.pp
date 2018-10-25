@@ -25,7 +25,7 @@ class kubernetes::worker {
   }
 
   exec { 'join-cluster':
-    command     => '/usr/bin/kubectl join --token ${token} ${master_ip}:${master_port} --discovery-token-ca-cert-hash sha256:${cert_hash}',
+    command     => "/usr/bin/kubectl join --token ${token} ${master_ip}:${master_port} --discovery-token-ca-cert-hash sha256:${cert_hash}",
     refreshonly => true,
   }
 

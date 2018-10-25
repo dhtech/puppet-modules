@@ -3,7 +3,7 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file
 #
-# == Class: CHANGE ME
+# == Class: template
 #
 # Full description of class here.
 #
@@ -16,7 +16,12 @@
 #   e.g. "Specify one or more upstream ntp servers as an array."
 #
 
-class changeme {
+####
+# REMEMBER to change the name template in both the class and the documentation
+# when you create a new module.
+####
+
+class template {
 
 
 }

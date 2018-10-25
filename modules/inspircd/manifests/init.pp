@@ -41,12 +41,12 @@ class inspircd ($peers, $sid) {
     enable  => true,
     restart => 'service inspircd reload',
     require => [
-                 Package['inspircd'],
-                 File['/etc/inspircd/dhtech.helpop'],
-                 File['/etc/inspircd/dhtech.motd'],
-                 File['/etc/inspircd/dhtech.rules'],
-                 File['/etc/inspircd/inspircd.conf'],
-                 File['/etc/inspircd/ssl'],
+                  Package['inspircd'],
+                  File['/etc/inspircd/dhtech.helpop'],
+                  File['/etc/inspircd/dhtech.motd'],
+                  File['/etc/inspircd/dhtech.rules'],
+                  File['/etc/inspircd/inspircd.conf'],
+                  File['/etc/inspircd/ssl'],
     ]
   }
 

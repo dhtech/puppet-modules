@@ -137,13 +137,14 @@ class dhcpinfo_web {
   supervisor::register { 'dhcpinfo_web_thin':
     command   => 'thin -C thin/production_config.yml -R config.ru start',
     directory => '/opt/dhcpinfo',
-    require   => [ File['/opt/dhcpinfo/thin'],
-                 File['/opt/dhcpinfo/thin/production_config.yml'],
-                 File['/opt/dhcpinfo/config.ru'],
-                 Package['thin'],
-                 Package['ruby-sinatra'],
-                 Package['ruby-netaddr'],
-               ]
+    require   => [
+          File['/opt/dhcpinfo/thin'],
+          File['/opt/dhcpinfo/thin/production_config.yml'],
+          File['/opt/dhcpinfo/config.ru'],
+          Package['thin'],
+          Package['ruby-sinatra'],
+          Package['ruby-netaddr'],
+    ]
   }
 
   exec { 'a2enmod_ssl':
@@ -170,11 +171,12 @@ class dhcpinfo_web {
   exec { 'a2ensite_dhcpinfo':
       command => '/usr/sbin/a2ensite dhcpinfo.event.dreamhack.se',
       creates => '/etc/apache2/sites-enabled/dhcpinfo.event.dreamhack.se.conf',
-      require => [ File['/etc/apache2/sites-available/dhcpinfo.event.dreamhack.se.conf'],
-                   Exec['a2enmod_ssl'],
-                   Exec['a2enmod_rewrite'],
-                   Exec['a2enmod_proxy_http'],
-                  ],
+      require => [
+          File['/etc/apache2/sites-available/dhcpinfo.event.dreamhack.se.conf'],
+          Exec['a2enmod_ssl'],
+          Exec['a2enmod_rewrite'],
+          Exec['a2enmod_proxy_http'],
+      ],
       notify  => Service['apache2'],
   }
 

@@ -28,7 +28,8 @@
 # [*rfc_1918_resolvers*]
 #   Machines that are allowed to query for reverse records in RFC1918 networks.
 
-class bind($role='resolver', $networks = [], $zones = [], $private_zones = [], $allow_transfer = [], $also_notify = [], $rfc_1918_resolvers = []) {
+class bind($role='resolver', $networks = [], $zones = [], $private_zones = [],
+            $allow_transfer = [], $also_notify = [], $rfc_1918_resolvers = []) {
 
   if $::operatingsystem == 'OpenBSD' {
     $named_user = '_bind'

@@ -14,7 +14,7 @@ class rabbitmq {
   ensure_packages(['rabbitmq-server'])
 
   $mq_username = 'dhtech'
-  $mq_password = vault("rabbitmq:${fqdn}")
+  $mq_password = vault("rabbitmq:${::fqdn}")
 
   service { 'rabbitmq-server':
     ensure  => running,

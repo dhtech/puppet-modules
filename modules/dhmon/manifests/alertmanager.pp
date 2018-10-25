@@ -14,10 +14,10 @@ class dhmon::alertmanager {
 
   #Create directories for prometheus and metric storage
   file { '/opt/alertmanager':
-   ensure => 'directory',
-   owner  => 'prometheus',
-   group  => 'prometheus',
-   mode   => '0700',
+    ensure => 'directory',
+    owner  => 'prometheus',
+    group  => 'prometheus',
+    mode   => '0700',
   }
   -> file { '/srv/alertmanager':
     ensure => 'directory',

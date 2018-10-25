@@ -16,7 +16,7 @@
 class ircbot($admins=[]) {
 
   group{'ircbot':
-     ensure => 'present',
+    ensure => 'present',
   }
 
   user {'ircbot':
@@ -95,13 +95,14 @@ class ircbot($admins=[]) {
     command     => '/opt/ircbot/dh-syslog-ircbot.py',
     directory   => '/opt/ircbot',
     stopasgroup => true,
-    require     => [ File['/opt/ircbot'],
-                 File['/opt/ircbot/run'],
-                 File['/opt/ircbot/dh-syslog-ircbot.conf'],
-                 File['/opt/ircbot/dh-syslog-ircbot.py'],
-                 File['/opt/ircbot/irclib.py'],
-                 File['/opt/ircbot/ircbot.py'],
-                 File['/opt/ircbot/start.py'],
-               ],
+    require     => [
+      File['/opt/ircbot'],
+      File['/opt/ircbot/run'],
+      File['/opt/ircbot/dh-syslog-ircbot.conf'],
+      File['/opt/ircbot/dh-syslog-ircbot.py'],
+      File['/opt/ircbot/irclib.py'],
+      File['/opt/ircbot/ircbot.py'],
+      File['/opt/ircbot/start.py'],
+    ],
   }
 }

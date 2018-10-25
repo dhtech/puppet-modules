@@ -31,10 +31,11 @@ class dhcpinfo_grapher {
     mode    => '0750',
     path    => '/opt/dhcpinfo/daemons/grapherd.rb',
     source  => 'puppet:///scripts/dhcpinfo/daemons/grapherd.rb',
-    require => [ File['/opt/dhcpinfo/daemons'],
-                 Package['ruby-rrd'],
-                 Package['ruby-file-tail'],
-               ],
+    require => [
+      File['/opt/dhcpinfo/daemons'],
+      Package['ruby-rrd'],
+      Package['ruby-file-tail'],
+    ],
   }
 
   package { 'ruby-rrd':

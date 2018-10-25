@@ -41,7 +41,7 @@
 #   Host certificate if present (default '' = not active)
 
 class ldaplogin ($ca, $logon, $sudo, $ldap, $ssh_ports, $panic_users,
-                 $use_otp = false, $gitshell = '', $host_cert = '') {
+                $use_otp = false, $gitshell = '', $host_cert = '') {
 
   service { 'sssd':
     ensure  => 'running',
@@ -66,8 +66,8 @@ class ldaplogin ($ca, $logon, $sudo, $ldap, $ssh_ports, $panic_users,
   # https://projects.puppetlabs.com/issues/8940
   each($ldap['servers']) |$srv| {
     host { "ldap-host-v4-${srv}":
-     name => $srv,
-     ip   => $ldap['servers_ip'][$srv][0],
+      name => $srv,
+      ip   => $ldap['servers_ip'][$srv][0],
     }
   }
 

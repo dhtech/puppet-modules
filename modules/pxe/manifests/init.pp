@@ -16,9 +16,10 @@
 #   e.g. "Specify one or more upstream ntp servers as an array."
 #
 
-include wget
-
 class pxe {
+
+  include wget
+
   package {
     'tftpd-hpa':
       ensure => present,

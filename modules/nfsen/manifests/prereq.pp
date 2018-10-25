@@ -12,7 +12,8 @@ class nfsen::prereq {
             creates => '/opt/nfsen/etc',
         }
 
-        $reqs = ['perl', 'libapache2-mod-php5', 'php5-common', 'rrdtool', 'libmailtools-perl', 'librrds-perl', 'libio-socket-ssl-perl', 'libsocket6-perl']
+        $reqs = ['perl', 'libapache2-mod-php5', 'php5-common', 'rrdtool',
+                'libmailtools-perl', 'librrds-perl', 'libio-socket-ssl-perl', 'libsocket6-perl']
 
         package { 'librrd4':
             ensure => present,
@@ -58,7 +59,9 @@ class nfsen::prereq {
             require => Exec['tar-nfsen'],
         }
         -> exec { 'nfsen-wwwfiles':
-            command => '/bin/ln -s /var/www/html/nfsen/nfsen.php /var/www/html/nfsen/index.php; /bin/chown -R www-data:www-data /opt/nfsen; /bin/chown -R www-data:www-data /var/www/html/nfsen',
+            command => '/bin/ln -s /var/www/html/nfsen/nfsen.php /var/www/html/nfsen/index.php;
+                        /bin/chown -R www-data:www-data /opt/nfsen; /bin/chown -R www-data:www-data
+                        /var/www/html/nfsen',
             creates => '/var/www/html/nfsen/index.php',
         }
         file { 'nfsen-index':
