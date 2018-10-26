@@ -101,7 +101,7 @@ def get_nodes_with_package(package, domain=None, environments=('production',)):
 
     c.execute(
         'SELECT host.name, network.name, package.option, e.value FROM host, '
-        'network, package LEFT OUTER JOIN option e ON e.node_id = host.node_id'
+        'network, package LEFT OUTER JOIN option e ON e.node_id = host.node_id '
         'AND e.name = "env" WHERE package.node_id = host.node_id '
         'AND network.node_id = host.network_id '
         'AND package.name = ?', (package, ))
