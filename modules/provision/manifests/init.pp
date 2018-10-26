@@ -126,7 +126,7 @@ class provision ($vault_mount, $esxi = [], $c7000 = [], $domain = '', $mgmt_if =
     environment =>
       "VAULT_MOUNT=\"${vault_mount}\"," +
       "VAULT_CERT=\"/var/lib/puppet/ssl/certs/${::fqdn}.pem\"," +
-      "VAULT_KEY=\"/var/lib/puppet/ssl/private_keys/${::fqdn}.pem\","
+      "VAULT_KEY=\"/var/lib/puppet/ssl/private_keys/${::fqdn}.pem\"," +
       "VMWARE_VCENTER_ISO=\"/srv/vmware-vcenter.iso\"," +
       "VMWARE_ESXI_ISO=\"/srv/vmware-esxi.iso\"",
   }
