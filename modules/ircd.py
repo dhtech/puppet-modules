@@ -21,3 +21,5 @@ def generate(host, *args):
     info['peers'] = peers
     info['sid'] = args[1]
     return {'inspircd': info}
+
+# vim: ts=4: sts=4: sw=4: expandtab

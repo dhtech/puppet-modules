@@ -10,3 +10,5 @@ def requires(host, *args):
 
 def generate(host, *args):
     return {'docker_registry': {}}
+
+# vim: ts=4: sts=4: sw=4: expandtab

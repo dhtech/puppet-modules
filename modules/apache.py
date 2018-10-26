@@ -16,3 +16,5 @@ def generate(host, *args):
     if 'ldap' in args:
         info['ldap'] = server
     return {'apache': info}
+
+# vim: ts=4: sts=4: sw=4: expandtab

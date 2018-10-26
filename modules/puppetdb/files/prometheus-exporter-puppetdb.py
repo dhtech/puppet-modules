@@ -41,3 +41,5 @@ for node in nodes:
         print('puppetdb_last_report_unchanged{instance="%s"} %d'
               % (node['certname'],
                   (1 if node['latest_report_status'] == 'unchanged' else 0)))
+
+# vim: ts=4: sts=4: sw=4: expandtab

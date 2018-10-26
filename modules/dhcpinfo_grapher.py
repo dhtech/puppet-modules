@@ -12,3 +12,5 @@ def generate(host, *args):
 
     info = {}
     return {'dhcpinfo_grapher': info}
+
+# vim: ts=4: sts=4: sw=4: expandtab

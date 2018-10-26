@@ -44,3 +44,5 @@ def generate(host, *args):
     # Only three, no support for more in Linux
     info['nameservers'] = info['nameservers'][:3]
     return {'resolvconf': info}
+
+# vim: ts=4: sts=4: sw=4: expandtab

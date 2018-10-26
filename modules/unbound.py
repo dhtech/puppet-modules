@@ -43,3 +43,5 @@ def generate(host, *args):
     info['stub_hosts'] = stub_hosts
     info['local'] = local
     return {'unbound': info}
+
+# vim: ts=4: sts=4: sw=4: expandtab

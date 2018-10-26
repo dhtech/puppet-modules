@@ -19,3 +19,5 @@ def generate(host, *args):
         return {}
 
     return {'ldap': {'master': args[0]}}
+
+# vim: ts=4: sts=4: sw=4: expandtab

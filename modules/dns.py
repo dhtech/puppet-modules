@@ -14,3 +14,5 @@ def requires(host, *args):
         role = 'resolver'
 
     return ['bind(role=%s)' % role]
+
+# vim: ts=4: sts=4: sw=4: expandtab

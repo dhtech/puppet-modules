@@ -448,3 +448,5 @@ def save_secret(path, **kwargs):
 def read_secret(path):
     data = vault().read(path)
     return data.get('data', None) if data else None
+
+# vim: ts=4: sts=4: sw=4: expandtab

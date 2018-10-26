@@ -21,3 +21,5 @@ def generate(host, *args):
 
     info = {'install': list(install), 'purge': list(purge)}
     return {'install': info}
+
+# vim: ts=4: sts=4: sw=4: expandtab

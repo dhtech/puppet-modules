@@ -11,3 +11,5 @@ def requires(host, *args):
 def generate(host, *args):
     info = {}
     return {'dhcpinfo_web': info}
+
+# vim: ts=4: sts=4: sw=4: expandtab

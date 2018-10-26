@@ -81,3 +81,5 @@ def generate(host, *args):
     info['forward_policy'] = 'accept' if 'router' in args else 'drop'
     info['rules'] = {'v4': v4_rules, 'v6': v6_rules}
     return {'pf': info}
+
+# vim: ts=4: sts=4: sw=4: expandtab

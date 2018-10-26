@@ -173,3 +173,5 @@ class App:
 
 if __name__ == '__main__':
     App(sys.argv).run()
+
+# vim: ts=4: sts=4: sw=4: expandtab

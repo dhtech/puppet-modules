@@ -64,3 +64,5 @@ def generate(host, *args):
     info['domain'] = get_domain(host)
 
     return {'postgresql': info}
+
+# vim: ts=4: sts=4: sw=4: expandtab

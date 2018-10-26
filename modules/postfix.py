@@ -21,3 +21,5 @@ def generate(host, *args):
     info['mailer_type'] = mailer_type
     info['relay_host'] = relay_host
     return {'postfix': info}
+
+# vim: ts=4: sts=4: sw=4: expandtab

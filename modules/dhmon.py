@@ -157,3 +157,5 @@ def generate(host, *args):
         info['dhmon::prometheus'] = generate_backend(host, local_targets)
 
     return info
+
+# vim: ts=4: sts=4: sw=4: expandtab

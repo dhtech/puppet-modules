@@ -11,3 +11,5 @@ def generate(host, *args):
     info = {}
     info['syslog_servers'] = list(syslog_servers) + list(args)
     return {'syslog': info}
+
+# vim: ts=4: sts=4: sw=4: expandtab

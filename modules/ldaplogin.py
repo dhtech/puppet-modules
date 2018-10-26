@@ -132,3 +132,5 @@ def generate(host, *args):
     info['panic_users'] = sorted(grp.getgrnam(services_group).gr_mem)
 
     return {'ldaplogin': info}
+
+# vim: ts=4: sts=4: sw=4: expandtab

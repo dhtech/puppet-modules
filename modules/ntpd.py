@@ -6,3 +6,5 @@
 
 def requires(host, *args):
     return ['ntp(server)']
+
+# vim: ts=4: sts=4: sw=4: expandtab

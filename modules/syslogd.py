@@ -9,3 +9,5 @@ def generate(host, *args):
     if 'rsyslog' in args:
         info['rsyslog'] = {}
     return info
+
+# vim: ts=4: sts=4: sw=4: expandtab

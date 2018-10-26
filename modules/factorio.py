@@ -27,3 +27,5 @@ def generate(host, *args):
     info['world_name'] = args[0]
 
     return {'factorio': info}
+
+# vim: ts=4: sts=4: sw=4: expandtab

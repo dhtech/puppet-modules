@@ -198,3 +198,5 @@ def generate(host, mgmt_fqdn, *args):
             info['c7000'].append(backend)
 
     return {'provision': info}
+
+# vim: ts=4: sts=4: sw=4: expandtab

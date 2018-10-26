@@ -56,3 +56,5 @@ def generate(host, *args):
         return {'openntpd': info}
     else:
         return {'ntp': info}
+
+# vim: ts=4: sts=4: sw=4: expandtab

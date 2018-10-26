@@ -9,3 +9,5 @@ def generate(host, *args):
     # The LDAP master is not really handled by puppet, but let puppet handle
     # the part required for sync monitoring.
     return {'ldapsyncprober': {'trigger_interval': '30'}}
+
+# vim: ts=4: sts=4: sw=4: expandtab

@@ -13,3 +13,5 @@ def generate(host, *args):
     info = {}
     info['current_event'] = current_event
     return {'dhcpinfo': info}
+
+# vim: ts=4: sts=4: sw=4: expandtab

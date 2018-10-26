@@ -6,3 +6,5 @@
 
 def generate(host, *args):
     return {'hardware': None}
+
+# vim: ts=4: sts=4: sw=4: expandtab

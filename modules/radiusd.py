@@ -45,3 +45,5 @@ def generate(host, *args):
     info['firewall_ips'] = firewall_ips
     info['partner_ips'] = partner_ips
     return {'radiusd': info}
+
+# vim: ts=4: sts=4: sw=4: expandtab

@@ -12,3 +12,5 @@ def generate(host, *args):
     info = {}
     info['hostname_list'] = hostname_list
     return {'dehydrated': info}
+
+# vim: ts=4: sts=4: sw=4: expandtab

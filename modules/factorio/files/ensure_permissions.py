@@ -29,3 +29,5 @@ for core_file in build_file_list():
                 pass
         else:
                 sys.exit(1)
+
+# vim: ts=4: sts=4: sw=4: expandtab

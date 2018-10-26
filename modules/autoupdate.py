@@ -23,3 +23,5 @@ def generate(host, *args):
     info['email'] = email
 
     return {'autoupdate': info}
+
+# vim: ts=4: sts=4: sw=4: expandtab

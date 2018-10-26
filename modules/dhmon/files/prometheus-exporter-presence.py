@@ -28,3 +28,5 @@ res = c.execute("""
 """)
 for row in res:
     print 'host_silenced{host="%s"} 1' % row, int(time.time() * 1000)
+
+# vim: ts=4: sts=4: sw=4: expandtab

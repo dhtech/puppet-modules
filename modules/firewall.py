@@ -12,3 +12,5 @@ def requires(host, *args):
         return ['pf(%s)' % ','.join(args)]
     else:
         return ['iptables(%s)' % ','.join(args)]
+
+# vim: ts=4: sts=4: sw=4: expandtab

@@ -63,3 +63,5 @@ def generate(host):
             config.update(parse_v2(secret))
             info['layers'][layer] = config
     return {'snmpexporter': info}
+
+# vim: ts=4: sts=4: sw=4: expandtab

@@ -199,3 +199,5 @@ def generate(host, *args):
     info['also_notify'] = also_notify
     info['rfc_1918_resolvers'] = rfc_1918_resolvers
     return {'bind': info}
+
+# vim: ts=4: sts=4: sw=4: expandtab
