@@ -4,14 +4,17 @@
 # license that can be found in the LICENSE file
 import lib
 
+
 def generate(host, *args):
 
-  current_event = lib.get_current_event()
+    current_event = lib.get_current_event()
 
-  ldap_server = sorted(lib.get_servers_for_node('ldap', host))[0]
+    ldap_server = sorted(lib.get_servers_for_node('ldap', host))[0]
 
-  info = {}
-  info['current_event'] = current_event
-  info['ldap_server'] = ldap_server
+    info = {}
+    info['current_event'] = current_event
+    info['ldap_server'] = ldap_server
 
-  return {'obsdlogin': info}
+    return {'obsdlogin': info}
+
+# vim: ts=4: sts=4: sw=4: expandtab

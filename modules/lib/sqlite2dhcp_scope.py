@@ -34,6 +34,7 @@ from collections import defaultdict
 #
 # which returns the complete dhcp scope as a string.
 
+
 class App:
     def __init__(self, args):
         if not self._check_args(args):
@@ -81,7 +82,7 @@ class App:
         for row in c.fetchall():
             node_id, shnet = row
 
-            if shnet == None:
+            if shnet is None:
                 single_nets.append(node_id)
             else:
                 shared_nets[shnet].append(node_id)
@@ -106,21 +107,24 @@ class App:
     def gen_host(self, host, ip, mac, index=0):
         self._print_indented('#@ HOST {} - {} - MAC {}'.format(host, ip, mac))
         self._print_indented('host {}-{} {{'.format(host, index))
-        self._print_indented('hardware ethernet {};'.format(mac), 1);
-        self._print_indented('fixed-address {};'.format(ip), 1);
-        self._print_indented('}\n');
+        self._print_indented('hardware ethernet {};'.format(mac), 1)
+        self._print_indented('fixed-address {};'.format(ip), 1)
+        self._print_indented('}\n')
 
     def gen_subnet(self, subnet_id, indent=0):
         """Generates config for one subnet"""
 
         c = self.db.cursor()
-        c.execute('SELECT name, vlan, ipv4_txt, ipv4_netmask_txt, ipv4_gateway_txt FROM network WHERE node_id=?', (subnet_id,))
+        c.execute('SELECT name, vlan, ipv4_txt, ipv4_netmask_txt, '
+                  'ipv4_gateway_txt FROM network '
+                  'WHERE node_id=?', (subnet_id,))
         name, vlan, ip_cidr, netmask, gateway = c.fetchone()
         ip = ip_cidr.split('/')[0]
 
-        c.execute("""SELECT value FROM option WHERE name='resv' AND node_id=?""", (subnet_id,))
+        c.execute("""SELECT value FROM option WHERE '
+                  'name='resv' AND node_id=?""", (subnet_id,))
         resv_rows = c.fetchall()
-        resv = 5 # default value
+        resv = 5  # default value
         if len(resv_rows) > 0:
             resv = int(resv_rows[0][0])
 
@@ -132,19 +136,23 @@ class App:
             WHERE node_id=? AND name LIKE 'dhcp-%'""", (subnet_id,))
         options = dict(map(lambda x: (x[0][5:], x[1]), c.fetchall()))
 
-        self._print_indented('#@ NET {} {} - VLAN {}'.format(name, ip_cidr, vlan), indent)
-        self._print_indented('subnet {} netmask {} {{'.format(ip, netmask), indent)
-        self._print_indented('range {} {};'.format(range_start, range_end), indent+1)
+        self._print_indented('#@ NET {} {} - VLAN {}'
+                             .format(name, ip_cidr, vlan), indent)
+        self._print_indented('subnet {} netmask {} {{'
+                             .format(ip, netmask), indent)
+        self._print_indented('range {} {};'
+                             .format(range_start, range_end), indent+1)
         self._print_indented('option routers {};'.format(gateway), indent+1)
 
         if 'tftp' in options:
-          host = options['tftp']
-          c = self.db.cursor()
-          c.execute('SELECT ipv4_addr_txt FROM host WHERE name = ?', (host, ))
-          ipv4, = c.fetchone()
-          self._print_indented('filename "/tftpboot.img";', indent+1)
-          self._print_indented('next-server {};'.format(ipv4), indent+1)
-          del options['tftp']
+            host = options['tftp']
+            c = self.db.cursor()
+            c.execute('SELECT ipv4_addr_txt FROM '
+                      'host WHERE name = ?', (host, ))
+            ipv4, = c.fetchone()
+            self._print_indented('filename "/tftpboot.img";', indent+1)
+            self._print_indented('next-server {};'.format(ipv4), indent+1)
+            del options['tftp']
 
         for option in options.iteritems():
             self._print_indented('{} {};'.format(*option), 1)
@@ -165,3 +173,5 @@ class App:
 
 if __name__ == '__main__':
     App(sys.argv).run()
+
+# vim: ts=4: sts=4: sw=4: expandtab

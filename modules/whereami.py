@@ -4,15 +4,19 @@
 # license that can be found in the LICENSE file
 import lib
 
+
 def requires(host, *args):
-  return ['apache(ldap)']
+    return ['apache(ldap)']
+
 
 def generate(host, *args):
 
-  # Get current event, used to decide name of dhcpinfo database
-  current_event = lib.get_current_event()
+    # Get current event, used to decide name of dhcpinfo database
+    current_event = lib.get_current_event()
 
-  info = {}
-  info['current_event'] = current_event
+    info = {}
+    info['current_event'] = current_event
 
-  return {'whereami': info}
+    return {'whereami': info}
+
+# vim: ts=4: sts=4: sw=4: expandtab

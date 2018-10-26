@@ -2,10 +2,15 @@
 #
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file
+
+
 def requires(host, *args):
-  return ['dhcpinfo']
+    return ['dhcpinfo']
+
 
 def generate(host, *args):
 
-  info = {}
-  return {'dhcpinfo_grapher': info}
+    info = {}
+    return {'dhcpinfo_grapher': info}
+
+# vim: ts=4: sts=4: sw=4: expandtab

@@ -4,9 +4,12 @@
 # license that can be found in the LICENSE file
 import lib
 
-def generate(host, *args):
-  current_event = lib.get_current_event()
-  info = {}
-  info['current_event'] = current_event
 
-  return {'asterisk': info}
+def generate(host, *args):
+    current_event = lib.get_current_event()
+    info = {}
+    info['current_event'] = current_event
+
+    return {'asterisk': info}
+
+# vim: ts=4: sts=4: sw=4: expandtab

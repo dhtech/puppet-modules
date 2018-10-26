@@ -30,7 +30,16 @@ for node in nodes:
             -1
         ))))
 
-        print('puppetdb_last_report_timestamp{instance="%s"} %d' % (node['certname'], timestamp))
-        print('puppetdb_last_report_failed{instance="%s"} %d' % (node['certname'], (1 if node['latest_report_status'] == 'failed' else 0)))
-        print('puppetdb_last_report_changed{instance="%s"} %d' % (node['certname'], (1 if node['latest_report_status'] == 'changed' else 0)))
-        print('puppetdb_last_report_unchanged{instance="%s"} %d' % (node['certname'], (1 if node['latest_report_status'] == 'unchanged' else 0)))
+        print('puppetdb_last_report_timestamp{instance="%s"} %d'
+              % (node['certname'], timestamp))
+        print('puppetdb_last_report_failed{instance="%s"} %d'
+              % (node['certname'],
+                  (1 if node['latest_report_status'] == 'failed' else 0)))
+        print('puppetdb_last_report_changed{instance="%s"} %d'
+              % (node['certname'],
+                  (1 if node['latest_report_status'] == 'changed' else 0)))
+        print('puppetdb_last_report_unchanged{instance="%s"} %d'
+              % (node['certname'],
+                  (1 if node['latest_report_status'] == 'unchanged' else 0)))
+
+# vim: ts=4: sts=4: sw=4: expandtab

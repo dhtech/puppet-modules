@@ -12,9 +12,12 @@ blacklist = [
         'ldap2.tech.dreamhack.se'
 ]
 
-def generate(host, *args):
-  domain = lib.get_domain(host)
-  if host in blacklist:
-    return {}
 
-  return {'ldap': {'master': args[0]}}
+def generate(host, *args):
+    domain = lib.get_domain(host)
+    if host in blacklist:
+        return {}
+
+    return {'ldap': {'master': args[0]}}
+
+# vim: ts=4: sts=4: sw=4: expandtab

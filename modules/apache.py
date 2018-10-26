@@ -4,14 +4,17 @@
 # license that can be found in the LICENSE file
 import lib
 
+
 def generate(host, *args):
 
-  my_domain = lib.get_domain(host)
-  ldap_servers = sorted(lib.get_nodes_with_package('ldap', my_domain).keys())
+    my_domain = lib.get_domain(host)
+    ldap_servers = sorted(lib.get_nodes_with_package('ldap', my_domain).keys())
 
-  # Just pick the first LDAP server (lexographically)
-  server = ldap_servers[0]
-  info = {}
-  if 'ldap' in args:
-    info['ldap'] = server
-  return {'apache': info}
+    # Just pick the first LDAP server (lexographically)
+    server = ldap_servers[0]
+    info = {}
+    if 'ldap' in args:
+        info['ldap'] = server
+    return {'apache': info}
+
+# vim: ts=4: sts=4: sw=4: expandtab

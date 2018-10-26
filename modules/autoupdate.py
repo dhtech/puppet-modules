@@ -4,21 +4,24 @@
 # license that can be found in the LICENSE file
 import lib
 
+
 def generate(host, *args):
-  my_domain = lib.get_domain(host)
+    my_domain = lib.get_domain(host)
 
-  # Only run auto updates on non-event servers
-  if my_domain == 'EVENT':
-    return {}
+    # Only run auto updates on non-event servers
+    if my_domain == 'EVENT':
+        return {}
 
-  # If an an arg begins with -, it's a package blacklist
-  blacklist = [x[1:] for x in args if x[0] == '-']
+    # If an an arg begins with -, it's a package blacklist
+    blacklist = [x[1:] for x in args if x[0] == '-']
 
-  # TODO(bluecmd): be smarter which email to use
-  email = 'services-colo@tech.dreamhack.se'
+    # TODO(bluecmd): be smarter which email to use
+    email = 'services-colo@tech.dreamhack.se'
 
-  info = {}
-  info['blacklist'] = blacklist
-  info['email'] = email
+    info = {}
+    info['blacklist'] = blacklist
+    info['email'] = email
 
-  return {'autoupdate': info}
+    return {'autoupdate': info}
+
+# vim: ts=4: sts=4: sw=4: expandtab
