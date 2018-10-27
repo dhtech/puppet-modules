@@ -43,7 +43,7 @@ def generate(host, mgmt_fqdn, *args):
     for arg in args:
         if arg == 'ocp':
             info['ocp'] = True
-            ocp_mcs = [
+            ocp_macs = [
                 {'name': 'r0a0', 'mac': 'E41D2DFC296A',
                     'mgmt-mac': 'E41D2DFC296C'},
                 {'name': 'r0a1', 'mac': 'E41D2DFC2826',
