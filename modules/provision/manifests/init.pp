@@ -56,9 +56,8 @@ class provision ($vault_mount, $esxi = [], $c7000 = [], $domain = '', $mgmt_if =
   ])
 
   $redis_secret =  vault('provision-redis')
-  $esxi_secret =  vault("login:esxi-${domain}")
   $c7000_secret =  vault('login:c7000')
-  $vc_secret = vault('vc.event.dreamhack.se')
+  $ocp_ipmi = vault('login:ocp-ipmi')
   $deploy_gateway = $deploy_conf['gateway']
   $deploy_network = $deploy_conf['network']
   $deploy_prefix = $deploy_conf['prefix']
@@ -111,15 +110,10 @@ class provision ($vault_mount, $esxi = [], $c7000 = [], $domain = '', $mgmt_if =
     content => template('provision/provision.yaml.erb'),
     notify  => Supervisor::Restart['provisiond'],
   }
-  -> file { 'data:vsphere_esxi.iso':
-    ensure => file,
-    path   => '/srv/vmware-esxi.iso',
-    source => 'puppet:///data/VMware-VMvisor-Installer-6.5.0.update02-8294253.x86_64.iso',
-  }
   file { 'data:vsphere_vcsa.iso':
     ensure => file,
     path   => '/srv/vmware-vcenter.iso',
-    source => 'puppet:///data/VMware-VCSA-all-6.5.0-8307201.iso',
+    source => 'puppet:///data/VMware-VCSA-all-6.7.0-10244745.iso',
   }
   -> supervisor::register { 'provisiond':
     command     => '/usr/local/bin/provisiond',

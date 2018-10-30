@@ -13,13 +13,8 @@ esxi:
   - host: '<%= server['ip'] %>'
     domain: '<%= server['domain'] %>'
     fqdn: '<%= server['fqdn'] %>'
-    <%- if server['fqdn'] == 'vc.event.dreamhack.se' -%>
-    username: '<%= @vc_secret['username'] %>'
-    password: '<%= @vc_secret['password'] %>'
-    <%- else -%>
-    username: '<%= @esxi_secret['username'] %>'
-    password: '<%= @esxi_secret['password'] %>'
-    <%- end -%>
+    username: '<%= scope.call_function('vault', ['login', server['fqdn']].join(':'))['username'] %>'
+    password: '<%= scope.call_function('vault', ['login', server['fqdn']].join(':'))['password'] %>'
     deploy-vlan: 4095
 <% end -%>
 c7000:
@@ -33,8 +28,8 @@ c7000:
 <% end -%>
 <% if @ocp == true -%>
 ocp:
-  - username: 'fbuser'
-    password: 'dhtech'
+  - username: '<%= @ocp_ipmi['username'] %>'
+    password: '<%= @ocp_ipmi['password'] %>'
     domain: '<%= @ocp_domain %>'
     machines:
 <% @ocp_machines.each do |m| -%>
