@@ -13,8 +13,8 @@ esxi:
   - host: '<%= server['ip'] %>'
     domain: '<%= server['domain'] %>'
     fqdn: '<%= server['fqdn'] %>'
-    username: '<%= scope.call_function('vault', [['login', server['fqdn']].join(':'))['username'] %>'
-    password: '<%= scope.call_function('vault', [['login', server['fqdn']].join(':'))['password'] %>'
+    username: '<%= scope.call_function('vault', ['login', server['fqdn']].join(':'))['username'] %>'
+    password: '<%= scope.call_function('vault', ['login', server['fqdn']].join(':'))['password'] %>'
     deploy-vlan: 4095
 <% end -%>
 c7000:
