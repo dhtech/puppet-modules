@@ -19,6 +19,9 @@ VAULT_ADDR="https://vault.tech.dreamhack.se:1443/"
 
 # Login with our machine account
 RESPONSE=$(curl -ks \
+  -H "Content-Type: application/json" \
+  --data @<(echo '{"name":"puppet-ldap"}') \
+  --cacert /etc/ssl/certs/ca-certificates.crt \
   --cert /var/lib/puppet/ssl/certs/$(hostname -f).pem \
   --key /var/lib/puppet/ssl/private_keys/$(hostname -f).pem \
   ${VAULT_ADDR}v1/auth/cert/login -XPOST)
@@ -52,6 +55,7 @@ if [ ! -f ${CERTFILE} ]; then
   echo "Installing certificates"
   echo "-H \"X-Vault-Token: $TOKEN\"" |
     curl --data @<(echo "{\"ttl\": \"${TTL}\", \"common_name\": \"$(hostname -f)\"}") \
+      --cacert /etc/ssl/certs/ca-certificates.crt \
       -s -X POST -K - ${VAULT_ADDR}v1/ldap-pki/issue/replication | python -c "
 import sys
 import json
@@ -68,7 +72,8 @@ fi
 # Get the setup stuff
 echo "Getting LDAP login info"
 $(echo "-H \"X-Vault-Token: $TOKEN\"" | \
-  curl -s -K - ${VAULT_ADDR}v1/ldap/replication | python -c "
+  curl --cacert /etc/ssl/certs/ca-certificates.crt -s -K - \
+  ${VAULT_ADDR}v1/ldap/replication | python -c "
 import sys
 import json
 
