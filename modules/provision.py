@@ -134,8 +134,10 @@ def generate(host, mgmt_fqdn, *args):
                     'mgmt-mac': '7CFE90428F60'},
                 {'name': 'r1b4', 'mac': 'E41D2DFC8E86',
                     'mgmt-mac': 'E41D2DFC8E88'},
-                {'name': 'r1b5', 'mac': 'E41D2DFC5100',
-                    'mgmt-mac': 'E41D2DFC5102'},
+                # r1b5 is using a 2x10 nic
+                # original macs are E41D2DFC5100/E41D2DFC5102
+                {'name': 'r1b5', 'mac': '248A079070AC',
+                    'mgmt-mac': '248A079070AE'},
                 {'name': 'r1b6', 'mac': '7CFE9041FEF2',
                     'mgmt-mac': '7CFE9041FEF4'},
                 {'name': 'r1b7', 'mac': '7CFE90412B3C',
