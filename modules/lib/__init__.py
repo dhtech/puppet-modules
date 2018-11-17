@@ -436,7 +436,7 @@ def vault():
     cert = '/var/lib/puppet/ssl/certs/%s.pem' % fqdn
     key = '/var/lib/puppet/ssl/private_keys/%s.pem' % fqdn
     client = hvac.Client(url=VAULT_HOST, cert=(cert, key))
-    client.auth_tls()
+    client.login('/v1/auth/cert/login', json={'name': 'puppet-master'})
     return client
 
 
