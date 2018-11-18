@@ -121,8 +121,8 @@ class App:
         name, vlan, ip_cidr, netmask, gateway = c.fetchone()
         ip = ip_cidr.split('/')[0]
 
-        c.execute("""SELECT value FROM option WHERE '
-                  'name='resv' AND node_id=?""", (subnet_id,))
+        c.execute("""SELECT value FROM option WHERE 
+                  name='resv' AND node_id=?""", (subnet_id,))
         resv_rows = c.fetchall()
         resv = 5  # default value
         if len(resv_rows) > 0:
