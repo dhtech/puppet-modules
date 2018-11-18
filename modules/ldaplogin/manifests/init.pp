@@ -192,9 +192,19 @@ class ldaplogin ($ca, $logon, $sudo, $ldap, $ssh_ports, $panic_users,
     source => 'puppet:///modules/ldaplogin/dh-principals.sh',
   }
 
+  # Don't replace /etc/panic.users if it exists but $panic_users is empty
+  # because that is most likely a mistake: there should always be at least
+  # 1 panic user.
+  if size($panic_users) > 0 {
+    $panic_user_replace = true
+  } else {
+    $panic_user_replace = false
+  }
+
   file { 'panic-users':
     ensure  => file,
     path    => '/etc/panic.users',
+    replace => $panic_user_replace,
     content => template('ldaplogin/panic.users.erb'),
   }
 
