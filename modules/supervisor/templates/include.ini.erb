@@ -12,13 +12,10 @@ user=<%= @user %>
 <% if not @directory.empty? -%>
 directory=<%= @directory %>
 <% end -%>
-<% if not @autostart.empty? -%>
+<% if not @autostart.to_s.empty? -%>
 autostart=<%= @autostart %>
 <% end -%>
-<% if not @stopasgroup.empty? -%>
-stopasgroup=<%= @stopasgroup %>
-<% end -%>
-<% if not @stopasgroup.empty? -%>
+<% if not @stopasgroup.to_s.empty? -%>
 stopasgroup=<%= @stopasgroup %>
 <% end -%>
 <% if not @environment.empty? -%>
