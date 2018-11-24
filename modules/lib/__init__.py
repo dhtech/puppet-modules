@@ -419,6 +419,15 @@ def get_networks_with_name(name):
     conn.close()
     return networks
 
+def match_networks_name(regexp):
+    conn, c = _connect()
+
+    c.execute('SELECT ipv4_txt, ipv6_txt FROM '
+              'network WHERE name REGEXP ?', (regexp, ))
+    networks = c.fetchone()
+    conn.close()
+    return networks
+
 
 def get_network_gateway(name):
     """Return (v4 gateway, v6 gateway) for a given network."""

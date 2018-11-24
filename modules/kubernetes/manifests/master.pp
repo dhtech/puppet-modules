@@ -10,5 +10,23 @@
 # === Parameters
 #
 
-class kubernetes::master {
+class kubernetes::master($variant, $etcd = [], $podnet = "", $servicenet = "") {
+
+  # TODO (rctl): set vault["kubernetes_${variant}:token", {}]
+  # TODO (rctl): set vault["kubernetes_${variant}:cert_hash", {}]
+  # TODO (rctl): Write these files from vault:
+  #   /etc/kubernetes/etcd-ca.crt
+  #   /etc/kubernetes/etcd.crt
+  #   /etc/kubernetes/etcd.key
+
+  file { '/etc/kubernetes/kubeadm-config.yaml':
+    ensure  => 'file',
+    content => template('kubernetes/init.yaml.erb'),
+  }
+
+  exec { 'create-cluster':
+    command     => "/usr/bin/kubectl init --config /etc/kubernetes/kubeadm-config.yaml",
+    refreshonly => true,
+  }
+
 }

@@ -1,0 +1,13 @@
+apiVersion: kubeadm.k8s.io/v1alpha3
+kind: JoinConfiguration
+apiEndpoint:
+  advertiseAddress: "<% @apiserver %>"
+  bindPort: 6443
+discoveryTokenCACertHashes:
+  - <% @hash %>
+token: <% @token %>
+nodeRegistration:
+  name: "<% @hostname %>"
+  criSocket: "/var/run/dockershim.sock"
+  kubeletExtraArgs:
+    cgroupDriver: "cgroupfs"

@@ -6,21 +6,43 @@ import lib
 
 
 def generate(host, *args):
-    info = {}
 
-    if 'worker' in args:
-        if lib.get_domain(host) == 'EVENT':
-            info['kubernetes::install'] = {}
+    info = {}
+    info['kubernetes::install'] = {}
+
+    if lib.get_domain(host) == 'EVENT':
+        variant = args[1]
+        if 'worker' in args:
+            # find api server that maches the variant
+            apiserver = ""
+            for h, o in lib.get_nodes_with_package("kubernetes"):
+                if "control" in o and variant in o:
+                    apiserver = h
+            if apiserver == "":
+                raise Exception("k8s apiserver missing in ipplan")      
             info['kubernetes::worker'] = {
-                    'current_event': lib.get_current_event()
+                'variant': variant,
+                'apiserver': apiserver
             }
-        else:
-            info['kubernetes::install'] = {}
-            # TODO(ventris): check if STO2 or BOGAL to the right keys
-            # info['kubernetes::worker']
-    if 'master' in args:
-        info['kubernetes::install'] = {}
-        info['kubernetes::master'] = {}
+        if 'master' in args:
+            # find which etcd matches this host
+            etcd = []
+            for h, o in lib.get_nodes_with_package("etcd"):
+                for a in args:
+                    if o == a:
+                        etcd.append(h)
+            servicenet = lib.match_networks_name(variant.upper() + ".*K8S-SVC")
+            podnet = lib.match_networks_name(variant.upper() + ".*K8S-POD")
+            if len(servicenet) == 0 or len(podnet) == 0:
+                raise Exception("service- and/or podnet not found in ipplan")      
+            info['kubernetes::master'] = {
+                'variant': variant,
+                'etcd': etcd,
+                'podnet': podnet[0],
+                'servicenet': servicenet[0]
+            }
+
+    # for colo deployment
     if 'colo' in args:
         info['colo_k8s'] = {}
     else:
