@@ -22,7 +22,6 @@
 class puppet ($master, $environment, $sourceaddress) {
 
   service { 'puppet':
-    ensure => 'running',
     name   => 'puppet',
     enable => true,
   }
