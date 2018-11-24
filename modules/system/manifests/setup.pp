@@ -41,5 +41,9 @@ class system::setup {
       content => template('system/modules.erb'),
       notify  => Service['systemd-modules-load'],
     }
+    exec { 'system:apt_update':
+      command     => '/usr/bin/apt-get update',
+      logoutput   => 'on_failure',
+    }
   }
 }
