@@ -12,14 +12,7 @@
 
 class kubernetes::install {
 
-  # Install basic packages
-  ensure_packages([
-      'apt-transport-https',
-      'ca-certificates',
-      'curl',
-      'software-properties-common',
-      'gnupg',
-  ])
+  require docker
   
   # Add source for Kubernetes
   file { 'k8s-source-add':
