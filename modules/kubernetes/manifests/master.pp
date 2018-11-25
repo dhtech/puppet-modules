@@ -21,7 +21,7 @@ class kubernetes::master($variant, $etcd = [], $podnet = "", $servicenet = "") {
 
   file { 'kubeadm-init-config':
     path => '/etc/kubernetes/kubeadm-config.yaml'
-    ensure  => 'file',
+    ensure  => file,
     content => template('kubernetes/init.yaml.erb'),
   }
 
