@@ -10,11 +10,11 @@ TimeoutStartSec=0
 
 ExecStart=/usr/bin/etcd --name <%= @hostname %> \
     --data-dir /var/lib/etcd \
-    --listen-client-urls http://<%= @ipaddress %>:2379 \
-    --advertise-client-urls http://<%= @ipaddress %>:2379 \
-    --listen-peer-urls http://<%= @ipaddress %>:2380 \
-    --initial-advertise-peer-urls http://<%= @ipaddress %>:2380 \
-    --initial-cluster <%= @nodes.map{ |node| "#{node}=http://#{node}:2380" }.join(',') %> \
+    --listen-client-urls https://<%= @ipaddress %>:2379 \
+    --advertise-client-urls https://<%= @ipaddress %>:2379 \
+    --listen-peer-urls https://<%= @ipaddress %>:2380 \
+    --initial-advertise-peer-urls https://<%= @ipaddress %>:2380 \
+    --initial-cluster <%= @nodes.map{ |node| "#{node}=https://#{node}:2380" }.join(',') %> \
     --initial-cluster-state new \
     --ca-file /etc/etcd/ca.crt \
     --cert-file /etc/etcd/client.pem \
