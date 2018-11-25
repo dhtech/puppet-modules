@@ -14,42 +14,9 @@
 
 class jumpgate {
 
-  package { 'mtr-tiny':
-    ensure => installed,
-  }
-
-  package { 'rancid':
-    ensure => installed,
-  }
-
-  package { 'snmp':
-    ensure => installed,
-  }
-
-  package { 'dnsutils':
-    ensure => installed,
-  }
-
-  package { 'nmap':
-    ensure => installed,
-  }
-
-  package { 'bash-completion':
-    ensure => installed,
-  }
-
-  package { 'ndisc6':
-    ensure => installed,
-  }
-
-  # access_ssh_checker dependencies
-  package {
-    [
-      'python-paramiko',
-      'python-requests'
-    ]:
-      ensure => installed,
-  }
+  ensure_packages([
+      'mtr-tiny', 'rancid', 'snmp', 'dnsutils', 'nmap', 'bash-completion',
+      'ndisc6', 'python-paramiko', 'python-requests', 'nc', 'ipmitool'])
 
   file {
     '/usr/local/bin/access_ssh_checker.py':
