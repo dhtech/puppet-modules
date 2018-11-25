@@ -37,11 +37,10 @@ class etcd::install {
     notify      => Exec['etcd-install'],
   }
 
-  exec { 'etcd-install':
-    command     => 'cp ./etcd-v3.3.10-linux-amd64/etcd /usr/bin/etcd',
-    logoutput   => 'on_failure',
-    try_sleep   => 1,
-    refreshonly => true,
+  file { 'etcd-install':
+    path     => '/usr/bin/etcd',
+    source   => './etcd-v3.3.10-linux-amd64/etcd',
+    ensure   => file,
     notify      => Exec['etcd-clean'],
   }
 
