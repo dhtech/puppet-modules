@@ -16,7 +16,6 @@ class etcd::init($variant = "default", $nodes = []) {
   #              vault["etcd_${variant}:key", {}] -> /etc/etcd/key.pem
   #              vault["etcd_${variant}:peercert", {}] -> /etc/etcd/peer.pem
   #              vault["etcd_${variant}:peerkey", {}] -> /etc/etcd/key.pem
-  #              vault["etcd_${variant}:token", {}] -> $token
   
   file { 'etcd-unit':
     path    => '/etc/systemd/system/etcd.service',
