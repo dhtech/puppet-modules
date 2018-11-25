@@ -69,4 +69,5 @@ class alertmanager {
   }
   -> service { 'alertmanager':
     ensure  => running,
+  }
 }
