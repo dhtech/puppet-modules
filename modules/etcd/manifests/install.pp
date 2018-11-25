@@ -39,7 +39,7 @@ class etcd::install {
     path     => '/usr/bin/etcd',
     source   => '/etc/etcd/etcd-v3.3.10-linux-amd64/etcd',
     ensure   => file,
-    mode     => 0700,
+    mode     => "0700",
     notify   => Exec['etcd-clean'],
   }
 
