@@ -14,7 +14,7 @@ ExecStart=/usr/bin/etcd --name <%= @hostname %> \
     --advertise-client-urls http://<%= @ipaddress %>:2379 \
     --listen-peer-urls http://<%= @ipaddress %>:2380 \
     --initial-advertise-peer-urls http://<%= @ipaddress %>:2380 \
-    --initial-cluster <% @nodes.map{ |node| "#{@node}=http://#{@node}:2380" }.join(',') %> \
+    --initial-cluster <%= @nodes.map{ |node| "#{@node}=http://#{@node}:2380" }.join(',') %> \
     --initial-cluster-state new \
     --ca-file /etc/etcd/ca.crt \
     --cert-file /etc/etcd/client.pem \
