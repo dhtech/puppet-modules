@@ -20,9 +20,7 @@ class kubernetes::install {
       'software-properties-common',
       'gnupg',
   ])
-
-  require docker
-
+  
   # Add source for Kubernetes
   file { 'k8s-source-add':
     ensure  => file,
