@@ -22,12 +22,9 @@ class radiusd ($access_ips = [], $dist_ips = [], $core_ips = [], $firewall_ips =
   $firewall_secret = vault('radius:firewall', {})
   $partner_secret = vault('radius:partner', {})
 
-  package { 'freeradius':
-    ensure => installed,
-  }
-  package { 'freeradius-common':
-    ensure => installed,
-  }
+  ensure_packages([
+    'freeradius', 'freeradius-common', 'freeradius-python2',
+    'freeradius-utils'])
 
   service { 'freeradius':
     ensure     => 'running',
