@@ -427,7 +427,6 @@ def match_networks_name(pattern):
     networks = c.fetchall()
     conn.close()
 
-    print(networks)
     return [network[1] for network in networks if re.match(pattern, network[0])]
 
 

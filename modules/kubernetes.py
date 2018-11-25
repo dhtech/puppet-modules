@@ -35,6 +35,9 @@ def generate(host, *args):
                         etcd.append(h)
             servicenet = lib.match_networks_name(variant.upper() + ".*K8S-SVC")
             podnet = lib.match_networks_name(variant.upper() + ".*K8S-POD")
+            print(variant.upper() + ".*K8S-SVC")
+            print(servicenet)
+            print(podnet)
             if len(servicenet) == 0 or len(podnet) == 0:
                 raise Exception("service- and/or podnet not found in ipplan")      
             info['kubernetes::master'] = {
