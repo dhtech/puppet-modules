@@ -22,9 +22,9 @@ class pinger {
     recurse => remote,
     source  => 'puppet:///scripts/pinger/',
   }
-  ~> exec { 'make-pinger':
+  ~> exec { 'make-pingerd':
     command     => '/usr/bin/make install DESTDIR=/opt',
-    cwd         => '/opt/snmpexporter.src',
+    cwd         => '/opt/pinger.src',
     refreshonly => true,
   }
   ~> file { 'pingerd.service':
