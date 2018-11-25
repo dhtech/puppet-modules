@@ -423,12 +423,12 @@ def get_networks_with_name(name):
 def match_networks_name(pattern):
     conn, c = _connect()
 
-    c.execute('SELECT name, ipv4_txt, ipv6_txt FROM network')
+    c.execute('SELECT name, ipv4_txt FROM network')
     networks = c.fetchone()
     conn.close()
 
 
-    return [network for network in networks if re.match(pattern, network["name"])]
+    return [network[1] for network in networks if re.match(pattern, network[0])]
 
 
 def get_network_gateway(name):
