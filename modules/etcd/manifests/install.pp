@@ -34,7 +34,7 @@ class etcd::install {
     logoutput   => 'on_failure',
     try_sleep   => 1,
     refreshonly => true,
-    notify      => Exec['etcd-install'],
+    notify      => File['etcd-install'],
   }
 
   file { 'etcd-install':
