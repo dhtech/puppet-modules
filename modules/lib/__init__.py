@@ -424,7 +424,7 @@ def match_networks_name(pattern):
     conn, c = _connect()
 
     c.execute('SELECT name, ipv4_txt FROM network')
-    networks = c.fetchone()
+    networks = c.fetchall()
     conn.close()
 
     print(networks)
