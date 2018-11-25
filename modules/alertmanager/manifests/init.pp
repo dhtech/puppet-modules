@@ -49,18 +49,18 @@ class alertmanager {
 
   file { '/opt/alertmanager/alertmanager.yml':
     ensure  => file,
-    content => template('dhmon/alertmanager.yaml.erb'),
+    content => template('alertmanager/alertmanager.yaml.erb'),
   }
 
   #Systemctl config
   file { '/etc/systemd/system/alertmanager.service':
     ensure  => file,
     notify  => Exec['alertmanager-systemctl-daemon-reload'],
-    content => template('dhmon/alertmanager.service.erb'),
+    content => template('alertmanager/alertmanager.service.erb'),
   }
   -> file { '/etc/default/alertmanager':
     ensure  => file,
-    content => template('dhmon/alertmanager.default.erb'),
+    content => template('alertmanager/alertmanager.default.erb'),
     notify  => Service['alertmanager'],
   }
   -> apache::proxy { 'alertmanager':
