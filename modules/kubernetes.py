@@ -31,6 +31,7 @@ def generate(host, *args):
             etcd = []
             e = lib.get_nodes_with_package("etcd")
             print(e)
+            raise Exception("test")
             for h, o in lib.get_nodes_with_package("etcd").items():
                 if variant in o:
                     etcd.append(h)
