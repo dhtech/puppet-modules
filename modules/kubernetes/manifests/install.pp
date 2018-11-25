@@ -65,8 +65,7 @@ class kubernetes::install {
 
   # configure cgroupfs
   exec { 'add-cgroupfs':
-    command =>  '/bin/sed -i "s/--kubeconfig=\/etc\/kubernetes\/kubelet.conf/--kubeconfig=\/etc\/kubernetes\/kubelet.conf
-                --cgroup-driver=cgroupfs/g" /etc/systemd/system/kubelet.service.d/10-kubeadm.conf',
+    command =>  '/bin/sed -i "s/--kubeconfig=\/etc\/kubernetes\/kubelet.conf/--kubeconfig=\/etc\/kubernetes\/kubelet.conf --cgroup-driver=cgroupfs/g" /etc/systemd/system/kubelet.service.d/10-kubeadm.conf',
     unless  =>  '/bin/grep cgroup-driver /etc/systemd/system/kubelet.service.d/10-kubeadm.conf',
     onlyif  =>  '/usr/bin/test -f /etc/systemd/system/kubelet.service.d/10-kubeadm.conf',
   }
