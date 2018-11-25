@@ -23,8 +23,8 @@ class pinger {
     source  => 'puppet:///scripts/pinger/',
   }
   ~> exec { 'make-pingerd':
-    command     => '/usr/bin/make install DESTDIR=/opt',
-    cwd         => '/opt/pinger.src',
+    command     => '/usr/bin/make install DESTDIR=/',
+    cwd         => '/opt/pinger.src/src/pinger',
     refreshonly => true,
   }
   ~> file { 'pingerd.service':
