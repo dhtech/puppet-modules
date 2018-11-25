@@ -40,6 +40,11 @@ class snmpexporter($layers) {
     path    => '/etc/snmp/snmp.conf',
   }
 
+  # Make sure directory /var/lib/mibs exists
+  file { '/var/lib/mibs':
+    ensure  => 'directory',
+  }
+
   # Install DH MIBs
   file { 'other-mibs':
     ensure  => directory,
@@ -51,6 +56,7 @@ class snmpexporter($layers) {
   # Install standard MIBs
   file { '/var/lib/mibs/std/':
     ensure  => 'directory',
+    require => File['/var/lib/mibs'],
   }
 
   file { '/opt/librenms.zip':
@@ -83,9 +89,10 @@ class snmpexporter($layers) {
   }
 
   file { 'auth.yaml':
-    ensure  => present,
-    content => template('snmpexporter/auth.yaml.erb'),
-    path    => '/etc/snmpexporter/auth.yaml',
+    ensure    => present,
+    content   => template('snmpexporter/auth.yaml.erb'),
+    path      => '/etc/snmpexporter/auth.yaml',
+    show_diff => no
   }
 
   file { 'snmpexporter.yaml':
@@ -137,5 +144,8 @@ class snmpexporter($layers) {
     command     => '/usr/bin/make all install',
     cwd         => '/opt/snmpexporter.src',
     refreshonly => true,
+  }
+  ~> file { '/etc/snmpexporter.yaml':
+    ensure => absent,
   }
 }

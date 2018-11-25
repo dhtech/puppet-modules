@@ -21,13 +21,12 @@ class radiusd ($access_ips = [], $dist_ips = [], $core_ips = [], $firewall_ips =
   $access_secret = vault('radius:access', {})
   $firewall_secret = vault('radius:firewall', {})
   $partner_secret = vault('radius:partner', {})
+  # Use the rancid backup user for local health check
+  $radtest_secret = vault('login:backup', {})
 
-  package { 'freeradius':
-    ensure => installed,
-  }
-  package { 'freeradius-common':
-    ensure => installed,
-  }
+  ensure_packages([
+    'freeradius', 'freeradius-common', 'freeradius-python2',
+    'freeradius-utils'])
 
   service { 'freeradius':
     ensure     => 'running',
@@ -87,8 +86,22 @@ class radiusd ($access_ips = [], $dist_ips = [], $core_ips = [], $firewall_ips =
   }
 
   file { '/etc/freeradius/3.0/clients.conf':
-    ensure  => file,
-    content => template('radiusd/clients.conf.erb'),
+    ensure    => file,
+    content   => template('radiusd/clients.conf.erb'),
+    notify    => Service['freeradius'],
+    show_diff => no,
   }
 
+  file { '/etc/freeradius/radius-check.sh':
+    ensure    => file,
+    content   => template('radiusd/radius-check.sh.erb'),
+    mode      => '0700',
+    show_diff => no,
+  }
+
+  cron { 'prometheus-exporter-radius-check':
+    command => '/etc/freeradius/radius-check.sh',
+    minute  => '*',
+    require => File['/etc/freeradius/radius-check.sh'],
+  }
 }

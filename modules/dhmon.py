@@ -101,9 +101,9 @@ def generate_backend(host, local_services):
     for layer in layers:
         # TODO(bluecmd): Use options for this
         if layer == 'access':
-            host = 'prober2.event.dreamhack.se'
+            host = 'snmp2.event.dreamhack.se'
         else:
-            host = 'prober1.event.dreamhack.se'
+            host = 'snmp1.event.dreamhack.se'
         snmp = blackbox(
                 'snmp_%s' % layer, host,
                 nodes[layer], {'layer': [layer]}, labels={
@@ -139,14 +139,6 @@ def generate(host, *args):
         info['dhmon::grafana'] = {
             'current_event': lib.get_current_event()
         }
-
-    if 'alertmanager' in args:
-        local_targets.append({
-            'job_name': 'alertmanager',
-            'metrics_path': '/alertmanager/metrics',
-            'scheme': 'http',
-            'static_configs': [{'targets': ['localhost:9093']}]})
-        info['dhmon::alertmanager'] = {}
 
     if 'backend' in args:
         local_targets.append({
