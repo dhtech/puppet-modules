@@ -19,6 +19,7 @@ etcd:
   external:
     endpoints:<% @etcd.each do |endpoint|%>
     - "<%= endpoint %>:2379"<% end -%>
+    
     caFile: "/etc/kubernetes/etcd-ca.crt"
     certFile: "/etc/kubernetes/etcd.crt"
     certKey: "/etc/kubernetes/etcd.key"
