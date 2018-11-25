@@ -34,7 +34,6 @@ def generate(host, *args):
                 if variant in o:
                     etcd.append(h)
             if len(etcd) == 0:
-                print(e)
                 raise Exception("No etcd nodes found")
             servicenet = lib.match_networks_name("EVENT@" + variant.upper() + ".*K8S-SVC")
             podnet = lib.match_networks_name("EVENT@" + variant.upper() + ".*K8S-POD")
