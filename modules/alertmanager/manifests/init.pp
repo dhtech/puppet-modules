@@ -50,13 +50,13 @@ class alertmanager {
   file { '/opt/alertmanager/alertmanager.yml':
     ensure  => file,
     content => template('alertmanager/alertmanager.yaml.erb'),
+    notify  => Exec['alertmanager-hup'],
   }
-
   #Systemctl config
-  file { '/etc/systemd/system/alertmanager.service':
+  -> file { '/etc/systemd/system/alertmanager.service':
     ensure  => file,
-    notify  => Exec['alertmanager-systemctl-daemon-reload'],
     content => template('alertmanager/alertmanager.service.erb'),
+    notify  => Exec['alertmanager-systemctl-daemon-reload'],
   }
   -> file { '/etc/default/alertmanager':
     ensure  => file,
@@ -69,5 +69,14 @@ class alertmanager {
   }
   -> service { 'alertmanager':
     ensure  => running,
+  }
+
+  exec { 'alertmanager-hup':
+    command     => '/usr/bin/pkill -SIGHUP alertmanager',
+    refreshonly => true,
+  }
+  exec { 'alertmanager-systemctl-daemon-reload':
+    command     => '/bin/systemctl daemon-reload',
+    refreshonly => true,
   }
 }
