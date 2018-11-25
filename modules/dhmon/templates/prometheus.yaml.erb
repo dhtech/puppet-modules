@@ -8,9 +8,10 @@
   ],
   'alerting' => {
     'alertmanagers' => [
-     'scheme' => 'http',
+     'scheme' => 'https',
+     'path_prefix' => '/alertmanager',
      'static_configs' => [
-      'targets' => ['localhost:9093']
+      'targets' => ['alertmanager.event.dreamhack.se']
     ]]
   },
   'scrape_configs' => @scrape_configs
