@@ -9,12 +9,13 @@ def generate(host, *args):
 
     info = {}
     info['etcd::install'] = {}
+    variant = args[0]
     etcd = []
     for h, o in lib.get_nodes_with_package("etcd").items():
         if variant in o:
             etcd.append(h)
     info['etcd::init'] = {
-        'variant': args[0],
+        'variant': variant,
         'nodes': etcd
     }
 
