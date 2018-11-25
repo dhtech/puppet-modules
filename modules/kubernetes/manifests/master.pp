@@ -19,7 +19,8 @@ class kubernetes::master($variant, $etcd = [], $podnet = "", $servicenet = "") {
   #   /etc/kubernetes/etcd.crt
   #   /etc/kubernetes/etcd.key
 
-  file { '/etc/kubernetes/kubeadm-config.yaml':
+  file { 'kubeadm-init-config':
+    path => '/etc/kubernetes/kubeadm-config.yaml'
     ensure  => 'file',
     content => template('kubernetes/init.yaml.erb'),
   }
@@ -27,6 +28,7 @@ class kubernetes::master($variant, $etcd = [], $podnet = "", $servicenet = "") {
   exec { 'create-cluster':
     command     => "/usr/bin/kubectl init --config /etc/kubernetes/kubeadm-config.yaml",
     refreshonly => true,
+    require => File['kubeadm-init-config'],
   }
 
 }
