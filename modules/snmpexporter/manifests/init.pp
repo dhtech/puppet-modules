@@ -40,6 +40,11 @@ class snmpexporter($layers) {
     path    => '/etc/snmp/snmp.conf',
   }
 
+  # Make sure directory /var/lib/mibs exists
+  file { '/var/lib/mibs':
+    ensure  => 'directory',
+  }
+
   # Install DH MIBs
   file { 'other-mibs':
     ensure  => directory,
