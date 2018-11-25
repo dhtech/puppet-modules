@@ -89,9 +89,10 @@ class snmpexporter($layers) {
   }
 
   file { 'auth.yaml':
-    ensure  => present,
-    content => template('snmpexporter/auth.yaml.erb'),
-    path    => '/etc/snmpexporter/auth.yaml',
+    ensure    => present,
+    content   => template('snmpexporter/auth.yaml.erb'),
+    path      => '/etc/snmpexporter/auth.yaml',
+    show_diff => no
   }
 
   file { 'snmpexporter.yaml':
