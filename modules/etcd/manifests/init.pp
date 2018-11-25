@@ -25,13 +25,13 @@ class etcd::init($variant = "default", $nodes = []) {
   }
 
   exec { 'daemon-reload':
-    command     => '/bin/systemctl daemon-reload':
+    command     => '/bin/systemctl daemon-reload',
     refreshonly => true,
     notify     => Exec['daemon-restart'],
   }
 
   exec { 'daemon-restart':
-    command     => '/bin/systemctl restart etcd':
+    command     => '/bin/systemctl restart etcd',
     refreshonly => true,
   }
 }
