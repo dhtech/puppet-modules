@@ -10,7 +10,9 @@ def generate(host, *args):
     info = {}
     info['kubernetes::install'] = {}
 
-    if lib.get_domain(host) == 'EVENT':
+    if 'colo' in args:
+        info['colo_k8s'] = {}
+    else:
         variant = args[1]
         if 'worker' in args:
             # find api server that maches the variant
@@ -41,11 +43,7 @@ def generate(host, *args):
                 'podnet': podnet[0],
                 'servicenet': servicenet[0]
             }
-
-    # for colo deployment
-    if 'colo' in args:
-        info['colo_k8s'] = {}
-
+            
     return info
 
 # vim: ts=4: sts=4: sw=4: expandtab
