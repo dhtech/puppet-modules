@@ -428,7 +428,7 @@ def match_networks_name(pattern):
     conn.close()
 
 
-    return [network for network in networks if re.match(pattern, network[name])]
+    return [network for network in networks if re.match(pattern, network["name"])]
 
 
 def get_network_gateway(name):
