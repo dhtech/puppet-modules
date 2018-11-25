@@ -136,8 +136,6 @@ def generate(host, *args):
     if 'web' in args:
         info['dhmon::analytics'] = {}
         info['dhmon::web'] = {}
-        info['dhmon::grafana'] = {
-            'current_event': lib.get_current_event()
         }
 
     if 'alertmanager' in args:
