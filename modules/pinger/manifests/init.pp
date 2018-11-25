@@ -28,9 +28,9 @@ class pinger {
     refreshonly => true,
   }
   ~> file { 'pingerd.service':
-    ensure  => present,
-    source  => '/opt/pinger.src/pingerd.service',
-    path    => '/etc/systemd/system/pingerd.service',
+    ensure => present,
+    source => '/opt/pinger.src/pingerd.service',
+    path   => '/etc/systemd/system/pingerd.service',
   }
 
   service { 'pingerd':
