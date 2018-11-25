@@ -38,7 +38,8 @@ schedulerExtraArgs:
   address: "<%= @ipaddress %>"
 apiServerCertSANs:
 - "<%= @ipaddress %>"
-- "<%= @hostname %>"
+- "<%= @hostname %>.event.dreamhack.se"
+- "<%= @variant %>.control.event.dreamhack.se"
 certificatesDir: "/etc/kubernetes/pki"
 imageRepository: "k8s.gcr.io"
 unifiedControlPlaneImage: "k8s.gcr.io/controlplane:v1.12.0"

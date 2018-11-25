@@ -29,10 +29,11 @@ def generate(host, *args):
         if 'control' in args:
             # find which etcd matches this host
             etcd = []
+            e = lib.get_nodes_with_package("etcd")
+            print(e)
             for h, o in lib.get_nodes_with_package("etcd").items():
-                for a in args:
-                    if o == a:
-                        etcd.append(h)
+                if variant in o:
+                    etcd.append(h)
             servicenet = lib.match_networks_name("EVENT@" + variant.upper() + ".*K8S-SVC")
             podnet = lib.match_networks_name("EVENT@" + variant.upper() + ".*K8S-POD")
             if len(servicenet) == 0 or len(podnet) == 0:
