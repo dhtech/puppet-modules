@@ -40,8 +40,8 @@ def generate(host, *args):
             info['kubernetes::master'] = {
                 'variant': variant,
                 'etcd': etcd,
-                'podnet': podnet[0],
-                'servicenet': servicenet[0]
+                'podnet': podnet[0]["ipv4_txt"],
+                'servicenet': servicenet[0]["ipv4_txt"]
             }
 
     return info
