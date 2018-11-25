@@ -17,7 +17,7 @@ def generate(host, *args):
         if 'worker' in args:
             # find api server that maches the variant
             apiserver = ""
-            for h, o in lib.get_nodes_with_package("kubernetes"):
+            for h, o in lib.get_nodes_with_package("kubernetes").items():
                 if "control" in o and variant in o:
                     apiserver = h
             if apiserver == "":
@@ -29,7 +29,7 @@ def generate(host, *args):
         if 'control' in args:
             # find which etcd matches this host
             etcd = []
-            for h, o in lib.get_nodes_with_package("etcd"):
+            for h, o in lib.get_nodes_with_package("etcd").items():
                 for a in args:
                     if o == a:
                         etcd.append(h)
