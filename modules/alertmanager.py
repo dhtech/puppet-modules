@@ -8,6 +8,6 @@ def requires(host, *args):
     return ['dhmon(alertmanager)']
 
 def generate(host, *args):
-    return {'alertmanger': {}}
+    return {'alertmanager': {}}
 
 # vim: ts=4: sts=4: sw=4: expandtab:
