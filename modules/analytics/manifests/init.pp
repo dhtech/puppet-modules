@@ -26,10 +26,12 @@ class analytics {
   supervisor::register { 'analytics':
     command   => '/usr/bin/python2 /analytics/analytics.py'
   }
-  -> apache::proxy { 'analytics':
+
+  apache::proxy { 'analytics':
     url     => '/analytics',
     backend => 'http://localhost:5000',
   }
+
   cron { 'update-analytics':
     command => '/usr/bin/git --git-dir=/analytics.git --work-tree=/analytics pull',
     minute  => '*',
