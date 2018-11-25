@@ -16,7 +16,7 @@ class jumpgate {
 
   ensure_packages([
       'mtr-tiny', 'rancid', 'snmp', 'dnsutils', 'nmap', 'bash-completion',
-      'ndisc6', 'python-paramiko', 'python-requests', 'nc', 'ipmitool'])
+      'ndisc6', 'python-paramiko', 'python-requests', 'netcat', 'ipmitool'])
 
   file {
     '/usr/local/bin/access_ssh_checker.py':
