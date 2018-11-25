@@ -86,15 +86,17 @@ class radiusd ($access_ips = [], $dist_ips = [], $core_ips = [], $firewall_ips =
   }
 
   file { '/etc/freeradius/3.0/clients.conf':
-    ensure  => file,
-    content => template('radiusd/clients.conf.erb'),
-    notify  => Service['freeradius'],
+    ensure    => file,
+    content   => template('radiusd/clients.conf.erb'),
+    notify    => Service['freeradius'],
+    show_diff => no,
   }
 
   file { '/etc/freeradius/radius-check.sh':
-    ensure  => file,
-    content => template('radiusd/radius-check.sh.erb'),
-    mode    => '0700',
+    ensure    => file,
+    content   => template('radiusd/radius-check.sh.erb'),
+    mode      => '0700',
+    show_diff => no,
   }
 
   cron { 'prometheus-exporter-radius-check':
