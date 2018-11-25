@@ -56,6 +56,7 @@ class snmpexporter($layers) {
   # Install standard MIBs
   file { '/var/lib/mibs/std/':
     ensure  => 'directory',
+    require => File['/var/lib/mibs'],
   }
 
   file { '/opt/librenms.zip':
@@ -142,5 +143,8 @@ class snmpexporter($layers) {
     command     => '/usr/bin/make all install',
     cwd         => '/opt/snmpexporter.src',
     refreshonly => true,
+  }
+  ~> file { '/etc/snmpexporter.yaml':
+    ensure => absent,
   }
 }
