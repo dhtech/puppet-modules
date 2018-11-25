@@ -47,7 +47,7 @@ class dhmon::alertmanager {
   #Systemctl config
   file { '/etc/systemd/system/alertmanager.service':
     ensure  => file,
-    notify  => Exec['alertmanger-systemctl-daemon-reload'],
+    notify  => Exec['alertmanager-systemctl-daemon-reload'],
     content => template('dhmon/alertmanager.service.erb'),
   }
   -> file { '/etc/default/alertmanager':
