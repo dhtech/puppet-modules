@@ -59,7 +59,7 @@ class dhmon::prometheus ($scrape_configs) {
   -> file { '/etc/systemd/system/prometheus.service':
     ensure  => file,
     content => template('dhmon/prometheus.service.erb'),
-    notify  => Exec['systemctl-daemon-reload'],
+    notify  => Exec['prometheus-systemctl-daemon-reload'],
   }
   -> file { '/etc/default/prometheus':
     ensure  => file,
@@ -90,7 +90,7 @@ class dhmon::prometheus ($scrape_configs) {
     refreshonly => true,
   }
 
-  exec { 'systemctl-daemon-reload':
+  exec { 'prometheus-systemctl-daemon-reload':
     command     => '/bin/systemctl daemon-reload',
     refreshonly => true,
   }

@@ -32,7 +32,7 @@ class dhmon::alertmanager {
     source => 'puppet:///data/alertmanager-0.14.0.linux-amd64.tar.gz',
     notify => Exec[ 'untar-alertmanager' ],
   }
-  #Unpackage prometheus
+  #Unpackage alertmanager
   exec { 'untar-alertmanager':
     command     => '/bin/tar -zxf /tmp/alertmanager.tar.gz -C /opt/alertmanager --strip-components=1',
     refreshonly => true,
@@ -47,7 +47,7 @@ class dhmon::alertmanager {
   #Systemctl config
   file { '/etc/systemd/system/alertmanager.service':
     ensure  => file,
-    notify  => Exec['systemctl-daemon-reload'],
+    notify  => Exec['alertmanger-systemctl-daemon-reload'],
     content => template('dhmon/alertmanager.service.erb'),
   }
   -> file { '/etc/default/alertmanager':
@@ -65,6 +65,10 @@ class dhmon::alertmanager {
   }
   exec { 'alertmanager-hup':
     command     => '/usr/bin/pkill -SIGHUP alertmanager',
+    refreshonly => true,
+  }
+  exec { 'alertmanager-systemctl-daemon-reload':
+    command     => '/bin/systemctl daemon-reload',
     refreshonly => true,
   }
 
