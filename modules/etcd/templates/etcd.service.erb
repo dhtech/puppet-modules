@@ -1,0 +1,30 @@
+[Unit]
+Description=etcd
+Documentation=https://github.com/coreos/etcd
+
+[Service]
+Type=notify
+Restart=always
+RestartSec=5s
+TimeoutStartSec=0
+
+ExecStart=/usr/bin/etcd --name <%= @hostname %> \
+    --data-dir /var/lib/etcd \
+    --listen-client-urls http://<%= @ipaddress %>:2379 \
+    --advertise-client-urls http://<%= @ipaddress %>:2379 \
+    --listen-peer-urls http://<%= @ipaddress %>:2380 \
+    --initial-advertise-peer-urls http://<%= @ipaddress %>:2380 \
+    --initial-cluster <% @nodes.map{ |node| "#{@node}=http://#{@node}:2380" }.join(',') %> \
+    --initial-cluster-token <%= @token %> \
+    --initial-cluster-state new \
+    --ca-file /etc/etcd/ca.crt \
+    --cert-file /etc/etcd/client.pem \
+    --key-file /etc/etcd/key.pem \
+    --client-cert-auth true
+    --peer-trusted-ca-file /etc/etcd/ca.crt
+    --peer-cert-file /etc/etcd/peer.pem
+    --peer-key-file /etc/etcd/key.pem
+    --peer-client-cert-auth true
+
+[Install]
+WantedBy=multi-user.target
