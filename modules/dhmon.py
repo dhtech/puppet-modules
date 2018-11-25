@@ -101,9 +101,9 @@ def generate_backend(host, local_services):
     for layer in layers:
         # TODO(bluecmd): Use options for this
         if layer == 'access':
-            host = 'prober2.event.dreamhack.se'
+            host = 'snmp2.event.dreamhack.se'
         else:
-            host = 'prober1.event.dreamhack.se'
+            host = 'snmp1.event.dreamhack.se'
         snmp = blackbox(
                 'snmp_%s' % layer, host,
                 nodes[layer], {'layer': [layer]}, labels={
