@@ -4,9 +4,6 @@
 # license that can be found in the LICENSE file
 
 
-def requires(host, *args):
-    return ['dhmon(alertmanager)']
-
 def generate(host, *args):
     return {'alertmanager': {}}
 

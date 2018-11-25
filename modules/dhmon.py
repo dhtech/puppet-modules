@@ -140,14 +140,6 @@ def generate(host, *args):
             'current_event': lib.get_current_event()
         }
 
-    if 'alertmanager' in args:
-        local_targets.append({
-            'job_name': 'alertmanager',
-            'metrics_path': '/alertmanager/metrics',
-            'scheme': 'http',
-            'static_configs': [{'targets': ['localhost:9093']}]})
-        info['dhmon::alertmanager'] = {}
-
     if 'backend' in args:
         local_targets.append({
             'job_name': 'prometheus',
