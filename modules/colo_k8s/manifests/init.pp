@@ -21,32 +21,7 @@ class colo_k8s {
       'gnupg',
   ])
 
-  # Add source and install docker
-  file { 'docker-source-add':
-    ensure  => file,
-    path    => '/etc/apt/sources.list.d/docker.list',
-    content => 'deb [arch=amd64] https://download.docker.com/linux/debian buster stable',
-    notify  => Exec['docker-source-key'],
-  }
-  -> exec { 'docker-source-key':
-    command     => '/usr/bin/curl -fsSL https://download.docker.com/linux/ubuntu/gpg | /usr/bin/apt-key add -',
-    logoutput   => 'on_failure',
-    try_sleep   => 1,
-    refreshonly => true,
-    notify      => Exec['docker-source-update'],
-  }
-  exec { 'docker-source-update':
-    command     => '/usr/bin/apt-get update',
-    logoutput   => 'on_failure',
-    try_sleep   => 1,
-    refreshonly => true,
-    require     => Package['apt-transport-https'],
-  }
-  package { 'docker-ce':
-    ensure  => installed,
-    require => [File['docker-source-add'], Exec['docker-source-key'], Exec['docker-source-update']],
-  }
-
+  require docker
 
   # Add source for Kubernetes
   file { 'k8s-source-add':

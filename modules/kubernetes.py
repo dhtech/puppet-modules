@@ -45,8 +45,6 @@ def generate(host, *args):
     # for colo deployment
     if 'colo' in args:
         info['colo_k8s'] = {}
-    else:
-        info['colo_k8s'] = {}
 
     return info
 
