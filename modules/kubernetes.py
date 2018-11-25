@@ -26,7 +26,7 @@ def generate(host, *args):
                 'variant': variant,
                 'apiserver': apiserver
             }
-        if 'master' in args:
+        if 'control' in args:
             # find which etcd matches this host
             etcd = []
             for h, o in lib.get_nodes_with_package("etcd"):
@@ -43,7 +43,7 @@ def generate(host, *args):
                 'podnet': podnet[0],
                 'servicenet': servicenet[0]
             }
-            
+
     return info
 
 # vim: ts=4: sts=4: sw=4: expandtab
