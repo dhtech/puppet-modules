@@ -31,7 +31,7 @@ class analytics {
     url     => '/analytics',
     backend => 'http://localhost:5000',
   }
-  
+
   cron { 'update-analytics':
     command => '/usr/bin/git --git-dir=/analytics.git --work-tree=/analytics pull',
     minute  => '*',
