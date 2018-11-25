@@ -26,12 +26,15 @@ class etcd::init($variant = "default", $nodes = []) {
 
   exec { 'daemon-reload':
     command     => '/bin/systemctl daemon-reload',
-    refreshonly => true,
+    notify     => Exec['daemon-enable'],
+  }
+
+  exec { 'daemon-enable':
+    command     => '/bin/systemctl enable etcd',
     notify     => Exec['daemon-restart'],
   }
 
   exec { 'daemon-restart':
     command     => '/bin/systemctl restart etcd',
-    refreshonly => true,
   }
 }

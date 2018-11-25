@@ -44,7 +44,7 @@ class etcd::install {
   }
 
   exec { 'etcd-clean':
-    command     => '/usr/bin/rm -r /etc/etcd/etcd-v3.3.10-linux-amd64.tar.gz /etc/etcd/etcd-v3.3.10-linux-amd64.tar',
+    command     => '/usr/bin/rm -r /etc/etcd/etcd-v3.3.10-linux-amd64.tar.gz /etc/etcd/etcd-v3.3.10-linux-amd64',
     logoutput   => 'on_failure',
     try_sleep   => 1,
   }
