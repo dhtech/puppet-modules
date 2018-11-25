@@ -34,13 +34,13 @@ class postgresql($allowed_hosts, $db_list, $current_event, $domain) {
   }
 
   file_line {'listen-on-network':
-    path    => '/etc/postgresql/10/main/postgresql.conf',
+    path    => '/etc/postgresql/11/main/postgresql.conf',
     line    => "listen_addresses = '*'",
     notify  => Service['postgresql'],
     require => Package['postgresql'],
   }
 
-  file {'/etc/postgresql/10/main/pg_hba.conf':
+  file {'/etc/postgresql/11/main/pg_hba.conf':
     content => template('postgresql/pg_hba.conf.erb'),
     mode    => '0640',
     owner   => 'postgres',
