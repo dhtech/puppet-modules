@@ -274,8 +274,7 @@ def get_nodes_with_option(option, domain=None, value=None):
             if result:
                 nodes_with_value.extend(result)
         conn.close()
-
-    nodes = [x for x in nodes if x[0] in nodes_with_value]
+        nodes = [x for x in nodes if x[0] in nodes_with_value]
 
     # Only return node names
     return [x[0] for x in nodes]
