@@ -16,6 +16,7 @@ def generate(host, *args):
             etcd.append(h)
     if len(etcd) == 0:
         raise Exception("cannot create single node etcd cluster")
+    etcd.append(host)
     info['etcd::init'] = {
         'variant': variant,
         'nodes': etcd
