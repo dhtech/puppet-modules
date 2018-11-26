@@ -46,7 +46,7 @@ class puppet ($master, $environment, $sourceaddress) {
   }
 
   exec { 'systemctl-daemon-reload-puppet':
-    command     => '/usr/bin/systemctl daemon-reload',
+    command     => '/bin/systemctl daemon-reload',
     refreshonly => true,
   }
 
