@@ -21,23 +21,11 @@ class etcd::init($variant = "default", $nodes = []) {
     path    => '/etc/systemd/system/etcd.service',
     ensure  => file,
     content => template('etcd/etcd.service.erb'),
-    notify  => Exec['daemon-reload'],
+    notify  => Service['etcd-server'],
   }
 
-  exec { 'daemon-reload':
-    command     => '/bin/systemctl daemon-reload',
-    refreshonly => true,
-    notify     => Exec['daemon-enable'],
-  }
-
-  exec { 'daemon-enable':
-    command     => '/bin/systemctl enable etcd',
-    refreshonly => true,
-    notify     => Exec['daemon-restart'],
-  }
-
-  exec { 'daemon-restart':
-    command     => '/bin/systemctl restart etcd',
-    refreshonly => true,
+  service { 'etcd-server':
+    ensure  => 'running',
+    enable  => true,
   }
 }
