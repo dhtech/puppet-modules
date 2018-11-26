@@ -62,7 +62,7 @@ class grafana($current_event) {
   # our custom config.
   file { 'grafana-config':
     path    => '/etc/grafana/grafana.ini',
-    content => template('dhmon/grafana-config.ini.erb'),
+    content => template('grafana/grafana-config.ini.erb'),
     mode    => '0644',
     require => Package['grafana'],
     notify  => Service['grafana-server'],
