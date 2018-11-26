@@ -64,6 +64,7 @@ class prometheus ($scrape_configs) {
   -> file { '/etc/default/prometheus':
     ensure  => file,
     content => template('prometheus/prometheus.default.erb'),
+    notify  => Service['prometheus'],
   }
 
   file { 'rules':
