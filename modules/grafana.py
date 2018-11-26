@@ -6,15 +6,11 @@ import lib
 
 
 def generate(host, *args):
-<<<<<<< HEAD
     info = {
     'grafana': {
         'current_event': lib.get_current_event()
         }
     }
-=======
-    info = {'current_event': lib.get_current_event()}
->>>>>>> 8027f9d115f4dc65ca389cc4f648c6d6584e28ba
 
     return info
 
