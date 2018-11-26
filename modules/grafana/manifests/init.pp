@@ -17,6 +17,9 @@ class grafana($current_event) {
   package { 'apt-transport-https':
       ensure => installed,
   }
+  package { 'gnupg':
+      ensure => installed,
+  }
   file { 'grafana-source-add':
     ensure  => file,
     path    => '/etc/apt/sources.list.d/grafana.list',
