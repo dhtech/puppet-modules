@@ -23,6 +23,7 @@ class kubernetes::master($variant, $etcd = [], $podnet = "", $servicenet = "") {
     path => '/etc/kubernetes/kubeadm-config.yaml',
     ensure  => file,
     content => template('kubernetes/init.yaml.erb'),
+    notify  => Exec['create-cluster'],
   }
 
   exec { 'create-cluster':

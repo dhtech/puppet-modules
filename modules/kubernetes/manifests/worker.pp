@@ -18,6 +18,7 @@ class kubernetes::worker($variant, $apiserver) {
   file { '/etc/kubernetes/kubeadm-config.yaml':
     ensure  => 'file',
     content => template('kubernetes/join.yaml.erb'),
+    notify  => Exec['join-cluster'],
   }
 
   exec { 'join-cluster':
