@@ -96,8 +96,8 @@ class prometheus ($scrape_configs) {
   }
 
   apache::proxy { 'prometheus-backend':
-    url     => '/prometheus/',
-    backend => 'http://localhost:9090/prometheus/',
+    url     => '/',
+    backend => 'http://localhost:9090/',
   }
 
   file { 'prometheus-presence-exporter':
