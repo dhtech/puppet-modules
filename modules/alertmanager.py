@@ -4,6 +4,10 @@
 # license that can be found in the LICENSE file
 
 
+
+def requires(host, *args):
+    return ['apache(ldap)']
+
 def generate(host, *args):
     return {'alertmanager': {}}
 
