@@ -16,13 +16,13 @@ ExecStart=/usr/bin/etcd --name <%= @hostname %> \
     --initial-advertise-peer-urls https://<%= @ipaddress %>:2380 \
     --initial-cluster <%= @nodes.map{ |node| "#{node}=https://#{node}:2380" }.join(',') %> \
     --initial-cluster-state new \
-    --ca-file /etc/etcd/ca.crt \
-    --cert-file /etc/etcd/client.pem \
-    --key-file /etc/etcd/key.pem \
+    # --ca-file /etc/etcd/ca.crt \ PUT KUBE-APISERVER AUTHORIZED HERE
+    # --cert-file /etc/etcd/client.pem \
+    # --key-file /etc/etcd/key.pem \
     --client-cert-auth \
-    --peer-trusted-ca-file /etc/etcd/ca.crt \
-    --peer-cert-file /etc/etcd/peer.pem \
-    --peer-key-file /etc/etcd/key.pem \
+    --peer-trusted-ca-file /etc/ssl/etcd-ca.crt \
+    --peer-cert-file /etc/ssl/etcd-<%= @fqdn %>.crt \
+    --peer-key-file /etc/ssl/private/etcd-<%= @fqdn %>.key \
     --peer-client-cert-auth
  
 [Install]
