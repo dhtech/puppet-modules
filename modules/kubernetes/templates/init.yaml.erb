@@ -19,10 +19,10 @@ etcd:
   external:
     endpoints:<% @etcd.each do |endpoint|%>
     - "<%= endpoint %>:2379"<% end -%>
-    
-    caFile: "/etc/kubernetes/etcd-ca.crt"
-    certFile: "/etc/kubernetes/etcd.crt"
-    certKey: "/etc/kubernetes/etcd.key"
+
+    caFile: "/etc/ssl/cert/dhtech-ca.pem"
+    certFile: "/etc/ssl/cert/tech-control1.event.dreamhack.se.pem"
+    certKey: "/etc/ssl/private/tech-control1.event.dreamhack.se.pem"
 networking:
   serviceSubnet: "<%= @servicenet %>"
   podSubnet: "<%= @podnet %>"
@@ -32,7 +32,7 @@ controlPlaneEndpoint: "<%= @ipaddress %>:6443"
 apiServerExtraArgs:
   authorization-mode: "Node,RBAC"
 controllerManagerExtraArgs:
-  node-cidr-mask-size: 20
+  node-cidr-mask-size: "26"
 schedulerExtraArgs:
   address: "<%= @ipaddress %>"
 apiServerCertSANs:
@@ -47,5 +47,5 @@ auditPolicy:
   logDir: "/var/log/audit"
   logMaxAge: 7
 featureGates:
-  selfhosting: false
+  SelfHosting: false
 clusterName: "<%= @variant %>"
