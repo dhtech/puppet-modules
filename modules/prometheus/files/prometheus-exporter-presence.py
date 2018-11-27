@@ -17,16 +17,11 @@ res = c.execute("""
 
 fields = ('host', 'layer', 'os')
 
-# for row in res:
-# keys = ['%s="%s"' % x for x in zip(fields, row) if x[1]]
-# print 'host_expected{' + ','.join(keys) + '} 1', int(time.time() * 1000)
-
-
 res = c.execute("""
   SELECT host.name FROM host, option
         WHERE option.node_id = host.node_id AND option.name = 'silence'
 """)
 for row in res:
-    print 'host_silenced{host="%s"} 1' % row, int(time.time() * 1000)
+    print 'host_silenced{host="%s"} 1' % row)
 
 # vim: ts=4: sts=4: sw=4: expandtab
