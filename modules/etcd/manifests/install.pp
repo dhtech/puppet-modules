@@ -23,7 +23,7 @@ class etcd::install {
   
   exec { 'etcd-download':
     command     => '/usr/bin/curl -L -o /etc/etcd/install/etcd-v3.3.10-linux-amd64.tar.gz https://github.com/etcd-io/etcd/releases/download/v3.3.10/etcd-v3.3.10-linux-amd64.tar.gz',
-    creates     => '/etc/etcd/etcd-v3.3.10-linux-amd64/etcd',
+    creates     => '/etc/etcd/install/etcd-v3.3.10-linux-amd64.tar.gz',
     logoutput   => 'on_failure',
     try_sleep   => 1,
     notify      => Exec['etcd-unpack'],
@@ -31,16 +31,16 @@ class etcd::install {
 
   exec { 'etcd-unpack':
     command     => '/usr/bin/tar -xvf -C /etc/etcd/install/ /etc/etcd/install/etcd-v3.3.10-linux-amd64.tar.gz',
+    creates     => '/etc/etcd/install/etcd-v3.3.10-linux-amd64/etcd',
     logoutput   => 'on_failure',
     try_sleep   => 1,
-    refreshonly => true,
     notify      => File['etcd-install'],
   }
 
   file { 'etcd-install':
     path     => '/usr/bin/etcd',
     source   => '/etc/etcd/install/etcd-v3.3.10-linux-amd64/etcd',
-    ensure   => present,
+    ensure   => file,
     mode     => "0700",
   }
 }
