@@ -36,9 +36,9 @@ class etcd::init($variant = "default", $nodes = []) {
   file { 'etcd-unit':
     path    => '/etc/systemd/system/etcd.service',
     ensure  => file,
-    refreshonly => true,
     content => template('etcd/etcd.service.erb'),
     notify  => Service['etcd-server'],
+    require => Exec['etcd-peering-cert'],
   }
 
   service { 'etcd-server':
