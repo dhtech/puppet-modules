@@ -22,25 +22,25 @@ class etcd::install {
   }
 
   exec { 'etcd-download':
-    command     => '/usr/bin/curl -L -o /etc/etcd/install/etcd-v3.3.10-linux-amd64.tar.gz https://github.com/etcd-io/etcd/releases/download/v3.3.10/etcd-v3.3.10-linux-amd64.tar.gz',
-    creates     => '/etc/etcd/install/etcd-v3.3.10-linux-amd64.tar.gz',
-    logoutput   => 'on_failure',
-    try_sleep   => 1,
-    notify      => Exec['etcd-unpack'],
+    command   => '/usr/bin/curl -L -o /etc/etcd/install/etcd-v3.3.10-linux-amd64.tar.gz https://github.com/etcd-io/etcd/releases/download/v3.3.10/etcd-v3.3.10-linux-amd64.tar.gz',
+    creates   => '/etc/etcd/install/etcd-v3.3.10-linux-amd64.tar.gz',
+    logoutput => 'on_failure',
+    try_sleep => 1,
+    notify    => Exec['etcd-unpack'],
   }
 
   exec { 'etcd-unpack':
-    command     => '/usr/bin/tar -xvf /etc/etcd/install/etcd-v3.3.10-linux-amd64.tar.gz -C /etc/etcd/install/',
-    creates     => '/etc/etcd/install/etcd-v3.3.10-linux-amd64/etcd',
-    logoutput   => 'on_failure',
-    try_sleep   => 1,
-    notify      => File['etcd-install'],
+    command   => '/usr/bin/tar -xvf /etc/etcd/install/etcd-v3.3.10-linux-amd64.tar.gz -C /etc/etcd/install/',
+    creates   => '/etc/etcd/install/etcd-v3.3.10-linux-amd64/etcd',
+    logoutput => 'on_failure',
+    try_sleep => 1,
+    notify    => File['etcd-install'],
   }
 
   file { 'etcd-install':
-    path     => '/usr/bin/etcd',
-    source   => '/etc/etcd/install/etcd-v3.3.10-linux-amd64/etcd',
-    ensure   => file,
-    mode     => "0700",
+    path   => '/usr/bin/etcd',
+    source => '/etc/etcd/install/etcd-v3.3.10-linux-amd64/etcd',
+    ensure => file,
+    mode   => "0700",
   }
 }
