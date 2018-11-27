@@ -3,19 +3,14 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file
 #
-# == Class: web
+# == Class: dhmap
 #
-# Static HTML
+# Static HTML for dhmap
 #
 # === Parameters
 #
 
-class dhmon::web {
-  file { 'webmon':
-    path    => '/var/www/html/webmon',
-    source  => 'puppet:///scripts/webmon',
-    recurse => true,
-  }
+class dhmap {
 
   file { 'dhmap':
     ensure => link,
@@ -26,7 +21,7 @@ class dhmon::web {
   cron { 'update-seatmap':
     command => '/scripts/dhmap/src/ipplan2dhmap.py /etc/ipplan.db > /var/www/html/dhmap/data.json',
     user    => root,
-    minute  => '*/10',
+    minute  => '*',
     require => File['dhmap'],
   }
 }

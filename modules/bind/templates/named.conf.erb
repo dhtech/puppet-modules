@@ -21,10 +21,14 @@ acl trusted-clients {
     10.0.0.0/16;        # access-mgmt
     10.32.0.0/21;       # dist-mgmt
     10.32.16.0/20;      # srv-pods
-    172.16.0.0/24;      # ilonet
-    77.80.220.128/26;   # tech-wlan
-    77.80.228.128/25;   # tech-net, tech-vpn
-    77.80.228.0/26;     # tech-srv-a
+    77.80.191.0/24;     # tech-wlan, tech-net
+    77.80.228.0/22;     # tech-srv
+    2a05:2242:840::/64; # tech-wlan
+    2a05:2242:910::/64; # tech-srv
+    2a05:2242:911::/64; # tech-srv
+    2a05:2242:920::/64; # tech-srv
+    2a05:2242:930::/64; # tech-srv
+    2a05:2242:950::/64; # tech-net
     77.80.229.192/26;   # k8s-node
     77.80.231.0/24;     # tech-servers
     77.80.254.0/23;     # tech-colo
