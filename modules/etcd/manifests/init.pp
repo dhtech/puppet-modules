@@ -12,7 +12,7 @@
 
 class etcd::init($variant = 'default', $nodes = []) {
 
-  $trustedclient =  vault("kube-${variant}:apicert")
+  $trustedclient =  base64('decode', vault("kube-${variant}:apicert")["certificate"])
 
   file { 'etcd-trusted-ca':
     ensure  => file,
