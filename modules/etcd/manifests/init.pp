@@ -19,7 +19,7 @@ class etcd::init($variant = "default", $nodes = []) {
     path    => '/usr/bin/dh-etcd-peering',
     mode    => '0755',
     source  => 'puppet:///modules/etcd/certs.sh',
-    notify  => Exec['etcd-peering-cert'],
+    notify    => Exec['etcd-peering-cert'],
   }
 
   exec { 'etcd-peering-cert':

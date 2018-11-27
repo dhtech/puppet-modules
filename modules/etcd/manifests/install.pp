@@ -38,9 +38,9 @@ class etcd::install {
   }
 
   file { 'etcd-install':
-    path   => '/usr/bin/etcd',
-    source => '/etc/etcd/install/etcd-v3.3.10-linux-amd64/etcd',
     ensure => file,
-    mode   => "0700",
+    source => '/etc/etcd/install/etcd-v3.3.10-linux-amd64/etcd',
+    path   => '/usr/bin/etcd',
+    mode   => '0700',
   }
 }
