@@ -40,6 +40,22 @@ class kubernetes::master($variant, $etcd = [], $podnet = "", $servicenet = "", $
     ensure => directory,
   }
 
+  file { 'kubeadm-cert-script':
+    path    => '/scripts/kubernetes/upload-cert.sh',
+    ensure  => file,
+    content => template('kubernetes/upload-cert.sh.erb'),
+    mode    => '0544',
+  }
+
+  exec { 'kubeadm-cert-upload':
+    command     => "/scripts/kubernetes/upload-cert.sh",
+    refreshonly => true,
+    require     => [
+      File['/etc/ssl/certs/server-fullchain.crt'],
+      File['kubeadm-cert-script'],
+    ],
+  }
+
   file { 'kubeadm-init-config':
     path => '/etc/kubernetes/kubeadm-config.yaml',
     ensure  => file,
@@ -50,7 +66,10 @@ class kubernetes::master($variant, $etcd = [], $podnet = "", $servicenet = "", $
   exec { 'kubeadm-create-cluster':
     command     => "/usr/bin/kubeadm init --config /etc/kubernetes/kubeadm-config.yaml",
     refreshonly => true,
-    require     => File['kubeadm-init-config'],
+    require     => [
+      File['kubeadm-init-config'],
+      Exec['kubeadm-cert-upload'],
+    ],
     notify      => Exec['kubeadm-token-create'],
   }
 
