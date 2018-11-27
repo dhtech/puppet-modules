@@ -15,6 +15,10 @@ class kubernetes::master($variant, $etcd = [], $podnet = "", $servicenet = "", $
   # TODO (gix): use letsencrypt for kubernetes apiserver
   # TODO (rctl): set vault("kube-${variant}:apicert") with machinecert
 
+  file { '/script/kubernetes/':
+    ensure => directory,
+  }
+
   file { 'kubeadm-init-config':
     path => '/etc/kubernetes/kubeadm-config.yaml',
     ensure  => file,
