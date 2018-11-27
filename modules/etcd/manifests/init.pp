@@ -14,12 +14,20 @@ class etcd::init($variant = 'default', $nodes = []) {
 
   $trustedclient =  vault("kube-${variant}:apicert")
 
+  file { 'etcd-trusted-ca':
+    ensure  => file,
+    path    => '/etc/etcd/trusted-client.crt',
+    content => template('etcd/trusted-client.crt.erb'),
+    require => Exec['etcd-peering-cert'],
+  }
+
   file { 'dh-etcd-peering':
     ensure => file,
     path   => '/usr/bin/dh-etcd-peering',
     mode   => '0755',
     source => 'puppet:///modules/etcd/certs.sh',
     notify => Exec['etcd-peering-cert'],
+    require => File['etcd-trusted-ca'],
   }
 
   exec { 'etcd-peering-cert':
@@ -34,8 +42,20 @@ class etcd::init($variant = 'default', $nodes = []) {
     ensure  => file,
     path    => '/etc/systemd/system/etcd.service',
     content => template('etcd/etcd.service.erb'),
-    notify  => Service['etcd-server'],
+    notify  => Exec['systemctl-reload'],
     require => Exec['etcd-peering-cert'],
+  }
+
+  exec { 'systemctl-reload':
+    command     =>  '/bin/systemctl daemon-reload',
+    refreshonly => true,
+    notify  => Exec['systemctl-enable'],
+  }
+
+  exec { 'systemctl-enable':
+    command     =>  '/bin/systemctl enable etcd',
+    refreshonly => true,
+    notify  => Service['etcd-server'],
   }
 
   service { 'etcd-server':
