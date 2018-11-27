@@ -75,8 +75,8 @@ class system($ca) {
   }
 
   file { 'deb-extras.list':
-    path   => '/etc/apt/sources.list.d/deb-extras.list',
     ensure => file,
+    path   => '/etc/apt/sources.list.d/deb-extras.list',
     source => 'puppet:///modules/system/deb-extras.list',
   }
 
