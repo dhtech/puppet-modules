@@ -88,7 +88,9 @@ def generate_backend(host, local_services):
     nodes = {}
     all_nodes = set()
     for layer in layers:
-        nodes[layer] = lib.get_nodes_with_layer(layer, domain)
+        hosts = lib.get_nodes_with_layer(layer, domain)
+        mute = lib.get_nodes_with_layer(layer, domain, 'no-snmp')
+        nodes[layer] = list(set(hosts) - set(mute))
         all_nodes.update(nodes[layer])
 
     # ICMP everything
