@@ -17,7 +17,8 @@ class etcd::install {
       'curl',
   ])
 
-  file { '/etc/etcd/install/':
+  file { 'etcd-dir':
+    path    => '/etc/etcd/install/',
     ensure  => directory,
     recurse => true,
   }
@@ -28,6 +29,7 @@ class etcd::install {
     logoutput => 'on_failure',
     try_sleep => 1,
     notify    => Exec['etcd-unpack'],
+    require   => File['etcd-dir'],
   }
 
   exec { 'etcd-unpack':
