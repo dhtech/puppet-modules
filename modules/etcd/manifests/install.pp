@@ -18,8 +18,8 @@ class etcd::install {
   ])
 
   file { 'etcd-dir':
-    path    => '/etc/etcd/install/',
     ensure  => directory,
+    path    => '/etc/etcd/install/',
     recurse => true,
   }
 
