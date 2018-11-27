@@ -11,12 +11,9 @@
 #
 
 class etcd::init($variant = "default", $nodes = []) {
-  # TODO (rctl): vault["etcd_${variant}:ca", {}] -> /etc/etcd/ca.crt
-  #              vault["etcd_${variant}:client", {}] -> /etc/etcd/client.pem
-  #              vault["etcd_${variant}:key", {}] -> /etc/etcd/key.pem
-  #              vault["etcd_${variant}:peercert", {}] -> /etc/etcd/peer.pem
-  #              vault["etcd_${variant}:peerkey", {}] -> /etc/etcd/key.pem
-  
+
+  $trustedclient =  vault("kube-${variant}:apicert")
+
   file { 'dh-etcd-peering':
     ensure  => file,
     path    => '/usr/bin/dh-etcd-peering',
