@@ -20,7 +20,7 @@ etcd:
     endpoints:<% @etcd.each do |endpoint|%>
     - "https://<%= endpoint %>:2379"<% end -%>
 
-    caFile: "/etc/ssl/dhtech-ca.pem"
+    caFile: "/etc/ssl/dhtech-ca.crt"
     certFile: "/var/lib/puppet/ssl/certs/<%= @hostname %>.event.dreamhack.se.pem"
     keyFile: "/var/lib/puppet/ssl/private_keys/<%= @hostname %>.event.dreamhack.se.pem"
 networking:
