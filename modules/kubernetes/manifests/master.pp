@@ -12,12 +12,9 @@
 
 class kubernetes::master($variant, $etcd = [], $podnet = "", $servicenet = "") {
 
-  # TODO (rctl): set vault["kubernetes_${variant}:token", {}]
-  # TODO (rctl): set vault["kubernetes_${variant}:cert_hash", {}]
-  # TODO (rctl): Write these files from vault:
-  #   /etc/kubernetes/etcd-ca.crt
-  #   /etc/kubernetes/etcd.crt
-  #   /etc/kubernetes/etcd.key
+  # TODO (gix): set vault["kube-${variant}:token", {}]
+  # TODO (gix): use letsencrypt for kubernetes apiserver
+  # TODO (rctl): set vault("kube-${variant}:apicert") with machinecert
 
   file { 'kubeadm-init-config':
     path => '/etc/kubernetes/kubeadm-config.yaml',
