@@ -15,6 +15,27 @@ class kubernetes::master($variant, $etcd = [], $podnet = "", $servicenet = "", $
   # TODO (gix): use letsencrypt for kubernetes apiserver
   # TODO (rctl): set vault("kube-${variant}:apicert") with machinecert
 
+  # Needed for 'ssl-cert' group
+  ensure_packages(['ssl-cert'])
+
+  file { '/etc/ssl/certs/server-fullchain.crt':
+    ensure => file,
+    owner  => 'root',
+    group  => 'ssl-cert',
+    mode   => '0644',
+    source => 'puppet:///letsencrypt/fullchain.pem',
+    links  => 'follow',
+  }
+
+  file { '/etc/ssl/private/server.key':
+    ensure => file,
+    owner  => 'root',
+    group  => 'ssl-cert',
+    mode   => '0640',
+    source => 'puppet:///letsencrypt/privkey.pem',
+    links  => 'follow',
+  }
+
   file { '/scripts/kubernetes/':
     ensure => directory,
   }

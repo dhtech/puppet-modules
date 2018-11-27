@@ -21,8 +21,8 @@ etcd:
     - "<%= endpoint %>:2379"<% end -%>
 
     caFile: "/etc/ssl/cert/dhtech-ca.pem"
-    certFile: "/etc/ssl/cert/tech-control1.event.dreamhack.se.pem"
-    certKey: "/etc/ssl/private/tech-control1.event.dreamhack.se.pem"
+    certFile: "/etc/ssl/cert/server-fullchain.crt"
+    certKey: "/etc/ssl/private/server.key"
 networking:
   serviceSubnet: "<%= @servicenet %>"
   podSubnet: "<%= @podnet %>"
