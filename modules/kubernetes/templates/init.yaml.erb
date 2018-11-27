@@ -20,7 +20,7 @@ etcd:
     endpoints:<% @etcd.each do |endpoint|%>
     - "https://<%= endpoint %>:2379"<% end -%>
 
-    caFile: "/etc/ssl/cert/dhtech-ca.pem"
+    caFile: "/etc/ssl/dhtech-ca.pem"
     certFile: "/etc/ssl/cert/server-fullchain.crt"
     keyFile: "/etc/ssl/private/server.key"
 networking:
