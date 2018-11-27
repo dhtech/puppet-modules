@@ -40,13 +40,13 @@ class etcd::install {
   file { 'etcd-install':
     path     => '/usr/bin/etcd',
     source   => '/etc/etcd/etcd-v3.3.10-linux-amd64/etcd',
-    ensure   => file,
+    ensure   => present,
     mode     => "0700",
     notify   => Exec['etcd-clean'],
   }
 
   exec { 'etcd-clean':
-    command     => '/usr/bin/rm -r /etc/etcd/etcd-v3.3.10-linux-amd64.tar.gz /etc/etcd/etcd-v3.3.10-linux-amd64',
+    command     => '/usr/bin/rm -r /etc/etcd/etcd-*',
     logoutput   => 'on_failure',
     refreshonly => true,
     try_sleep   => 1,
