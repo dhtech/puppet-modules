@@ -8,7 +8,7 @@ Restart=always
 RestartSec=5s
 TimeoutStartSec=0
 
-ExecStart=/usr/bin/etcd --name <%= @hostname %> \
+ExecStart=/usr/bin/etcd --name <%= @fqdn %> \
     --data-dir /var/lib/etcd \
     --listen-client-urls https://<%= @ipaddress %>:2379 \
     --advertise-client-urls https://<%= @ipaddress %>:2379 \
