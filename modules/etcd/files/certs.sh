@@ -53,3 +53,5 @@ open('${CA}', 'w').write(result['issuing_ca'])
 "
 fi
 
+cat $CA > /etc/ssl/etcd-fullchain.crt
+cat $CERTFILE >> /etc/ssl/etcd-fullchain.crt
