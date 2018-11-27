@@ -97,7 +97,7 @@ def generate(host, *args):
             _, group = arg.split(':', 2)
             info['sudo'].append(group)
         else:
-            groups.append(group)
+            groups.append(arg)
 
     # 'git' is a special keyword to enable restricting users to git-shell
     if 'git' in args:
