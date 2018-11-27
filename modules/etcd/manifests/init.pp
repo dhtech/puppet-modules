@@ -18,7 +18,6 @@ class etcd::init($variant = 'default', $nodes = []) {
     ensure  => file,
     path    => '/etc/etcd/trusted-client.crt',
     content => template('etcd/trusted-client.crt.erb'),
-    require => Exec['etcd-peering-cert'],
   }
 
   file { 'dh-etcd-peering':
