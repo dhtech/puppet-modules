@@ -18,7 +18,8 @@ class etcd::install {
   ])
 
   file { '/etc/etcd/install/':
-    ensure => directory,
+    ensure  => directory,
+    recurse => true,
   }
 
   exec { 'etcd-download':
