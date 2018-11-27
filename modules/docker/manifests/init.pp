@@ -42,9 +42,14 @@ class docker {
     refreshonly => true,
     require     => Package['apt-transport-https'],
   }
+  file { 'docker-apt-pin':
+    ensure  => file,
+    path    => '/etc/apt/preferences.d/docker'
+    source => 'puppet:///modules/docker/docker-pin',
+  }
   package { 'docker-ce':
     ensure  => installed,
-    require => [File['docker-source-add'], Exec['docker-source-key'], Exec['docker-source-update']],
+    require => [File['docker-source-add'], Exec['docker-source-key'], Exec['docker-source-update'], File['docker-apt-pin']],
   }
 
   # Update sysctl to handle forwarding
