@@ -22,11 +22,11 @@ class etcd::init($variant = 'default', $nodes = []) {
   }
 
   file { 'dh-etcd-peering':
-    ensure => file,
-    path   => '/usr/bin/dh-etcd-peering',
-    mode   => '0755',
-    source => 'puppet:///modules/etcd/certs.sh',
-    notify => Exec['etcd-peering-cert'],
+    ensure  => file,
+    path    => '/usr/bin/dh-etcd-peering',
+    mode    => '0755',
+    source  => 'puppet:///modules/etcd/certs.sh',
+    notify  => Exec['etcd-peering-cert'],
     require => File['etcd-trusted-ca'],
   }
 
@@ -42,20 +42,20 @@ class etcd::init($variant = 'default', $nodes = []) {
     ensure  => file,
     path    => '/etc/systemd/system/etcd.service',
     content => template('etcd/etcd.service.erb'),
-    notify  => Exec['systemctl-reload'],
+    notify  => Exec['etcd-systemctl-reload'],
     require => Exec['etcd-peering-cert'],
   }
 
-  exec { 'systemctl-reload':
+  exec { 'etcd-systemctl-reload':
     command     =>  '/bin/systemctl daemon-reload',
     refreshonly => true,
-    notify  => Exec['systemctl-enable'],
+    notify      => Exec['etcd-systemctl-enable'],
   }
 
-  exec { 'systemctl-enable':
+  exec { 'etcd-systemctl-enable':
     command     =>  '/bin/systemctl enable etcd',
     refreshonly => true,
-    notify  => Service['etcd-server'],
+    notify      => Service['etcd-server'],
   }
 
   service { 'etcd-server':
