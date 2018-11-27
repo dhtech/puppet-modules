@@ -25,11 +25,11 @@ class factorio::install {
         require => [Exec['download']],
         }
     file { '/home/factorio/ensure_permissions.py':
-        ensure  => file,
-        owner   => 'factorio',
-        group   => 'factorio',
-        mode    => '0644',
-        source  => 'puppet:///modules/factorio/ensure_permissions.py',
+        ensure => file,
+        owner  => 'factorio',
+        group  => 'factorio',
+        mode   => '0644',
+        source => 'puppet:///modules/factorio/ensure_permissions.py',
         }
     exec { 'factorio_chown':
         command => '/bin/chown -R factorio:factorio /home/factorio',
