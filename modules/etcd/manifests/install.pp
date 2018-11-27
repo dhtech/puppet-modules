@@ -34,7 +34,6 @@ class etcd::install {
     logoutput   => 'on_failure',
     try_sleep   => 1,
     refreshonly => true,
-    require     => Exec['etcd-download'],
     notify      => File['etcd-install'],
   }
 
@@ -43,7 +42,6 @@ class etcd::install {
     source   => '/etc/etcd/etcd-v3.3.10-linux-amd64/etcd',
     ensure   => file,
     mode     => "0700",
-    require  => Exec['etcd-unpack'],
     notify   => Exec['etcd-clean'],
   }
 
