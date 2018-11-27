@@ -8,11 +8,10 @@ VAULT_ADDR="https://vault.tech.dreamhack.se:1443"
 # Login with our machine account
 RESPONSE=$(curl -ks \
   -H "Content-Type: application/json" \
-  --data @<(echo '{"name":"puppet-etcd"}') \
   --cacert /etc/ssl/certs/ca-certificates.crt \
   --cert /var/lib/puppet/ssl/certs/$(hostname -f).pem \
   --key /var/lib/puppet/ssl/private_keys/$(hostname -f).pem \
-  ${VAULT_ADDR}v1/auth/cert/login -XPOST)
+  ${VAULT_ADDR}/v1/auth/cert/login -XPOST)
 
 # Extract token
 echo "Logging in to vault server $VAULT_ADDR"
@@ -22,7 +21,9 @@ import json
 
 print json.loads(sys.stdin.read())['auth']['client_token']")
 
-
-# Upload public cert for apiserver to Vault
-echo "-H \"X-Vault-Token:$TOKEN\"" | curl -X POST - -d "{\"fullchain\":\"$(cat /etc/ssl/certs/server-fullchain.crt)\"}" $VAULT_ADDR/v1/<%= @current_event %>-services/kube-<%= @variant %>:apicert
-
+# Check if secret already exist
+RESULT=$(echo "-H \"X-Vault-Token:$TOKEN\"" | curl -X POST -K- $VAULT_ADDR/v1/<%= @current_event %>-services/kube-<%= @variant %>:apicert | grep -s '"certificate":')
+if [[ $RC -ne 0 ]]; then
+    # Upload public cert for apiserver to Vault
+    echo "-H \"X-Vault-Token:$TOKEN\"" | curl -X POST -K- -d "{\"certificate\":\"$(cat /var/lib/puppet/ssl/certs/$(hostname -f).pem)\"}" $VAULT_ADDR/v1/<%= @current_event %>-services/kube-<%= @variant %>:apicert
+fi

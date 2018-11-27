@@ -21,8 +21,8 @@ etcd:
     - "https://<%= endpoint %>:2379"<% end -%>
 
     caFile: "/etc/ssl/dhtech-ca.pem"
-    certFile: "/etc/ssl/certs/server-fullchain.crt"
-    keyFile: "/etc/ssl/private/server.key"
+    certFile: "/var/lib/puppet/ssl/certs/<%= @hostname %>.event.dreamhack.se.pem"
+    keyFile: "/var/lib/puppet/ssl/private_keys/<%= @hostname %>.event.dreamhack.se.pem"
 networking:
   serviceSubnet: "<%= @servicenet %>"
   podSubnet: "<%= @podnet %>"
