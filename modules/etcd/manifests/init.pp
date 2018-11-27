@@ -27,7 +27,7 @@ class etcd::init($variant = 'default', $nodes = []) {
     mode    => '0755',
     source  => 'puppet:///modules/etcd/certs.sh',
     notify  => Exec['etcd-peering-cert'],
-    require => File['etcd-trusted-ca'],
+    require => [File['etcd-trusted-ca'], File['etcd-install']],
   }
 
   exec { 'etcd-peering-cert':
