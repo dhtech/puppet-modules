@@ -45,6 +45,7 @@ class kubernetes::master($variant, $etcd = [], $podnet = "", $servicenet = "", $
     ensure  => file,
     content => template('kubernetes/upload-cert.sh.erb'),
     mode    => '0544',
+    notify  => Exec['kubeadm-cert-upload'],
   }
 
   exec { 'kubeadm-cert-upload':
