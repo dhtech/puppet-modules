@@ -74,6 +74,12 @@ class system($ca) {
     target => '/etc/motd',
   }
 
+  file { 'deb-extras.list'
+    path   => '/etc/apt/sources.list.d/deb-extras.list'
+    ensure => file,
+    source => 'puppet:///modules/system/deb-extras.list',
+  }
+
   # TODO(bluecmd): Move whatever we can from preseed to here.
   # That way all our OSes will have the same tools.
   ensure_packages([
