@@ -22,6 +22,6 @@ res = c.execute("""
         WHERE option.node_id = host.node_id AND option.name = 'silence'
 """)
 for row in res:
-    print 'host_silenced{host="%s"} 1' % row)
+    print 'host_silenced{host="%s"} 1' % row
 
 # vim: ts=4: sts=4: sw=4: expandtab
