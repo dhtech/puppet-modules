@@ -3,7 +3,7 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file
 #
-# == Class: dhmon::prometheus
+# == Class: prometheus
 #
 # Prometheus metrics collector
 #
@@ -13,7 +13,7 @@
 #   Map of the same structure as Prometheus' scrape_configs.
 #
 
-class dhmon::prometheus ($scrape_configs) {
+class prometheus ($scrape_configs) {
 
   #Create user/group for Prometheus
   group { 'prometheus':
@@ -32,7 +32,7 @@ class dhmon::prometheus ($scrape_configs) {
   }
   -> file { '/srv/metrics':
     ensure  => directory,
-    content => template('dhmon/prometheus.yaml.erb'),
+    content => template('prometheus/prometheus.yaml.erb'),
     owner   => 'prometheus',
     group   => 'prometheus',
     mode    => '0700',
@@ -53,17 +53,18 @@ class dhmon::prometheus ($scrape_configs) {
 
   file { '/opt/prometheus/prometheus.yml':
     ensure  => file,
-    content => template('dhmon/prometheus.yaml.erb'),
+    content => template('prometheus/prometheus.yaml.erb'),
     notify  => Exec['prometheus-hup'],
   }
   -> file { '/etc/systemd/system/prometheus.service':
     ensure  => file,
-    content => template('dhmon/prometheus.service.erb'),
+    content => template('prometheus/prometheus.service.erb'),
     notify  => Exec['prometheus-systemctl-daemon-reload'],
   }
   -> file { '/etc/default/prometheus':
     ensure  => file,
-    content => template('dhmon/prometheus.default.erb'),
+    content => template('prometheus/prometheus.default.erb'),
+    notify  => Service['prometheus'],
   }
 
   file { 'rules':
@@ -73,7 +74,7 @@ class dhmon::prometheus ($scrape_configs) {
     owner   => 'prometheus',
     group   => 'prometheus',
     purge   => true,
-    source  => 'puppet:///svn/allevents/dhmon/rules/',
+    source  => 'puppet:///svn/allevents/prometheus/rules/',
     notify  => Exec['prometheus-hup'],
   }
   -> service { 'prometheus':
@@ -96,14 +97,15 @@ class dhmon::prometheus ($scrape_configs) {
   }
 
   apache::proxy { 'prometheus-backend':
-    url     => '/prometheus/',
-    backend => 'http://localhost:9090/prometheus/',
+    url     => '/',
+    backend => 'http://localhost:9090/',
   }
 
   file { 'prometheus-presence-exporter':
     ensure => file,
     path   => '/usr/local/bin/prometheus-presence-exporter',
-    source => 'puppet:///modules/dhmon/prometheus-exporter-presence.py',
+    source => 'puppet:///modules/prometheus/prometheus-exporter-presence.py',
+    mode   => '0755',
   }
 
   cron { 'prometheus-presence-exporter-cron':

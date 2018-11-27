@@ -8,7 +8,7 @@ After=syslog.target network.target
 
 [Service]
 EnvironmentFile=/etc/default/alertmanager
-User=prometheus
+User=alertmanager
 WorkingDirectory=/opt/alertmanager
 ExecStart=/opt/alertmanager/alertmanager $ARGS
 

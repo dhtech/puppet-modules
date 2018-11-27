@@ -2,7 +2,7 @@
 domain = <%= @fqdn %>
 http_port = 3001
 protocol = http
-root_url = https://%(domain)s/grafana
+root_url = https://<%= @fqdn %>
 
 [users]
 allow_sign_up = false

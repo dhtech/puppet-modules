@@ -32,7 +32,7 @@ class asterisk($current_event) {
     mode   => '0644',
     owner  => 'asterisk',
     group  => 'asterisk',
-    source => 'puppet:///svn/$current_event/services/voipplan',
+    source => 'puppet:///svn/allevents/services/voipplan',
   }
   file { '/etc/asterisk/iax.conf':
     ensure  => file,
