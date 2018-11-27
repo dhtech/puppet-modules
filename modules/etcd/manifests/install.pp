@@ -30,7 +30,7 @@ class etcd::install {
   }
 
   exec { 'etcd-unpack':
-    command     => '/usr/bin/tar -xvf -o /etc/etcd/install/ /etc/etcd/install/etcd-v3.3.10-linux-amd64.tar.gz',
+    command     => '/usr/bin/tar -xvf -C /etc/etcd/install/ /etc/etcd/install/etcd-v3.3.10-linux-amd64.tar.gz',
     logoutput   => 'on_failure',
     try_sleep   => 1,
     refreshonly => true,
