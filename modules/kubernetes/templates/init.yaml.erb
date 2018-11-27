@@ -18,7 +18,7 @@ kind: ClusterConfiguration
 etcd:
   external:
     endpoints:<% @etcd.each do |endpoint|%>
-    - "<%= endpoint %>:2379"<% end -%>
+    - "https://<%= endpoint %>:2379"<% end -%>
 
     caFile: "/etc/ssl/cert/dhtech-ca.pem"
     certFile: "/etc/ssl/cert/server-fullchain.crt"
