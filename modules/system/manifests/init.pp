@@ -74,8 +74,8 @@ class system($ca) {
     target => '/etc/motd',
   }
 
-  file { 'deb-extras.list'
-    path   => '/etc/apt/sources.list.d/deb-extras.list'
+  file { 'deb-extras.list':
+    path   => '/etc/apt/sources.list.d/deb-extras.list',
     ensure => file,
     source => 'puppet:///modules/system/deb-extras.list',
   }
