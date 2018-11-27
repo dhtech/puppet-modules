@@ -25,5 +25,5 @@ print json.loads(sys.stdin.read())['auth']['client_token']")
 RESULT=$(echo "-H \"X-Vault-Token:$TOKEN\"" | curl -X GET -K- $VAULT_ADDR/v1/<%= @current_event %>-services/kube-<%= @variant %>:apicert | grep -s '"certificate":')
 if [[ $RC -ne 0 ]]; then
     # Upload public cert for apiserver to Vault
-    echo "-H \"X-Vault-Token:$TOKEN\"" | curl -X POST -K- -d "{\"certificate\":\"$(cat /var/lib/puppet/ssl/certs/$(hostname -f).pem)\"}" $VAULT_ADDR/v1/<%= @current_event %>-services/kube-<%= @variant %>:apicert
+    echo "-H \"X-Vault-Token:$TOKEN\"" | curl -X POST -K- -d "{\"certificate\":\"$(cat /var/lib/puppet/ssl/certs/$(hostname -f).pem | base64 -w 0)\"}" $VAULT_ADDR/v1/<%= @current_event %>-services/kube-<%= @variant %>:apicert
 fi
