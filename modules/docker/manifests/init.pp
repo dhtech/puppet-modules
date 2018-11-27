@@ -43,8 +43,8 @@ class docker {
     require     => Package['apt-transport-https'],
   }
   file { 'docker-apt-pin':
-    ensure  => file,
-    path    => '/etc/apt/preferences.d/docker'
+    ensure => file,
+    path   => '/etc/apt/preferences.d/docker',
     source => 'puppet:///modules/docker/docker-pin',
   }
   package { 'docker-ce':
