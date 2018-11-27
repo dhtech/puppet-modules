@@ -42,7 +42,7 @@ class etcd::install {
     source   => '/etc/etcd/etcd-v3.3.10-linux-amd64/etcd',
     ensure   => file,
     mode     => "0700",
-    refreshonly => true,
+    require  => File['etcd-install'],
     notify   => Exec['etcd-clean'],
   }
 
