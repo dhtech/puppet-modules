@@ -25,12 +25,12 @@ class factorio::install {
         require => [Exec['download']],
         }
     file { '/home/factorio/ensure_permissions.py':
-  ensure      => file,
-  owner       => 'factorio',
-        group => 'factorio',
-  mode        => '0644',
-  source      => 'puppet:///modules/factorio/ensure_permissions.py',
-  }
+        ensure  => file,
+        owner   => 'factorio',
+        group   => 'factorio',
+        mode    => '0644',
+        source  => 'puppet:///modules/factorio/ensure_permissions.py',
+        }
     exec { 'factorio_chown':
         command => '/bin/chown -R factorio:factorio /home/factorio',
         unless  => '/usr/bin/python /home/factorio/ensure_permissions.py',
@@ -49,7 +49,7 @@ class factorio::install {
         group   => 'factorio',
         mode    => '0640',
         content => template('factorio/server-settings.json.erb'),
-  notify        => Service['factorio_service'],
+        notify  => Service['factorio_service'],
         }
     exec { 'create_server':
         command => "/home/factorio/factorio/bin/x64/factorio --create /home/factorio/factorio/saves/${world_name}.zip",
@@ -59,6 +59,6 @@ class factorio::install {
         command     => '/bin/systemctl daemon-reload',
         refreshonly => true,
         subscribe   => File['/etc/systemd/system/factorio.service'],
-  notify            => Service['factorio_service']
+        notify      => Service['factorio_service']
         }
 }
