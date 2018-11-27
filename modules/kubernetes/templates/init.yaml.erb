@@ -21,7 +21,7 @@ etcd:
     - "https://<%= endpoint %>:2379"<% end -%>
 
     caFile: "/etc/ssl/dhtech-ca.pem"
-    certFile: "/etc/ssl/cert/server-fullchain.crt"
+    certFile: "/etc/ssl/certs/server-fullchain.crt"
     keyFile: "/etc/ssl/private/server.key"
 networking:
   serviceSubnet: "<%= @servicenet %>"

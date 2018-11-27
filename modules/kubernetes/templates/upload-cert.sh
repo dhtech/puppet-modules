@@ -23,12 +23,6 @@ import json
 print json.loads(sys.stdin.read())['auth']['client_token']")
 
 
-KUBEADM_CERTDIR="/etc/kubernetes/pki"
-TTL="720h" # 30d
+# Upload public cert for apiserver to Vault
+echo "-H \"X-Vault-Token:$TOKEN\"" | curl -X POST - -d "{\"fullchain\":\"$(cat /etc/ssl/certs/server-fullchain.crt)\"}" $VAULT_ADDR/v1/<%= @current_event %>-services/kube-<%= @variant %>:apicert
 
-# Calculate CA cert hash and create kubeadm token
-KUBEADM_HASH=$(openssl x509 -pubkey -in ${KUBEADM_CERTDIR}/ssl/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //')
-KUBEADM_TOKEN=$(kubeadm token create --ttl ${TTL})
-
-# Upload hash and token to Vault
-echo "-H \"X-Vault-Token:$TOKEN\"" | curl -X POST - -d "{\"cert_hash\":\"${KUBEADM_HASH}\", \"token\":\"${KUBEADM_TOKEN}\"}" $VAULT_ADDR/v1/<%= @current_event %>-services/kube-<%= @variant %>:token
