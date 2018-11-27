@@ -40,7 +40,7 @@ if [ ! -f ${CERTFILE} ]; then
   echo "-H \"X-Vault-Token: $TOKEN\"" |
     curl --data @<(echo "{\"ttl\": \"${TTL}\", \"common_name\": \"$(hostname -f)\"}") \
       --cacert /etc/ssl/certs/ca-certificates.crt \
-      -s -X POST -K - ${VAULT_ADDR}v1/etcd-pki/issue/replication | python -c "
+      -s -X POST -K - ${VAULT_ADDR}v1/etcd-pki/issue/peering | python -c "
 import sys
 import json
 

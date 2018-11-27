@@ -17,9 +17,26 @@ class etcd::init($variant = "default", $nodes = []) {
   #              vault["etcd_${variant}:peercert", {}] -> /etc/etcd/peer.pem
   #              vault["etcd_${variant}:peerkey", {}] -> /etc/etcd/key.pem
   
+  file { 'dh-etcd-peering':
+    ensure  => file,
+    path    => '/usr/bin/dh-etcd-peering',
+    mode    => '0755',
+    source  => 'puppet:///modules/etcd/certs.sh',
+    notify  => Exec['etcd-peering-cert'],
+  }
+
+  exec { 'etcd-peering-cert':
+    command     => '/usr/bin/dh-etcd-peering',
+    logoutput   => 'on_failure',
+    try_sleep   => 1,
+    refreshonly => true,
+    notify      => File['etcd-unit'],
+  }
+
   file { 'etcd-unit':
     path    => '/etc/systemd/system/etcd.service',
     ensure  => file,
+    refreshonly => true,
     content => template('etcd/etcd.service.erb'),
     notify  => Service['etcd-server'],
   }
