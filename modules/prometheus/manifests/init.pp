@@ -105,6 +105,7 @@ class prometheus ($scrape_configs) {
     ensure => file,
     path   => '/usr/local/bin/prometheus-presence-exporter',
     source => 'puppet:///modules/prometheus/prometheus-exporter-presence.py',
+    mode   => '0755',
   }
 
   cron { 'prometheus-presence-exporter-cron':
