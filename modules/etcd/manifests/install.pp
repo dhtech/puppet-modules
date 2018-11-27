@@ -20,7 +20,7 @@ class etcd::install {
   file { '/etc/etcd/install/':
     ensure => directory,
   }
-  
+
   exec { 'etcd-download':
     command     => '/usr/bin/curl -L -o /etc/etcd/install/etcd-v3.3.10-linux-amd64.tar.gz https://github.com/etcd-io/etcd/releases/download/v3.3.10/etcd-v3.3.10-linux-amd64.tar.gz',
     creates     => '/etc/etcd/install/etcd-v3.3.10-linux-amd64.tar.gz',
