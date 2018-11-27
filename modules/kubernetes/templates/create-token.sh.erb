@@ -30,7 +30,7 @@ KUBEADM_HASH=$(openssl x509 -pubkey -in ${KUBEADM_CERTDIR}/ssl/ca.crt | openssl 
 KUBEADM_TOKEN=$(kubeadm token create --ttl ${TTL})
 
 # Check if secret already exist
-RESULT=$(echo "-H \"X-Vault-Token:$TOKEN\"" | curl -X POST -K- $VAULT_ADDR/v1/<%= @current_event %>-services/kube-<%= @variant %>:token |  grep -s '"cert_hash":')
+RESULT=$(echo "-H \"X-Vault-Token:$TOKEN\"" | curl -X GET -K- $VAULT_ADDR/v1/<%= @current_event %>-services/kube-<%= @variant %>:token |  grep -s '"cert_hash":')
 if [[ $RC -ne 0 ]]; then
     # Upload hash and token to Vault
     echo "-H \"X-Vault-Token:$TOKEN\"" | curl -X POST -K- -d "{\"cert_hash\":\"${KUBEADM_HASH}\", \"token\":\"${KUBEADM_TOKEN}\"}" $VAULT_ADDR/v1/<%= @current_event %>-services/kube-<%= @variant %>:token
