@@ -1,0 +1,34 @@
+#!/bin/bash
+
+set -e
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+VAULT_ADDR="https://vault.tech.dreamhack.se:1443"
+
+# Login with our machine account
+RESPONSE=$(curl -ks \
+  -H "Content-Type: application/json" \
+  --data @<(echo '{"name":"puppet-etcd"}') \
+  --cacert /etc/ssl/certs/ca-certificates.crt \
+  --cert /var/lib/puppet/ssl/certs/$(hostname -f).pem \
+  --key /var/lib/puppet/ssl/private_keys/$(hostname -f).pem \
+  ${VAULT_ADDR}v1/auth/cert/login -XPOST)
+
+# Extract token
+echo "Logging in to vault server $VAULT_ADDR"
+TOKEN=$(echo $RESPONSE | python -c "
+import sys
+import json
+
+print json.loads(sys.stdin.read())['auth']['client_token']")
+
+
+KUBEADM_CERTDIR="/etc/kubernetes/pki"
+TTL="720h" # 30d
+
+# Calculate CA cert hash and create kubeadm token
+KUBEADM_HASH=$(openssl x509 -pubkey -in ${KUBEADM_CERTDIR}/ssl/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //')
+KUBEADM_TOKEN=$(kubeadm token create --ttl ${TTL})
+
+# Upload hash and token to Vault
+curl -X POST -H "X-Vault-Token:$VAULT_TOKEN" -d "{\"cert_hash\":\"${KUBEADM_HASH}\", \"token\":\"${KUBEADM_TOKEN}\"}" $VAULT_ADDR/v1/<%= @current_event %>-services/kube-<%= @variant %>:token

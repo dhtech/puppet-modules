@@ -10,9 +10,8 @@
 # === Parameters
 #
 
-class kubernetes::master($variant, $etcd = [], $podnet = "", $servicenet = "") {
+class kubernetes::master($variant, $etcd = [], $podnet = "", $servicenet = "", $current_event = "") {
 
-  # TODO (gix): set vault["kube-${variant}:token", {}]
   # TODO (gix): use letsencrypt for kubernetes apiserver
   # TODO (rctl): set vault("kube-${variant}:apicert") with machinecert
 
@@ -20,13 +19,31 @@ class kubernetes::master($variant, $etcd = [], $podnet = "", $servicenet = "") {
     path => '/etc/kubernetes/kubeadm-config.yaml',
     ensure  => file,
     content => template('kubernetes/init.yaml.erb'),
-    notify  => Exec['create-cluster'],
+    notify  => Exec['kubeadm-create-cluster'],
   }
 
-  exec { 'create-cluster':
-    command     => "/usr/bin/kubectl init --config /etc/kubernetes/kubeadm-config.yaml",
+  exec { 'kubeadm-create-cluster':
+    command     => "/usr/bin/kubeadm init --config /etc/kubernetes/kubeadm-config.yaml",
     refreshonly => true,
-    require => File['kubeadm-init-config'],
+    require     => File['kubeadm-init-config'],
+    notify      => Exec['kubeadm-token-create'],
+  }
+
+  file { 'kubeadm-token-script':
+    path    => '/scripts/kubernetes/create-token.sh',
+    ensure  => file,
+    content => template('kubernetes/create-token.sh.erb'),
+    mode    => '0544',
+    notify  => Exec['kubeadm-token-create'],
+  }
+
+  exec { 'kubeadm-token-create':
+    command     => "/scripts/kubernetes/create-token.sh",
+    refreshonly => true,
+    require     => [
+      Exec['kubeadm-create-cluster'],
+      File['kubeadm-token-script'],
+    ],
   }
 
 }

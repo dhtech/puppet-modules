@@ -10,10 +10,7 @@
 # === Parameters
 #
 
-class kubernetes::worker($variant, $apiserver) {
-
-  $token = vault["kubernetes_${variant}:token", {}]
-  $hash = vault["kubernetes_${variant}:cert_hash", {}]
+class kubernetes::worker($variant, $apiserver, $cert_hash, $token) {
 
   file { '/etc/kubernetes/kubeadm-config.yaml':
     ensure  => 'file',

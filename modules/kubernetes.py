@@ -7,6 +7,7 @@ import lib
 
 def generate(host, *args):
 
+    current_event = lib.get_current_event()
     info = {}
     info['kubernetes::install'] = {}
 
@@ -22,9 +23,15 @@ def generate(host, *args):
                     apiserver = h
             if apiserver == "":
                 raise Exception("k8s apiserver missing in ipplan")      
+            secretpath = '{}-services/k8s:token'.format(event)
+            secrets = lib.read_secret(secretpath)
+            if not secrets:
+                raise Exception("Kubeadm token secret missing. Is master deployed?")
             info['kubernetes::worker'] = {
                 'variant': variant,
-                'apiserver': apiserver
+                'apiserver': apiserver,
+                'cert_hash': secrets['cert_hash'],
+                'token': secrets['token']
             }
         if 'control' in args:
             # find which etcd matches this host
@@ -43,7 +50,8 @@ def generate(host, *args):
                 'variant': variant,
                 'etcd': etcd,
                 'podnet': podnet[0],
-                'servicenet': servicenet[0]
+                'servicenet': servicenet[0],
+                'current_event': current_event
             }
 
     return info
