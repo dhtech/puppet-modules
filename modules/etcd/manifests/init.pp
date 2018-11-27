@@ -15,11 +15,12 @@ class etcd::init($variant = 'default', $nodes = []) {
   $trustedclient =  vault("kube-${variant}:apicert")
 
   file { 'dh-etcd-peering':
-    ensure => file,
-    path   => '/usr/bin/dh-etcd-peering',
-    mode   => '0755',
-    source => 'puppet:///modules/etcd/certs.sh',
-    notify => Exec['etcd-peering-cert'],
+    ensure  => file,
+    path    => '/usr/bin/dh-etcd-peering',
+    mode    => '0755',
+    source  => 'puppet:///modules/etcd/certs.sh',
+    notify  => Exec['etcd-peering-cert'],
+    require => File['etcd-install'],
   }
 
   exec { 'etcd-peering-cert':
