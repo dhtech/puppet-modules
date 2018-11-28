@@ -2,6 +2,7 @@ import collections
 import hvac
 import socket
 import sqlite3
+import re
 from collections import defaultdict
 # HACK: Teach Vault about our trusted CAs
 import os
@@ -417,6 +418,15 @@ def get_networks_with_name(name):
     networks = c.fetchone()
     conn.close()
     return networks
+
+def match_networks_name(pattern):
+    conn, c = _connect()
+
+    c.execute('SELECT name, ipv4_txt FROM network')
+    networks = c.fetchall()
+    conn.close()
+
+    return [network[1] for network in networks if re.match(pattern, network[0])]
 
 
 def get_network_gateway(name):
