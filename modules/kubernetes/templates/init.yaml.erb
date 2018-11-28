@@ -7,8 +7,6 @@ nodeRegistration:
   - key: "kubeadmNode"
     value: "master"
     effect: "NoSchedule"
-  kubeletExtraArgs:
-    cgroupDriver: "cgroupfs"
 apiEndpoint:
   advertiseAddress: "<%= @ipaddress %>"
   bindPort: 6443

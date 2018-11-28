@@ -26,7 +26,7 @@ KUBEADM_CERTDIR="/etc/kubernetes/pki"
 TTL="720h" # 30d
 
 # Calculate CA cert hash and create kubeadm token
-KUBEADM_HASH=$(openssl x509 -pubkey -in ${KUBEADM_CERTDIR}/ssl/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //')
+KUBEADM_HASH=$(openssl x509 -pubkey -in ${KUBEADM_CERTDIR}/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //')
 KUBEADM_TOKEN=$(kubeadm token create --ttl ${TTL})
 
 # Check if secret already exist
