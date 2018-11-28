@@ -8,6 +8,7 @@ Restart=always
 RestartSec=5s
 TimeoutStartSec=0
 
+Environment=SSL_CERT_FILE=/etc/etcd/ca.pem
 ExecStart=/usr/bin/etcd --name <%= @fqdn %> \
     --data-dir /var/lib/etcd \
     --listen-client-urls https://<%= @ipaddress %>:2379 \

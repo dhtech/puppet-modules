@@ -53,6 +53,12 @@ open('${CA}', 'w').write(result['issuing_ca'])
 "
 fi
 
+# Fullchain
 cat $CERTFILE > /etc/ssl/etcd-fullchain.crt
 echo "" >> /etc/ssl/etcd-fullchain.crt
 cat $CA >> /etc/ssl/etcd-fullchain.crt
+
+# Trusted store
+cat $CA > /etc/etcd/ca.pem
+echo "" >> /etc/etcd/ca.pem
+cat /var/lib/puppet/ssl/certs/ca.pem >> /etc/etcd/ca.pem
