@@ -15,7 +15,7 @@ class kubernetes::install {
   require docker
 
   exec { 'k8s-disable-swap':
-    command   => 'swapoff -a',
+    command   => '/usr/sbin/swapoff -a',
     try_sleep => 1,
   }
   
