@@ -63,7 +63,7 @@ class etcd::init($variant = 'default', $nodes = []) {
     refreshonly => true,
   }
 
-  service { 'etcd-server':
+  service { 'etcd':
     ensure  => 'running',
     enable  => true,
     require => Exec['etcd-systemctl-enable'],
