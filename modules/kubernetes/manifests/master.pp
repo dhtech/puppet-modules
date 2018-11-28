@@ -24,31 +24,28 @@ class kubernetes::master($variant, $etcd = [], $podnet = "", $servicenet = "", $
     ensure  => file,
     content => template('kubernetes/upload-cert.sh.erb'),
     mode    => '0544',
+    require => File['/scripts/kubernetes/'],
     notify  => Exec['kubeadm-cert-upload'],
   }
 
   exec { 'kubeadm-cert-upload':
     command     => "/scripts/kubernetes/upload-cert.sh",
     refreshonly => true,
-    require     => [
-      File['kubeadm-cert-script'],
-    ],
   }
 
   file { 'kubeadm-init-config':
     path => '/etc/kubernetes/kubeadm-config.yaml',
     ensure  => file,
     content => template('kubernetes/init.yaml.erb'),
+    require => Exec['kubeadm-cert-upload'],
     notify  => Exec['kubeadm-create-cluster'],
   }
 
   exec { 'kubeadm-create-cluster':
     command     => "/usr/bin/kubeadm init --config /etc/kubernetes/kubeadm-config.yaml",
+    creates     => '/etc/kubernetes/admin.conf',
     refreshonly => true,
-    require     => [
-      File['kubeadm-init-config'],
-      Exec['kubeadm-cert-upload'],
-    ],
+    require     => Exec['k8s-disable-swap'],
     notify      => Exec['kubeadm-token-create'],
   }
 
@@ -57,16 +54,13 @@ class kubernetes::master($variant, $etcd = [], $podnet = "", $servicenet = "", $
     ensure  => file,
     content => template('kubernetes/create-token.sh.erb'),
     mode    => '0544',
-    notify  => Exec['kubeadm-token-create'],
+    require => File['/scripts/kubernetes/'],
   }
 
   exec { 'kubeadm-token-create':
     command     => "/scripts/kubernetes/create-token.sh",
     refreshonly => true,
-    require     => [
-      Exec['kubeadm-create-cluster'],
-      File['kubeadm-token-script'],
-    ],
+    require     => Exec['kubeadm-token-script'],
   }
 
 }
