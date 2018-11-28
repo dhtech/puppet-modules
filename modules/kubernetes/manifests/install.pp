@@ -18,7 +18,7 @@ class kubernetes::install {
     command   => '/usr/sbin/swapoff -a',
     try_sleep => 1,
   }
-  
+
   # Add source for Kubernetes
   file { 'k8s-source-add':
     ensure  => file,
@@ -66,13 +66,6 @@ class kubernetes::install {
   }
   ~> exec { '/sbin/sysctl --system':
     refreshonly => true,
-  }
-
-  # configure cgroupfs
-  exec { 'add-cgroupfs':
-    command =>  '/bin/sed -i "s/--kubeconfig=\/etc\/kubernetes\/kubelet.conf/--kubeconfig=\/etc\/kubernetes\/kubelet.conf --cgroup-driver=cgroupfs/g" /etc/systemd/system/kubelet.service.d/10-kubeadm.conf',
-    unless  =>  '/bin/grep cgroup-driver /etc/systemd/system/kubelet.service.d/10-kubeadm.conf',
-    onlyif  =>  '/usr/bin/test -f /etc/systemd/system/kubelet.service.d/10-kubeadm.conf',
   }
   ~> exec { '/bin/systemctl daemon-reload':
     refreshonly => true,
