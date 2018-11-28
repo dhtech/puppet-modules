@@ -13,6 +13,11 @@
 class kubernetes::install {
 
   require docker
+
+  exec { 'k8s-disable-swap':
+    command   => 'swapoff -a',
+    try_sleep => 1,
+  }
   
   # Add source for Kubernetes
   file { 'k8s-source-add':
