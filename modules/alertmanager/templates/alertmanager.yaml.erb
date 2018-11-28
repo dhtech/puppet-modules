@@ -29,17 +29,15 @@ route:
     - receiver: 'powerpatrol'
       match_re:
         team: powerpatrol
-
-route:
-  receiver: 'heartbeat'
-  group_wait: 1s
-  group_interval: 5s
-  repeat_interval: 5s
-  group_by: [alertname]
-  routes:
     - receiver: 'heartbeat'
-      match_re:
-        type: heartbeat
+      group_wait: 1s
+      group_interval: 5s
+      repeat_interval: 5s
+      group_by: [alertname]
+      routes:
+        - receiver: 'heartbeat'
+          match_re:
+            type: heartbeat
 
 receivers:
 - name: 'default-receiver'
