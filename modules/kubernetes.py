@@ -23,7 +23,7 @@ def generate(host, *args):
                     apiserver = h
             if apiserver == "":
                 raise Exception("k8s apiserver missing in ipplan")      
-            secretpath = '{}-services/k8s:token'.format(event)
+            secretpath = '{}-services/k8s:token'.format(current_event)
             secrets = lib.read_secret(secretpath)
             if not secrets:
                 raise Exception("Kubeadm token secret missing. Is master deployed?")
