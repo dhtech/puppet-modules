@@ -77,6 +77,8 @@ def generate_backend(host, local_services):
             }
             if 'interval' in spec['monitor']:
                 scrape_config['scrape_interval'] = spec['monitor']['interval']
+            if 'labels' in spec['monitor']:
+                scrape_config['static_configs'][0]['labels'] = spec['monitor']['labels']
             # Only allow authentication over https
             if spec['monitor'].get('auth', False) and url.scheme == 'https':
                 scrape_config['basic_auth'] = basic_auth
