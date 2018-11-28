@@ -26,6 +26,9 @@ route:
     - receiver: 'powerpatrol'
       match_re:
         team: powerpatrol
+    - receiver: 'heartbeat'
+      match_re:
+        type: heartbeat
 
 receivers:
 - name: 'default-receiver'
@@ -47,3 +50,6 @@ receivers:
   webhook_configs:
   - url: 'https://ticket.tech.dreamhack.se/tech/prometheus.php'
   - url: 'http://alertringer.tech.event.dreamhack.se/api/v1/alerts?team=powerpatrol'
+- name: 'heartbeat'
+  webhook_configs:
+  - url: 'http://alertringer.tech.event.dreamhack.se/api/v1/heartbeat'
