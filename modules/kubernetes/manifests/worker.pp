@@ -18,8 +18,11 @@ class kubernetes::worker($variant, $apiserver, $cert_hash, $token) {
     notify  => Exec['join-cluster'],
   }
 
+  $token =  vault("kube-${variant}:token")['token']
+  $cert_hash =  vault("kube-${variant}:token")['cert_hash']
+
   exec { 'join-cluster':
-    command     => '/usr/bin/kubectl join --config /etc/kubernetes/kubeadm-config.yaml',
+    command     => '/usr/bin/kubeadm join --config /etc/kubernetes/kubeadm-config.yaml',
     creates     => '/etc/kubernetes/kubelet.conf',
     refreshonly => true,
     require     => Exec['k8s-disable-swap'],
