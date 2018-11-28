@@ -15,8 +15,7 @@ include apt
 # None. Everything is driven by facts.
 #
 class hardware {
-
-  if $::productname == 'VMware Virtual Platform' {
+  if defined('$::productname') and $::productname =~ /VMware/ {
     # OpenBSD does not use open-vm-tools, see the vmt(4) driver.
     if $::operatingsystem != 'OpenBSD' {
       package { 'open-vm-tools':

@@ -45,3 +45,10 @@ client <%= ipv4_addr %>/32 {
     shortname = <%= ipv4_addr %>
 }
 <% end %>
+
+# Local test agent
+client 127.0.0.1/32 {
+    ipaddr    = 127.0.0.1
+    secret    = test
+    shortname = 127.0.0.1
+}

@@ -91,10 +91,13 @@ def generate(host, *args):
         services_group = 'services-team'
     info['sudo'].append(services_group)
 
+    groups = []
     for arg in args:
         if arg.startswith('sudo'):
             _, group = arg.split(':', 2)
             info['sudo'].append(group)
+        else:
+            groups.append(arg)
 
     # 'git' is a special keyword to enable restricting users to git-shell
     if 'git' in args:
@@ -107,13 +110,13 @@ def generate(host, *args):
     ]
 
     # Allow sudo users to logon everywhere
-    for user in info['sudo']:
-        info['logon'].append((user, 'ALL'))
+    for group in info['sudo']:
+        info['logon'].append((group, 'ALL'))
 
-    # Add all explicit users
-    for user in args:
+    # Add all explicit groups
+    for group in groups:
         # Allow local logins as well to allow scripts to auth users
-        formatted = user.format(event=lib.get_current_event())
+        formatted = group.format(event=lib.get_current_event())
         info['logon'].append((formatted, 'ALL'))
 
     # LDAP settings

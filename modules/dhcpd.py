@@ -23,7 +23,7 @@ def generate(host, *args):
         active = 0
 
     # Get fqdn of active node
-    active_node = 'ddns1.event.dreamhack.se'
+    active_node = 'dhcp1.event.dreamhack.se'
     for (k, v) in lib.get_nodes_with_package('dhcpd',
                                              lib.get_domain(host)).items():
         if v == [u'active']:

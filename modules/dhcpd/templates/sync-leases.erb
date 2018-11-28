@@ -14,7 +14,7 @@ case ${kernel_name} in
   ;;
   *)
     echo "Kernel name ${kernel_name} is not supported"
-    exit 1;
+    exit 127;
   ;;
 esac
 
@@ -23,15 +23,26 @@ if [ "<%= @active %>" -eq "1" ]; then
   exit 0;
 fi
 
-# Copy lease database
-curl -s https://<%= @active_node %>:15443/leases --cacert ${certdir}/certs/ca.pem --cert ${certdir}/certs/<%= @fqdn %>.pem --key ${certdir}/private_keys/<%= @fqdn %>.pem > ${dhcp_leases_dir}/dhcpd.leases
-if [ $? -ne 0 ]; then
-  logger -t `basename $0` "syncing dhcp leases file FAILED"
-  sync_fail=1
-else
-  logger -t `basename $0` "syncing dhcp leases file OK"
-fi
+# Download lease database
+curl -s https://<%= @active_node %>:15443/leases --cacert ${certdir}/certs/ca.pem --cert ${certdir}/certs/<%= @fqdn %>.pem --key ${certdir}/private_keys/<%= @fqdn %>.pem > ${dhcp_leases_dir}/dhcpd.leases.sync
 
-if [ -n "${sync_fail}" ]; then
+if [ $? -ne 0 ]; then
+  logger -t `basename $0` "syncing dhcp leases file FAILED (could not download lease file)"
   exit 1
 fi
+
+# Check if lease database is empty
+if [ $(cat "${dhcp_leases_dir}/dhcpd.leases.sync" | wc -c) -eq 0 ]; then
+    logger -t `basename $0` "syncing dhcp leases file FAILED (downloaded lease file is empty)"
+    exit 2
+fi
+
+# Copy lease database
+cp ${dhcp_leases_dir}/dhcpd.leases.sync ${dhcp_leases_dir}/dhcpd.leases
+
+if [ $? -ne 0 ]; then
+  logger -t `basename $0` "syncing dhcp leases file FAILED (cannot replace lease file)"
+  exit 3
+fi
+
+logger -t `basename $0` "syncing dhcp leases file OK"

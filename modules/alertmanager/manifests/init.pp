@@ -10,19 +10,27 @@
 # === Parameters
 #
 
-class dhmon::alertmanager {
+class alertmanager {
 
-  #Create directories for prometheus and metric storage
-  file { '/opt/alertmanager':
+  #Create user/group for Prometheus
+  group { 'alertmanager':
+    ensure => 'present',
+  }
+  -> user { 'alertmanager':
+    ensure => 'present',
+    system => true,
+  }
+  #Create directories for alertmanager
+  -> file { '/opt/alertmanager':
     ensure => 'directory',
-    owner  => 'prometheus',
-    group  => 'prometheus',
+    owner  => 'alertmanager',
+    group  => 'alertmanager',
     mode   => '0700',
   }
   -> file { '/srv/alertmanager':
     ensure => 'directory',
-    owner  => 'prometheus',
-    group  => 'prometheus',
+    owner  => 'alertmanager',
+    group  => 'alertmanager',
     mode   => '0700',
   }
 
@@ -32,40 +40,43 @@ class dhmon::alertmanager {
     source => 'puppet:///data/alertmanager-0.14.0.linux-amd64.tar.gz',
     notify => Exec[ 'untar-alertmanager' ],
   }
-  #Unpackage prometheus
+  #Unpackage alertmanager
   exec { 'untar-alertmanager':
     command     => '/bin/tar -zxf /tmp/alertmanager.tar.gz -C /opt/alertmanager --strip-components=1',
     refreshonly => true,
-    user        => 'prometheus',
+    user        => 'alertmanager',
   }
 
   file { '/opt/alertmanager/alertmanager.yml':
     ensure  => file,
-    content => template('dhmon/alertmanager.yaml.erb'),
+    content => template('alertmanager/alertmanager.yaml.erb'),
+    notify  => Exec['alertmanager-hup'],
   }
-
   #Systemctl config
-  file { '/etc/systemd/system/alertmanager.service':
+  -> file { '/etc/systemd/system/alertmanager.service':
     ensure  => file,
-    notify  => Exec['systemctl-daemon-reload'],
-    content => template('dhmon/alertmanager.service.erb'),
+    content => template('alertmanager/alertmanager.service.erb'),
+    notify  => Exec['alertmanager-systemctl-daemon-reload'],
   }
   -> file { '/etc/default/alertmanager':
     ensure  => file,
-    content => template('dhmon/alertmanager.default.erb'),
+    content => template('alertmanager/alertmanager.default.erb'),
     notify  => Service['alertmanager'],
   }
   -> apache::proxy { 'alertmanager':
-    url     => '/alertmanager',
-    backend => 'http://localhost:9093/alertmanager',
+    url     => '/',
+    backend => 'http://localhost:9093/',
   }
   -> service { 'alertmanager':
     ensure  => running,
-    require => File['/etc/systemd/system/alertmanager.service'],
   }
+
   exec { 'alertmanager-hup':
     command     => '/usr/bin/pkill -SIGHUP alertmanager',
     refreshonly => true,
   }
-
+  exec { 'alertmanager-systemctl-daemon-reload':
+    command     => '/bin/systemctl daemon-reload',
+    refreshonly => true,
+  }
 }
