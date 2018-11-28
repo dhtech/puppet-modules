@@ -60,7 +60,7 @@ class kubernetes::master($variant, $etcd = [], $podnet = "", $servicenet = "", $
   exec { 'kubeadm-token-create':
     command     => "/scripts/kubernetes/create-token.sh",
     refreshonly => true,
-    require     => Exec['kubeadm-token-script'],
+    require     => File['kubeadm-token-script'],
   }
 
 }
