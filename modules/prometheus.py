@@ -87,19 +87,16 @@ def generate_backend(host, local_services):
     # Layer specific monitoring
     layers = lib.get_layers(domain)
 
-    nodes = {}
+    snmp_nodes = {}
+    ssh_nodes = {}
     all_nodes = set()
     for layer in layers:
         hosts = lib.get_nodes_with_layer(layer, domain)
-        mute = lib.get_nodes_with_layer(layer, domain, 'no-snmp')
-        nodes[layer] = list(set(hosts) - set(mute))
+        snmp_mute = lib.get_nodes_with_layer(layer, domain, 'no-snmp')
+        ssh_mute = lib.get_nodes_with_layer(layer, domain, 'no-ssh')
+        snmp_nodes[layer] = list(set(hosts) - set(snmp_mute))
+        ssh_nodes[layer] = list(set(hosts) - set(ssh_mute))
         all_nodes.update(nodes[layer])
-
-    # ICMP everything
-    # TODO(bluecmd): if we want to use this, enable this.
-    # icmp = blackbox('icmp', '127.0.0.1:1234', '
-    #                 'all_nodes, {'modules': ['icmp']})
-    # scrape_configs.append(icmp)
 
     # SNMP
     for layer in layers:
@@ -115,6 +112,16 @@ def generate_backend(host, local_services):
         snmp['scrape_interval'] = '30s'
         snmp['scrape_timeout'] = '30s'
         scrape_configs.append(snmp)
+
+    # SSH
+    for layer in layers:
+        host = 'radius.event.dreamhack.se'
+        ssh = blackbox(
+               'ssh_%s' % layer, host,
+               nodes[layer], {'module': ['ssh_banner']}, labels={'layer': layer})
+        ssh['scrape_interval'] = '30s'
+        ssh['scrape_timeout'] = '30s'
+        scrape_configs.append(ssh)
 
     # Add external service-discovery
     external = {
