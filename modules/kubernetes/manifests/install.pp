@@ -79,6 +79,7 @@ class kubernetes::install {
     logoutput   => 'on_failure',
     try_sleep   => 1,
     refreshonly => true,
+    require     => Package['kubeadm'],
   }
 
 }
