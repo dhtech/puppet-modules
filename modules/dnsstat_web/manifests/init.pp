@@ -35,7 +35,12 @@ class dnsstat_web($current_event) {
     require     => Package['apache2'],
     command     => '/usr/sbin/a2ensite dnsstat.event.dreamhack.se',
     creates     => '/etc/apache2/sites-available/.dnsstat_a2ensite_enabled',
-    notify      => Service['apache2'],
+    notify      => Exec['dnsstat-apache2-restart'],
+  }
+
+  exec { 'dnsstat-apache2-restart':
+    command     =>  '/bin/systemctl restart apache2',
+    refreshonly => true,
   }
 
   file { ['/var/www/dnsstat.event.dreamhack.se',
