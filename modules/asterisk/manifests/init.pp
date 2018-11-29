@@ -46,12 +46,12 @@ class asterisk($current_event) {
   exec { "allow_obelix_ipv4":
     command => 'iptables -A INPUT -s obelix.tech.dreamhack.se -m comment --comment "allow obelix communication" -j ACCEPT',
     path        => '/usr/bin:/bin/:/sbin:/usr/sbin',
-    unless  => 'iptables-save | grep "allow obelix communication" | wc -l',
+    unless  => 'iptables-save | grep "allow obelix communication" >/dev/null 2>&1',
   }
   exec { "allow_obelix_ipv6":
     command => 'ip6tables -A INPUT -s obelix.tech.dreamhack.se -m comment --comment "allow obelix communication" -j ACCEPT',
     path        => '/usr/bin:/bin/:/sbin:/usr/sbin',
-    unless  => 'ip6tables-save | grep "allow obelix communication" | wc -l',
+    unless  => 'ip6tables-save | grep "allow obelix communication" >/dev/null 2>&1',
   }
 
   file { '/etc/asterisk/manager.conf':
