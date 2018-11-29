@@ -63,6 +63,18 @@ class pxe {
   }
 
   file {
+    '/srv/www/memtest.bin':
+      ensure => present,
+      source => 'puppet:///data/pxe/memtest.bin',
+  }
+
+  file {
+    '/srv/www/dban.bzi':
+      ensure => present,
+      source => 'puppet:///data/pxe/dban.bzi',
+  }
+
+  file {
     '/etc/nginx/sites-enabled/pxe':
       ensure => file,
       source => 'puppet:///modules/pxe/nginx-pxe',
