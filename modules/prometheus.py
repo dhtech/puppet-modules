@@ -114,9 +114,9 @@ def generate_backend(host, local_services):
     # SSH
     for layer in layers:
         for host in ['jumpgate1', 'jumpgate2', 'rancid']:
-            host = host + '.event.dreamhack.se:9115'
+            fqdn = host + '.event.dreamhack.se:9115'
             ssh = blackbox(
-                   'ssh_%s' % layer, host,
+                   'ssh_%s_%s' % (layer, host), fqdn,
                    ssh_nodes[layer], {'module': ['ssh_banner']}, labels={'layer': layer})
             ssh['scrape_interval'] = '30s'
             ssh['scrape_timeout'] = '30s'
