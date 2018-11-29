@@ -22,25 +22,16 @@ TraceEnable Off
   AuthType Basic
   AuthName "Dreamhack Tech Internal Services"
 
+  AuthBasicProvider ldap-tech ldap-crew
+
+  Require valid-user
+</Location>
+
+<Location /webmon>
+  AuthType Basic
+  AuthName "Dreamhack Tech Internal Services"
+
   AuthBasicProvider ldap-tech
-
-  Require valid-user
-</Location>
-
-<Location /dhmap>
-  AuthType Basic
-  AuthName "Dreamhack Tech Internal Services"
-
-  AuthBasicProvider ldap-tech ldap-crew
-
-  Require valid-user
-</Location>
-
-<Location /analytics>
-  AuthType Basic
-  AuthName "Dreamhack Tech Internal Services"
-
-  AuthBasicProvider ldap-tech ldap-crew
 
   Require valid-user
 </Location>
