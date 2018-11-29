@@ -19,6 +19,11 @@ class kubernetes::install {
     try_sleep => 1,
   }
 
+  file { 'kube-dir':
+    ensure => directory,
+    path   => '/etc/kubernetes/',
+  }
+
   # Add source for Kubernetes
   file { 'k8s-source-add':
     ensure  => file,
@@ -44,7 +49,7 @@ class kubernetes::install {
   # Install kubernetes modules
   package { 'kubectl':
     ensure  => installed,
-    require => [File['k8s-source-add'], Exec['k8s-source-key'], Exec['k8s-source-update']],
+    require => [File['kube-dir'], File['k8s-source-add'], Exec['k8s-source-key'], Exec['k8s-source-update']],
   }
   package { 'kubeadm':
     ensure  => installed,
