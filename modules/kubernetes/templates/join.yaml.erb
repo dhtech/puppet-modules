@@ -1,11 +1,10 @@
 apiVersion: kubeadm.k8s.io/v1alpha3
 kind: JoinConfiguration
-apiEndpoint:
-  advertiseAddress: "<% @apiserver %>"
-  bindPort: 6443
+discoveryTokenAPIServers:
+  - "<%= @apiserver %>:6443"
 discoveryTokenCACertHashes:
-  - <% @cert_hash %>
-token: <% @token %>
+  - sha256:<%= @cert_hash %>
+token: <%= @token %>
 nodeRegistration:
-  name: "<% @hostname %>"
+  name: "<%= @hostname %>"
   criSocket: "/var/run/dockershim.sock"

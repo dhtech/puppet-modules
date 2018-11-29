@@ -19,10 +19,10 @@ class kubernetes::worker($variant, $apiserver, $cert_hash, $token) {
   }
 
   exec { 'join-cluster':
-    command     => '/usr/bin/kubectl join --config /etc/kubernetes/kubeadm-config.yaml',
+    command     => '/usr/bin/kubeadm join --config /etc/kubernetes/kubeadm-config.yaml',
     creates     => '/etc/kubernetes/kubelet.conf',
     refreshonly => true,
-    require     => Exec['k8s-disable-swap'],
+    require     => [Package['kubeadm'], Exec['k8s-disable-swap']],
   }
 
 }
