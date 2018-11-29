@@ -47,7 +47,7 @@ class apache($ldap = nil) {
     notify  => Service['apache2'],
   }
 
-  if $::fqdn == 'dhmon.event.dreamhack.se' {
+  if $::fqdn == 'status.event.dreamhack.se' {
     file { 'apache-security.conf':
         ensure  => present,
         path    => '/etc/apache2/conf-available/security.conf',
