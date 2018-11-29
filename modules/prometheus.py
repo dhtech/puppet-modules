@@ -113,7 +113,7 @@ def generate_backend(host, local_services):
 
     # SSH
     for layer in layers:
-        host = 'radius.event.dreamhack.se'
+        host = 'rancid.event.dreamhack.se'
         ssh = blackbox(
                'ssh_%s' % layer, host,
                ssh_nodes[layer], {'module': ['ssh_banner']}, labels={'layer': layer})
