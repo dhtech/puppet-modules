@@ -29,7 +29,7 @@ class kubernetes::install {
     ensure  => file,
     path    => '/etc/apt/sources.list.d/kubernetes.list',
     content => 'deb http://apt.kubernetes.io/ kubernetes-xenial main',
-    notify  => Exec['k8s-source-update'],
+    notify  => Exec['k8s-source-key'],
   }
   exec { 'k8s-source-key':
     command     => '/usr/bin/curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | /usr/bin/apt-key add -',
