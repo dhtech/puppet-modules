@@ -89,14 +89,12 @@ def generate_backend(host, local_services):
 
     snmp_nodes = {}
     ssh_nodes = {}
-    all_nodes = set()
     for layer in layers:
         hosts = lib.get_nodes_with_layer(layer, domain)
         snmp_mute = lib.get_nodes_with_layer(layer, domain, 'no-snmp')
         ssh_mute = lib.get_nodes_with_layer(layer, domain, 'no-ssh')
         snmp_nodes[layer] = list(set(hosts) - set(snmp_mute))
         ssh_nodes[layer] = list(set(hosts) - set(ssh_mute))
-        all_nodes.update(nodes[layer])
 
     # SNMP
     for layer in layers:
