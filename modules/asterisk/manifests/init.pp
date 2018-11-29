@@ -43,14 +43,14 @@ class asterisk($current_event) {
     require => Package['asterisk'],
     notify  => Exec['reload_asterisk'],
   }
-  exec { "allow_obelix_ipv4":
+  exec { 'allow_obelix_ipv4':
     command => 'iptables -A INPUT -s obelix.tech.dreamhack.se -m comment --comment "allow obelix communication" -j ACCEPT',
-    path        => '/usr/bin:/bin/:/sbin:/usr/sbin',
+    path    => '/usr/bin:/bin/:/sbin:/usr/sbin',
     unless  => 'iptables-save | grep "allow obelix communication" >/dev/null 2>&1',
   }
-  exec { "allow_obelix_ipv6":
+  exec { 'allow_obelix_ipv6':
     command => 'ip6tables -A INPUT -s obelix.tech.dreamhack.se -m comment --comment "allow obelix communication" -j ACCEPT',
-    path        => '/usr/bin:/bin/:/sbin:/usr/sbin',
+    path    => '/usr/bin:/bin/:/sbin:/usr/sbin',
     unless  => 'ip6tables-save | grep "allow obelix communication" >/dev/null 2>&1',
   }
 
