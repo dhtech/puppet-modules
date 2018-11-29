@@ -105,7 +105,7 @@ def generate_backend(host, local_services):
             host = 'snmp1.event.dreamhack.se'
         snmp = blackbox(
                 'snmp_%s' % layer, host,
-                nodes[layer], {'layer': [layer]}, labels={
+                snmp_nodes[layer], {'layer': [layer]}, labels={
                     'layer': layer})
         snmp['scrape_interval'] = '30s'
         snmp['scrape_timeout'] = '30s'
@@ -116,7 +116,7 @@ def generate_backend(host, local_services):
         host = 'radius.event.dreamhack.se'
         ssh = blackbox(
                'ssh_%s' % layer, host,
-               nodes[layer], {'module': ['ssh_banner']}, labels={'layer': layer})
+               ssh_nodes[layer], {'module': ['ssh_banner']}, labels={'layer': layer})
         ssh['scrape_interval'] = '30s'
         ssh['scrape_timeout'] = '30s'
         scrape_configs.append(ssh)
