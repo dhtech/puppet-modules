@@ -43,6 +43,15 @@ class asterisk($current_event) {
     require => Package['asterisk'],
     notify  => Exec['reload_asterisk'],
   }
+  file { '/etc/asterisk/manager.conf':
+    ensure  => file,
+    owner   => 'asterisk',
+    group   => 'asterisk',
+    mode    => '0644',
+    content => template('asterisk/manager.conf.erb'),
+    require => Package['asterisk'],
+    notify  => Exec['reload_asterisk'],
+  }
   exec { 'reload_asterisk':
     command     => 'service asterisk reload',
     refreshonly => true,
