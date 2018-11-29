@@ -30,46 +30,61 @@ class pxe {
       ensure => present,
   }
 
-  #file {
-  #  '/srv/tftp/ipxe.pxe':
-  #    ensure => present,
-  #    source => 'puppet:///modules/pxe/ipxe.pxe',
-  #}
+  # Can be build from source: git clone git://git.ipxe.org/ipxe.git
+  # make bin/ipxe.pxe
+  file {
+    '/srv/tftp/ipxe.pxe':
+      ensure => present,
+      source => 'puppet:///data/pxe/ipxe.pxe',
+  }
 
-  #file {
-  #  '/srv/tftp/ipxe.efi':
-  #    ensure => present,
-  #    source => 'puppet:///modules/pxe/ipxe.efi',
-  #}
+  # make bin-x86_64-efi/ipxe.pxe
+  file {
+    '/srv/tftp/ipxe.efi':
+      ensure => present,
+      source => 'puppet:///data/pxe/ipxe.efi',
+  }
 
-  #service {
-  #  'tftpd-hpa':
-  #    ensure => running,
-  #}
+  service {
+    'tftpd-hpa':
+      ensure => running,
+  }
 
   service {
     'nginx':
       ensure => running,
   }
 
-  #file {
-  #  '/srv/www/':
-  #    ensure  => directory,
-  #    recurse => true,
-  #    source  => 'puppet:///modules/pxe/www',
-  #}
+  file {
+    '/srv/www/':
+      ensure  => directory,
+      recurse => true,
+      source  => 'puppet:///modules/pxe/www',
+  }
 
-  #file {
-  #  '/etc/nginx/sites-enabled/pxe':
-  #    ensure => file,
-  #    source => 'puppet:///modules/pxe/nginx-pxe',
-  #    notify => Service['nginx'],
-  #}
+  file {
+    '/srv/www/memtest.bin':
+      ensure => present,
+      source => 'puppet:///data/pxe/memtest.bin',
+  }
 
-  #file {
-  #  '/etc/nginx/sites-enabled/default':
-  #    ensure => absent,
-  #    notify => Service['nginx'],
-  #}
+  file {
+    '/srv/www/dban.bzi':
+      ensure => present,
+      source => 'puppet:///data/pxe/dban.bzi',
+  }
+
+  file {
+    '/etc/nginx/sites-enabled/pxe':
+      ensure => file,
+      source => 'puppet:///modules/pxe/nginx-pxe',
+      notify => Service['nginx'],
+  }
+
+  file {
+    '/etc/nginx/sites-enabled/default':
+      ensure => absent,
+      notify => Service['nginx'],
+  }
 
 }

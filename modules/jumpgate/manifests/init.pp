@@ -16,7 +16,13 @@ class jumpgate {
 
   ensure_packages([
       'mtr-tiny', 'rancid', 'snmp', 'dnsutils', 'nmap', 'bash-completion',
-      'ndisc6', 'python-paramiko', 'python-requests', 'netcat', 'ipmitool'])
+      'ndisc6', 'python-paramiko', 'python-requests', 'netcat', 'ipmitool',
+      'prometheus-blackbox-exporter'])
+
+  service { 'prometheus-blackbox-exporter':
+    ensure => 'running',
+    enable => true
+  }
 
   file {
     '/usr/local/bin/access_ssh_checker.py':

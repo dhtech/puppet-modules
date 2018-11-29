@@ -94,7 +94,7 @@ def generate_backend(host, local_services):
         snmp_mute = lib.get_nodes_with_layer(layer, domain, 'no-snmp')
         ssh_mute = lib.get_nodes_with_layer(layer, domain, 'no-ssh')
         snmp_nodes[layer] = list(set(hosts) - set(snmp_mute))
-        ssh_nodes[layer] = list(set(hosts) - set(ssh_mute))
+        ssh_nodes[layer] = [x+':22' for x in set(hosts) - set(ssh_mute)]
 
     # SNMP
     for layer in layers:
@@ -113,13 +113,14 @@ def generate_backend(host, local_services):
 
     # SSH
     for layer in layers:
-        host = 'radius.event.dreamhack.se'
-        ssh = blackbox(
-               'ssh_%s' % layer, host,
-               ssh_nodes[layer], {'module': ['ssh_banner']}, labels={'layer': layer})
-        ssh['scrape_interval'] = '30s'
-        ssh['scrape_timeout'] = '30s'
-        scrape_configs.append(ssh)
+        for host in ['jumpgate1', 'jumpgate2', 'rancid']:
+            fqdn = host + '.event.dreamhack.se:9115'
+            ssh = blackbox(
+                   'ssh_%s_%s' % (layer, host), fqdn,
+                   ssh_nodes[layer], {'module': ['ssh_banner']}, labels={'layer': layer})
+            ssh['scrape_interval'] = '30s'
+            ssh['scrape_timeout'] = '30s'
+            scrape_configs.append(ssh)
 
     # Add external service-discovery
     external = {
