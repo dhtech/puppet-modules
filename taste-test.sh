@@ -36,7 +36,10 @@ else
             echo "Pusing current state to puppet.."
             rsync -ruvz --exclude=".*" . puppet.tech.dreamhack.se:/etc/puppetlabs/puppet/environments/$SESSID 2>/dev/null
             echo "Running puppet on host..."
-            ssh -q -o LogLevel=error $HOSTNAME "sudo puppet agent -t --environment $SESSID | tee \$HOME/puppet-canary.log"
+            ssh -q -o LogLevel=error $HOSTNAME "
+                wall \$USER is running puppet canary on this host.
+                sudo puppet agent -t --environment $SESSID 2>&1 | tee \$HOME/puppet-canary.log
+            "
         fi
     done
 fi
@@ -46,7 +49,8 @@ ssh -q -o LogLevel=error puppet.tech.dreamhack.se "
     sudo rm -r /etc/puppetlabs/puppet/environments/$SESSID
 " 2>/dev/null
 ssh -q -o LogLevel=error $HOSTNAME "
-    sudo systemctl stop puppet
+    wall \$USER is done running puppet canary on this host, going back to production.
+    sudo systemctl start puppet
 " 2>/dev/null
 
 echo "Cleanup done! Dont forget to merge changes on GitHub or they will be overridden on next puppet run."
