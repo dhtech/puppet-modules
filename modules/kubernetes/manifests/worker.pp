@@ -16,7 +16,7 @@ class kubernetes::worker($variant, $apiserver, $cert_hash, $token) {
     ensure  => 'file',
     content => template('kubernetes/join.yaml.erb'),
     notify  => Exec['join-cluster'],
-    require     => [Package['kubeadm'], Exec['k8s-disable-swap']],
+    require => [Package['kubeadm'], Exec['k8s-disable-swap']],
   }
 
   exec { 'join-cluster':
