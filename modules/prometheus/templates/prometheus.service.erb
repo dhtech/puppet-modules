@@ -11,6 +11,7 @@ EnvironmentFile=/etc/default/prometheus
 User=prometheus
 WorkingDirectory=/opt/prometheus
 ExecStart=/opt/prometheus/prometheus $ARGS
+LimitNOFILE=65536
 
 [Install]
 WantedBy=multi-user.target
