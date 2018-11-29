@@ -77,6 +77,16 @@ class prometheus ($scrape_configs) {
     source  => 'puppet:///svn/allevents/prometheus/rules/',
     notify  => Exec['prometheus-hup'],
   }
+  file { 'puppet':
+    ensure  => directory,
+    path    => '/etc/prometheus/external',
+    recurse => true,
+    owner   => 'prometheus',
+    group   => 'prometheus',
+    purge   => true,
+    source  => 'puppet:///svn/allevents/prometheus/external/',
+    notify  => Exec['prometheus-hup'],
+  }
   -> service { 'prometheus':
     ensure  => running,
     require => File['/etc/systemd/system/prometheus.service']
