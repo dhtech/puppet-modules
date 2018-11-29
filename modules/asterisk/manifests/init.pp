@@ -43,6 +43,15 @@ class asterisk($current_event) {
     require => Package['asterisk'],
     notify  => Exec['reload_asterisk'],
   }
+  exec { "allow_obelix_ipv4":
+    command => 'iptables -A INPUT -s obelix.tech.dreamhack.se -m comment --comment "allow obelix communication" -j ACCEPT',
+    unless  => 'iptables-save | grep -- \'--comment "allow obelix communication"\' | wc -l',
+  }
+  exec { "allow_obelix_ipv6":
+    command => 'ip6tables -A INPUT -s obelix.tech.dreamhack.se -m comment --comment "allow obelix communication" -j ACCEPT',
+    unless  => 'ip6tables-save | grep -- \'--comment "allow obelix communication"\' | wc -l',
+  }
+
   file { '/etc/asterisk/manager.conf':
     ensure  => file,
     owner   => 'asterisk',
