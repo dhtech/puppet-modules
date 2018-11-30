@@ -131,6 +131,15 @@ def generate_backend(host, local_services):
     }
     scrape_configs.append(external)
 
+    vcenter = {
+      'job_name': 'vmware_vcenter'
+      'metrics_path': '/metrics'
+      'static_configs': [{
+          'targets': ['vc.event.dreamhack.se'],
+      }],
+    }
+    scrape_configs.append(vcenter)
+
     return {'scrape_configs': scrape_configs}
 
 
