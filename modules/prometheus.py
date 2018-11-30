@@ -132,10 +132,10 @@ def generate_backend(host, local_services):
     scrape_configs.append(external)
 
     vcenter = {
-      'job_name': 'vmware_vcenter'
-      'metrics_path': '/metrics'
+      'job_name': 'vmware_vcenter',
+      'metrics_path': '/metrics',
       'static_configs': [{
-          'targets': ['vc.event.dreamhack.se'],
+          'targets': ['http://provision.event.dreamhack.se:9272'],
       }],
     }
     scrape_configs.append(vcenter)
