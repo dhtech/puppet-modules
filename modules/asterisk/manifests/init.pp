@@ -69,7 +69,7 @@ class asterisk($current_event) {
     path    => '/usr/bin:/bin/:/sbin:/usr/sbin',
     unless  => 'iptables-save | grep "allow asterisk tcp" >/dev/null 2>&1',
   }
-  exec { 'allow_udp_sip': 
+  exec { 'allow_udp_sip':
     command => [
       'iptables -A INPUT -s 77.80.128.0/17 -p tcp -m multiport',
       '--dports 10000:20000-m comment --comment "allow sip udp" -j ACCEPT',
