@@ -41,7 +41,7 @@ class telehttp() {
     notify      => Service['apache2'],
   }
   exec { 'get-deps':
-    command => 'pip3 install -r /scripts/telehttp/app/requirements.txt',
+    command => '/usr/bin/pip3 install -r /scripts/telehttp/app/requirements.txt',
   }
   supervisor::register { 'tele':
     command   => '/usr/bin/python3 /scripts/telehttp/app/app.py'
