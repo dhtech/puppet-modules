@@ -43,7 +43,6 @@ class dnsstat_web($current_event) {
     command => '/usr/sbin/a2enmod ssl',
     creates => '/etc/apache2/mods-enabled/ssl.load',
     require => Package['apache2'],
-    notify  => Service['apache2'],
   }
 
   exec { 'dnsstat-apache2-restart':
@@ -125,7 +124,6 @@ class dnsstat_web($current_event) {
     mode   => '0644',
     source => 'puppet:///letsencrypt/fullchain.pem',
     links  => 'follow',
-    notify => Service['apache2'],
   }
 
   file { '/etc/ssl/private/server.key':
@@ -135,6 +133,5 @@ class dnsstat_web($current_event) {
     mode   => '0640',
     source => 'puppet:///letsencrypt/privkey.pem',
     links  => 'follow',
-    notify => Service['apache2'],
   }
 }
