@@ -53,6 +53,16 @@ class asterisk($current_event) {
     path    => '/usr/bin:/bin/:/sbin:/usr/sbin',
     unless  => 'ip6tables-save | grep "allow obelix communication" >/dev/null 2>&1',
   }
+  exec { 'allow_udp_sip':
+    command => 'iptables -A INPUT -s 77.80.128.0/17 -m multiport --dports 5060 -m comment --comment "allow sip udp" -j ACCEPT',
+    path    => '/usr/bin:/bin/:/sbin:/usr/sbin',
+    unless  => 'iptables-save | grep "allow sip udp" >/dev/null 2>&1',
+  }
+  exec { 'allow_tcp_sip':
+    command => 'iptables -A INPUT -s 77.80.128.0/17 -m multiport --dports 5060 -m comment --comment "allow sip tcp" -j ACCEPT',
+    path    => '/usr/bin:/bin/:/sbin:/usr/sbin',
+    unless  => 'iptables-save | grep "allow sip tcp" >/dev/null 2>&1',
+  }
 
   file { '/etc/asterisk/manager.conf':
     ensure  => file,
