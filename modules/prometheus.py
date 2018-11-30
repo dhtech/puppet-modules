@@ -134,6 +134,8 @@ def generate_backend(host, local_services):
     vcenter = {
       'job_name': 'vmware_vcenter',
       'metrics_path': '/metrics',
+      'scrape_interval': '60s',
+      'scrape_timeout': '55s',
       'static_configs': [{
           'targets': ['provision.event.dreamhack.se:9272'],
       }],
@@ -152,8 +154,6 @@ def generate(host, *args):
     local_targets = []
     local_targets.append({
         'job_name': 'prometheus',
-        'scrape_interval': '90s',
-        'scrape_timeout': '85s',
         'scheme': 'http',
         'static_configs': [{'targets': ['localhost:9090']}]})
     info['prometheus'] = generate_backend(host, local_targets)
