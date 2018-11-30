@@ -32,24 +32,10 @@ class telehttp() {
     creates     => '/etc/apache2/sites-available/.tele_a2ensite_enabled',
     notify      => Service['apache2'],
   }
-  file { '/var/www/tele.event.dreamhack.se':
-    ensure    => directory,
+  exec { 'get-deps':
+    command => 'pip3 install -r /scripts/telehttp/app/requirements.txt',
   }
-  file { '/var/www/tele.event.dreamhack.se/index.html':
-    ensure  => present,
-    mode    => '0644',
-    owner   => 'www-data',
-    group   => 'www-data',
-    notify  => Service['apache2'],
-    source  => 'puppet:///modules/telehttp/index.html',
-    require => File['/var/www/tele.event.dreamhack.se'],
-  }
-  file { '/var/www/tele.event.dreamhack.se/tele.css':
-    ensure  => present,
-    mode    => '0644',
-    owner   => 'www-data',
-    group   => 'www-data',
-    source  => 'puppet:///modules/telehttp/tele.css',
-    require => File['/var/www/tele.event.dreamhack.se'],
+  supervisor::register { 'tele':
+    command   => '/usr/bin/python3 /scripts/telehttp/app/app.py'
   }
 }
