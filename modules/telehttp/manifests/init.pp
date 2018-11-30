@@ -21,6 +21,12 @@ class telehttp() {
   package { 'python3-pip':
     ensure => installed,
   }
+  file { '/etc/voipplan':
+    mode   => '0644',
+    owner  => 'root',
+    group  => 'root:wq',
+    source => 'puppet:///svn/allevents/services/voipplan',
+  }
   file { '/etc/apache2/sites-available/tele.event.dreamhack.se.conf':
     notify => Exec['a2ensite'],
     mode   => '0644',
