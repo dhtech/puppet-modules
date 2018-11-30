@@ -24,7 +24,7 @@ class telehttp() {
   file { '/etc/voipplan':
     mode   => '0644',
     owner  => 'root',
-    group  => 'root:wq',
+    group  => 'root',
     source => 'puppet:///svn/allevents/services/voipplan',
   }
   file { '/etc/apache2/sites-available/tele.event.dreamhack.se.conf':
