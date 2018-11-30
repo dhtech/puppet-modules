@@ -18,7 +18,9 @@ class telehttp() {
   service { 'apache2':
     ensure  => running,
   }
-
+  package { 'python3-pip':
+    ensure => installed,
+  }
   file { '/etc/apache2/sites-available/tele.event.dreamhack.se.conf':
     notify => Exec['a2ensite'],
     mode   => '0644',
