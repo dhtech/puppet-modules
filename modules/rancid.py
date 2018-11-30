@@ -16,7 +16,7 @@ def generate(host, *args):
 
     proto_map = {
       'ios':      'cisco',
-      'nxos':    'cisco-nx',
+      'nxos':    'cisco',
       'fortios':  'fortigate',
       'iosxr':    'cisco-xr',
       'wlc':      'cisco-wlc',
