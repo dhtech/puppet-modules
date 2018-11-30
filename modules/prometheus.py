@@ -152,7 +152,8 @@ def generate(host, *args):
     local_targets = []
     local_targets.append({
         'job_name': 'prometheus',
-        'metrics_path': '/metrics',
+        'scrape_interval': '1m'
+        'scrape_timeout': '55s'
         'scheme': 'http',
         'static_configs': [{'targets': ['localhost:9090']}]})
     info['prometheus'] = generate_backend(host, local_targets)
