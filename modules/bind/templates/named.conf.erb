@@ -35,6 +35,11 @@ acl trusted-clients {
     185.42.136.171/32;  # sto2-mgmt nat
 };
 
+# For prometheus exporter
+statistics-channels {
+  inet 127.0.0.1 port 8053 allow { 127.0.0.1; };
+};
+
 options {
     version "Bring me a shrubbery!";
 
