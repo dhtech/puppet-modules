@@ -11,7 +11,10 @@ DATE=`date +%s`
 SESSID="`echo "canary_${USER}_${HOSTNAME/-/_}" | cut -f1 -d"."`_$DATE"
 
 set -e
-ssh $HOSTNAME echo "[PREFLIGHT] Testing host access..."
+ssh $HOSTNAME << EOF 
+    wall \$USER is running puppet canary on this host.
+    echo "[PREFLIGHT] Testing host access..."
+EOF 
 ssh puppet.tech.dreamhack.se echo "[PREFLIGHT] Testing puppet access..."
 set +e
 
@@ -37,7 +40,6 @@ else
             rsync -ruvz --exclude=".*" . puppet.tech.dreamhack.se:/etc/puppetlabs/puppet/environments/$SESSID 2>/dev/null
             echo "Running puppet on host..."
             ssh -q -o LogLevel=error $HOSTNAME "
-                wall \$USER is running puppet canary on this host.
                 sudo puppet agent -t --environment $SESSID 2>&1 | tee \$HOME/puppet-canary.log
             "
         fi
