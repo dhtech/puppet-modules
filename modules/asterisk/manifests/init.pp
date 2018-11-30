@@ -53,15 +53,20 @@ class asterisk($current_event) {
     path    => '/usr/bin:/bin/:/sbin:/usr/sbin',
     unless  => 'ip6tables-save | grep "allow obelix communication" >/dev/null 2>&1',
   }
-  exec { 'allow_udp_sip':
-    command => 'iptables -A INPUT -s 77.80.128.0/17 -p udp -m multiport --dports 5060 -m comment --comment "allow sip udp" -j ACCEPT',
+  exec { 'allow_udp_asterisk':
+    command => 'iptables -A INPUT -s 77.80.128.0/17 -p udp -m multiport --dports 5060 -m comment --comment "allow asterisk udp" -j ACCEPT',
+    path    => '/usr/bin:/bin/:/sbin:/usr/sbin',
+    unless  => 'iptables-save | grep "allow asterisk udp" >/dev/null 2>&1',
+  }
+  exec { 'allow_tcp_asterisk':
+    command => 'iptables -A INPUT -s 77.80.128.0/17 -p tcp -m multiport --dports 5060 -m comment --comment "allow asterisk tcp" -j ACCEPT',
+    path    => '/usr/bin:/bin/:/sbin:/usr/sbin',
+    unless  => 'iptables-save | grep "allow asterisk tcp" >/dev/null 2>&1',
+  }
+  exec { 'allow_udp_sip': 
+    command => 'iptables -A INPUT -s 77.80.128.0/17 -p tcp -m multiport --dports 10000:20000 -m comment --comment "allow sip udp" -j ACCEPT',
     path    => '/usr/bin:/bin/:/sbin:/usr/sbin',
     unless  => 'iptables-save | grep "allow sip udp" >/dev/null 2>&1',
-  }
-  exec { 'allow_tcp_sip':
-    command => 'iptables -A INPUT -s 77.80.128.0/17 -p tcp -m multiport --dports 5060 -m comment --comment "allow sip tcp" -j ACCEPT',
-    path    => '/usr/bin:/bin/:/sbin:/usr/sbin',
-    unless  => 'iptables-save | grep "allow sip tcp" >/dev/null 2>&1',
   }
 
   file { '/etc/asterisk/manager.conf':
