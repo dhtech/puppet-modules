@@ -123,5 +123,6 @@ class system($ca) {
     package { 'snmpd':
       ensure => 'purged',
     }
+    ensure_packages(['cron'])
   }
 }

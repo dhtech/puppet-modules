@@ -63,13 +63,15 @@ class hardware {
       }
 
     } elsif $::productname == 'Wedge-DC-F 20-001331' {
-      service { 'onlpd':
-        ensure => 'stopped',
-        enable => false,
-      }
-      service { 'onlp-snmpd':
-        ensure => 'stopped',
-        enable => false,
+      if $::kernelrelease =~ /OpenNetworkLinux/ {
+        service { 'onlpd':
+          ensure => 'stopped',
+          enable => false,
+        }
+        service { 'onlp-snmpd':
+          ensure => 'stopped',
+          enable => false,
+        }
       }
     }
     package { 'ladvd':
