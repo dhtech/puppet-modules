@@ -33,7 +33,7 @@ def generate(host, *args):
         resolvers.remove(host)
         # Use an external resolver by default so we do not create deadlocks
         # when bootstrapping the environment from scratch.
-        info['nameservers'].append('8.8.8.8')
+        info['nameservers'].append('1.1.1.1')
 
     ips = lib.resolve_nodes_to_ip(resolvers)
     info['nameservers'].extend([ips[x][0] for x in resolvers])
