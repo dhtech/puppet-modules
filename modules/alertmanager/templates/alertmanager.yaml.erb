@@ -75,5 +75,5 @@ inhibit_rules:
   - source_match:
       alertname: HostDown
     target_match_re:
-      alertname: ^SshFrom
+      alertname: SshFrom.*
     equal: ['host']
