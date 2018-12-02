@@ -142,6 +142,25 @@ def generate_backend(host, local_services):
     }
     scrape_configs.append(vcenter)
 
+    # Make sure that all metrics have a host label.
+    # This rule uses the existing host label if there is one,
+    # stripping of the port (which shouldn't be part of the host label anyway)
+    # *or* if that label does not exist it uses the instance label
+    # (again stripping of the port)
+    relabel = {
+        'regex': r':?([^:]*):?.*',
+        'separator': ':',
+        'replacement': '${1}',
+        'source_labels': ['host', 'instance'],
+        'target_label': 'host',
+    }
+
+    mrc = 'metric_relabel_configs'
+    for scrape in scrape_configs:
+        if mrc in scrape:
+            scrape[mrc].append(relabel)
+        else:
+            scrape[mrc] = [relabel]
     return {'scrape_configs': scrape_configs}
 
 
