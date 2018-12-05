@@ -3,10 +3,6 @@ kind: InitConfiguration
 nodeRegistration:
   name: "<%= @hostname %>"
   criSocket: "/var/run/dockershim.sock"
-  taints:
-  - key: "kubeadmNode"
-    value: "master"
-    effect: "NoSchedule"
 apiEndpoint:
   advertiseAddress: "<%= @ipaddress %>"
   bindPort: 6443
