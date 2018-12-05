@@ -69,3 +69,11 @@ receivers:
 - name: 'heartbeat'
   webhook_configs:
   - url: 'http://alertringer.tech.event.dreamhack.se/api/v1/alerts?team=heartbeat'
+
+inhibit_rules:
+    # If you cannot ping, you most likely cannot SSH
+  - source_match:
+      alertname: HostDown
+    target_match_re:
+      alertname: SshFrom.*
+    equal: ['host']

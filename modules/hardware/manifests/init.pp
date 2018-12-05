@@ -62,6 +62,17 @@ class hardware {
         ensure => installed
       }
 
+    } elsif $::productname == 'Wedge-DC-F 20-001331' {
+      if $::kernelrelease =~ /OpenNetworkLinux/ {
+        service { 'onlpd':
+          ensure => 'stopped',
+          enable => false,
+        }
+        service { 'onlp-snmpd':
+          ensure => 'stopped',
+          enable => false,
+        }
+      }
     }
     package { 'ladvd':
       ensure => installed
