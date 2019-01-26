@@ -4,8 +4,10 @@
 
 export BORG_RSH='ssh -i /etc/ssh/ssh_host_ecdsa_key'
 export BORG_REPO=borg@storage1.tech.dreamhack.se:repository/$(hostname -f)
-read -r BORG_PASSPHRASE /etc/borg.passphrase
+read -r BORG_PASSPHRASE </etc/borg.passphrase
 export BORG_PASSPHRASE
+
+borg init --encryption=repokey &> /dev/null
 
 borg create \
   --compression lzma,3 \
@@ -17,5 +19,5 @@ borg create \
 
 borg prune \
   --prefix '{fqdn}-' \
-  --keep-daily 7 --keep-weekly 4 --keep-monthly 6 \
+  --keep-daily 7 --keep-weekly 4 --keep-monthly 6 2>&1 \
   | grep -v '^Remote:'
