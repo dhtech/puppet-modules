@@ -36,4 +36,9 @@ class borg {
     mode    => '0400',
     path    => '/etc/borg.passphrase',
   }
+
+  cron { 'borg-cron':
+    command => '/usr/local/bin/borg.sh',
+    hour    => '*/12',
+  }
 }

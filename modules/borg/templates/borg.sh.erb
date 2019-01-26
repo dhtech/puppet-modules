@@ -7,6 +7,11 @@ export BORG_REPO=borg@storage1.tech.dreamhack.se:repository/$(hostname -f)
 read -r BORG_PASSPHRASE </etc/borg.passphrase
 export BORG_PASSPHRASE
 
+# Do not backup all machines at the same time
+if [[ "$1" != "--now" ]]; then
+  sleep $((RANDOM / 5))
+fi
+
 borg init --encryption=repokey &> /dev/null
 
 borg create \
