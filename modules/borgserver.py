@@ -11,6 +11,6 @@ def generate(host, *args):
         'fqdn': x.node,
         'ssh-key': '%s %s' % (x.value['ecdsa']['type'], x.value['ecdsa']['key'])
         } for x in ssh]
-    return {'borgserver': {'servers': servers}}
+    return {'borgserver': {'servers': sorted(servers)}}
 
 # vim: ts=4: sts=4: sw=4: expandtab
