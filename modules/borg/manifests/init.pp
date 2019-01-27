@@ -39,6 +39,7 @@ class borg {
 
   cron { 'borg-cron':
     command => '/usr/local/bin/borg.sh',
+    minute  => '19',
     hour    => '*/12',
   }
 }
