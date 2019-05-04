@@ -5,7 +5,7 @@ ServerTokens Minimal
 ServerSignature Off
 TraceEnable Off
 
-<% unless @ldap.nil? -%>
+<% unless @ldap.blank? -%>
 <Location />
   AuthType Basic
   AuthName "Dreamhack Tech Internal Services"
