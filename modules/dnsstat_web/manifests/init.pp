@@ -21,7 +21,8 @@ class dnsstat_web($current_event) {
   ensure_packages([
     'apache2',
     'php',
-    'php-pgsql'])
+    'php-pgsql',
+    'ssl-cert'])
 
   file { '/etc/apache2/sites-available/dnsstat.event.dreamhack.se.conf':
     mode   => '0644',
@@ -35,7 +36,18 @@ class dnsstat_web($current_event) {
     require     => Package['apache2'],
     command     => '/usr/sbin/a2ensite dnsstat.event.dreamhack.se',
     creates     => '/etc/apache2/sites-available/.dnsstat_a2ensite_enabled',
-    notify      => Service['apache2'],
+    notify      => Exec['dnsstat-apache2-restart'],
+  }
+
+  exec { 'a2enmod_ssl':
+    command => '/usr/sbin/a2enmod ssl',
+    creates => '/etc/apache2/mods-enabled/ssl.load',
+    require => Package['apache2'],
+  }
+
+  exec { 'dnsstat-apache2-restart':
+    command     =>  '/bin/systemctl restart apache2',
+    refreshonly => true,
   }
 
   file { ['/var/www/dnsstat.event.dreamhack.se',
@@ -103,5 +115,23 @@ class dnsstat_web($current_event) {
     command => 'php /var/www/dnsstat.event.dreamhack.se/generate_json.php',
     user    => 'root',
     minute  => '*/10',
+  }
+
+  file { '/etc/ssl/certs/server-fullchain.crt':
+    ensure => file,
+    owner  => 'root',
+    group  => 'ssl-cert',
+    mode   => '0644',
+    source => 'puppet:///letsencrypt/fullchain.pem',
+    links  => 'follow',
+  }
+
+  file { '/etc/ssl/private/server.key':
+    ensure => file,
+    owner  => 'root',
+    group  => 'ssl-cert',
+    mode   => '0640',
+    source => 'puppet:///letsencrypt/privkey.pem',
+    links  => 'follow',
   }
 }

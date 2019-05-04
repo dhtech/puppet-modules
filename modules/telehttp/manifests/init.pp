@@ -18,7 +18,15 @@ class telehttp() {
   service { 'apache2':
     ensure  => running,
   }
-
+  package { 'python3-pip':
+    ensure => installed,
+  }
+  file { '/etc/voipplan':
+    mode   => '0644',
+    owner  => 'root',
+    group  => 'root',
+    source => 'puppet:///svn/allevents/services/voipplan',
+  }
   file { '/etc/apache2/sites-available/tele.event.dreamhack.se.conf':
     notify => Exec['a2ensite'],
     mode   => '0644',
@@ -32,24 +40,10 @@ class telehttp() {
     creates     => '/etc/apache2/sites-available/.tele_a2ensite_enabled',
     notify      => Service['apache2'],
   }
-  file { '/var/www/tele.event.dreamhack.se':
-    ensure    => directory,
+  exec { 'get-deps':
+    command => '/usr/bin/pip3 install -r /scripts/telehttp/app/requirements.txt',
   }
-  file { '/var/www/tele.event.dreamhack.se/index.html':
-    ensure  => present,
-    mode    => '0644',
-    owner   => 'www-data',
-    group   => 'www-data',
-    notify  => Service['apache2'],
-    source  => 'puppet:///modules/telehttp/index.html',
-    require => File['/var/www/tele.event.dreamhack.se'],
-  }
-  file { '/var/www/tele.event.dreamhack.se/tele.css':
-    ensure  => present,
-    mode    => '0644',
-    owner   => 'www-data',
-    group   => 'www-data',
-    source  => 'puppet:///modules/telehttp/tele.css',
-    require => File['/var/www/tele.event.dreamhack.se'],
+  supervisor::register { 'tele':
+    command   => '/usr/bin/python3 /scripts/telehttp/app/app.py'
   }
 }

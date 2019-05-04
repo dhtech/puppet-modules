@@ -133,6 +133,11 @@ class ldaplogin ($ca, $logon, $sudo, $ldap, $ssh_ports, $panic_users,
     content => template('ldaplogin/ssh_known_hosts.erb'),
   }
 
+  file { '/etc/ssh/authorized_keys':
+    ensure => 'directory',
+    mode   => '0755',
+  }
+
   if $host_cert != '' {
     file { 'ssh_host_ecdsa_key.crt':
       ensure  => 'present',

@@ -3,7 +3,7 @@
 
 ARGS="--config.file=/opt/prometheus/prometheus.yml \
   --web.listen-address=:9090 \
-  --web.external-url=https://<%= @fqdn %>/prometheus \
+  --web.external-url=https://<%= @fqdn %> \
   --web.enable-lifecycle \
   --storage.tsdb.path=/srv/metrics \
   --storage.tsdb.retention=4320h \

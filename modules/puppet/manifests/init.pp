@@ -27,6 +27,29 @@ class puppet ($master, $environment, $sourceaddress) {
     enable => true,
   }
 
+  file { '/etc/systemd/system/puppet.service.d':
+    ensure => directory,
+  }
+
+  file { '/etc/systemd/system/puppet.service.d/10-require-network.conf':
+    ensure  => file,
+    content => [
+      '[Unit]',
+      'Wants=network-online.target',
+      'After=network-online.target',
+      '',
+      '[Service]',
+      'Restart=on-failure',
+      'RestartSec=30',
+    ].join("\n"),
+    notify  => Exec['systemctl-daemon-reload-puppet'],
+  }
+
+  exec { 'systemctl-daemon-reload-puppet':
+    command     => '/bin/systemctl daemon-reload',
+    refreshonly => true,
+  }
+
   if $::operatingsystem == 'Debian' and $::lsbmajdistrelease == 'testing' {
     file { 'puppet-conf':
       ensure  => file,

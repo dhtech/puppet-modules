@@ -32,7 +32,7 @@ class asterisk($current_event) {
     mode   => '0644',
     owner  => 'asterisk',
     group  => 'asterisk',
-    source => 'puppet:///svn/$current_event/services/voipplan',
+    source => 'puppet:///svn/allevents/services/voipplan',
   }
   file { '/etc/asterisk/iax.conf':
     ensure  => file,
@@ -40,6 +40,50 @@ class asterisk($current_event) {
     group   => 'asterisk',
     mode    => '0644',
     content => template('asterisk/iax.conf.erb'),
+    require => Package['asterisk'],
+    notify  => Exec['reload_asterisk'],
+  }
+  exec { 'allow_obelix_ipv4':
+    command => 'iptables -A INPUT -s obelix.tech.dreamhack.se -m comment --comment "allow obelix communication" -j ACCEPT',
+    path    => '/usr/bin:/bin/:/sbin:/usr/sbin',
+    unless  => 'iptables-save | grep "allow obelix communication" >/dev/null 2>&1',
+  }
+  exec { 'allow_obelix_ipv6':
+    command => 'ip6tables -A INPUT -s obelix.tech.dreamhack.se -m comment --comment "allow obelix communication" -j ACCEPT',
+    path    => '/usr/bin:/bin/:/sbin:/usr/sbin',
+    unless  => 'ip6tables-save | grep "allow obelix communication" >/dev/null 2>&1',
+  }
+  exec { 'allow_udp_asterisk':
+    command => [
+      'iptables -A INPUT -s 77.80.128.0/17 -p udp -m multiport',
+      '--dports 5060 -m comment --comment "allow asterisk udp" -j ACCEPT',
+    ].join(' '),
+    path    => '/usr/bin:/bin/:/sbin:/usr/sbin',
+    unless  => 'iptables-save | grep "allow asterisk udp" >/dev/null 2>&1',
+  }
+  exec { 'allow_tcp_asterisk':
+    command => [
+      'iptables -A INPUT -s 77.80.128.0/17 -p tcp -m multiport',
+      '--dports 5060 -m comment --comment "allow asterisk tcp" -j ACCEPT',
+    ].join(' '),
+    path    => '/usr/bin:/bin/:/sbin:/usr/sbin',
+    unless  => 'iptables-save | grep "allow asterisk tcp" >/dev/null 2>&1',
+  }
+  exec { 'allow_udp_sip':
+    command => [
+      'iptables -A INPUT -s 77.80.128.0/17 -p tcp -m multiport',
+      '--dports 10000:20000 -m comment --comment "allow sip udp" -j ACCEPT',
+    ].join(' '),
+    path    => '/usr/bin:/bin/:/sbin:/usr/sbin',
+    unless  => 'iptables-save | grep "allow sip udp" >/dev/null 2>&1',
+  }
+
+  file { '/etc/asterisk/manager.conf':
+    ensure  => file,
+    owner   => 'asterisk',
+    group   => 'asterisk',
+    mode    => '0644',
+    content => template('asterisk/manager.conf.erb'),
     require => Package['asterisk'],
     notify  => Exec['reload_asterisk'],
   }

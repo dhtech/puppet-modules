@@ -1,0 +1,30 @@
+[Unit]
+Description=etcd
+Documentation=https://github.com/coreos/etcd
+
+[Service]
+Type=notify
+Restart=always
+RestartSec=5s
+TimeoutStartSec=0
+
+Environment=SSL_CERT_FILE=/etc/etcd/ca.pem
+ExecStart=/usr/bin/etcd --name <%= @fqdn %> \
+    --data-dir /var/lib/etcd \
+    --listen-client-urls https://<%= @ipaddress %>:2379 \
+    --advertise-client-urls https://<%= @ipaddress %>:2379 \
+    --listen-peer-urls https://<%= @ipaddress %>:2380 \
+    --initial-advertise-peer-urls https://<%= @ipaddress %>:2380 \
+    --initial-cluster <%= @nodes.map{ |node| "#{node}=https://#{node}:2380" }.join(',') %> \
+    --initial-cluster-state new \
+    --client-cert-auth \
+    --trusted-ca-file /etc/etcd/trusted-client.crt \
+    --cert-file /etc/ssl/etcd-fullchain.crt \
+    --key-file /etc/ssl/private/etcd-<%= @hostname %>.key \
+    --peer-trusted-ca-file /etc/ssl/etcd-ca.crt \
+    --peer-cert-file /etc/ssl/etcd-<%= @hostname %>.crt \
+    --peer-key-file /etc/ssl/private/etcd-<%= @hostname %>.key \
+    --peer-client-cert-auth
+ 
+[Install]
+WantedBy=multi-user.target

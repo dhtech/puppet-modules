@@ -30,16 +30,19 @@ class pxe {
       ensure => present,
   }
 
+  # Can be build from source: git clone git://git.ipxe.org/ipxe.git
+  # make bin/ipxe.pxe
   file {
     '/srv/tftp/ipxe.pxe':
       ensure => present,
-      source => 'puppet:///modules/pxe/ipxe.pxe',
+      source => 'puppet:///data/pxe/ipxe.pxe',
   }
 
+  # make bin-x86_64-efi/ipxe.pxe
   file {
     '/srv/tftp/ipxe.efi':
       ensure => present,
-      source => 'puppet:///modules/pxe/ipxe.efi',
+      source => 'puppet:///data/pxe/ipxe.efi',
   }
 
   service {
@@ -57,6 +60,18 @@ class pxe {
       ensure  => directory,
       recurse => true,
       source  => 'puppet:///modules/pxe/www',
+  }
+
+  file {
+    '/srv/www/memtest.bin':
+      ensure => present,
+      source => 'puppet:///data/pxe/memtest.bin',
+  }
+
+  file {
+    '/srv/www/dban.bzi':
+      ensure => present,
+      source => 'puppet:///data/pxe/dban.bzi',
   }
 
   file {

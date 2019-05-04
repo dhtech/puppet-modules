@@ -64,8 +64,8 @@ class alertmanager {
     notify  => Service['alertmanager'],
   }
   -> apache::proxy { 'alertmanager':
-    url     => '/alertmanager',
-    backend => 'http://localhost:9093/alertmanager',
+    url     => '/',
+    backend => 'http://localhost:9093/',
   }
   -> service { 'alertmanager':
     ensure  => running,

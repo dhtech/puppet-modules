@@ -10,22 +10,18 @@
 # === Parameters
 #
 
-class kubernetes::worker {
+class kubernetes::worker($variant, $apiserver, $cert_hash, $token) {
 
-  $token = vault['kubernetes:token', {}]
-  $master_ip = vault['kubernetes:master_ip', {}]
-  $master_port = vault['kubernets:master_port', {}]
-  $cert_hash = vault['kubernetes:cert_hash', {}]
-
-  #Remove this file to run the join command again on the next puppet run.
-  file { 'cluster-joined':
-    ensure   => file,
-    path     => '/var/tmp/cluster.joined',
-    notify - => Exec['join-cluster'],
+  file { '/etc/kubernetes/kubeadm-config.yaml':
+    ensure  => 'file',
+    content => template('kubernetes/join.yaml.erb'),
+    notify  => Exec['join-cluster'],
+    require => [Package['kubeadm'], Exec['k8s-disable-swap']],
   }
 
   exec { 'join-cluster':
-    command     => "/usr/bin/kubectl join --token ${token} ${master_ip}:${master_port} --discovery-token-ca-cert-hash sha256:${cert_hash}",
+    command     => '/usr/bin/kubeadm join --config /etc/kubernetes/kubeadm-config.yaml',
+    creates     => '/etc/kubernetes/kubelet.conf',
     refreshonly => true,
   }
 

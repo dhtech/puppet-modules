@@ -74,6 +74,12 @@ class system($ca) {
     target => '/etc/motd',
   }
 
+  file { 'deb-extras.list':
+    ensure => file,
+    path   => '/etc/apt/sources.list.d/deb-extras.list',
+    source => 'puppet:///modules/system/deb-extras.list',
+  }
+
   # TODO(bluecmd): Move whatever we can from preseed to here.
   # That way all our OSes will have the same tools.
   ensure_packages([
@@ -111,5 +117,12 @@ class system($ca) {
     command => "${git_binary} submodule init && ${git_binary} submodule update --recursive --remote",
     cwd     => '/scripts/',
     creates => '/scripts/.git/modules',
+  }
+
+  if $::kernelrelease =~ /OpenNetworkLinux/ {
+    package { 'snmpd':
+      ensure => 'purged',
+    }
+    ensure_packages(['cron'])
   }
 }

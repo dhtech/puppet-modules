@@ -2,9 +2,11 @@
 #
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file
+import base64
 import collections
 import grp
 import lib
+import os
 import re
 # Needed to read host's public SSH key for signing
 import pypuppetdb
@@ -36,6 +38,15 @@ def sign_host_key(host):
     login_data['sshecdsakey_signed'] = res['signed_key']
     lib.save_secret(login_path(host), **login_data)
     return res['signed_key']
+
+
+def generate_borg_passphrase(host):
+    login_data = lib.read_secret(login_path(host)) or {}
+    if login_data.get('borg_passphrase', None) is not None:
+        return
+    # Generate new passphrase
+    login_data['borg_passphrase'] = base64.b64encode(os.urandom(32))
+    lib.save_secret(login_path(host), **login_data)
 
 
 def generate(host, *args):
@@ -91,10 +102,13 @@ def generate(host, *args):
         services_group = 'services-team'
     info['sudo'].append(services_group)
 
+    groups = []
     for arg in args:
         if arg.startswith('sudo'):
             _, group = arg.split(':', 2)
             info['sudo'].append(group)
+        else:
+            groups.append(arg)
 
     # 'git' is a special keyword to enable restricting users to git-shell
     if 'git' in args:
@@ -107,13 +121,13 @@ def generate(host, *args):
     ]
 
     # Allow sudo users to logon everywhere
-    for user in info['sudo']:
-        info['logon'].append((user, 'ALL'))
+    for group in info['sudo']:
+        info['logon'].append((group, 'ALL'))
 
-    # Add all explicit users
-    for user in args:
+    # Add all explicit groups
+    for group in groups:
         # Allow local logins as well to allow scripts to auth users
-        formatted = user.format(event=lib.get_current_event())
+        formatted = group.format(event=lib.get_current_event())
         info['logon'].append((formatted, 'ALL'))
 
     # LDAP settings
@@ -130,6 +144,7 @@ def generate(host, *args):
     info['ca'] = lib.read_secret('ssh/config/ca')['public_key']
     info['host_cert'] = sign_host_key(host)
     info['panic_users'] = sorted(grp.getgrnam(services_group).gr_mem)
+    generate_borg_passphrase(host)
 
     return {'ldaplogin': info}
 

@@ -46,6 +46,6 @@ class asterisktftp($current_event) {
     mode   => '0644',
     owner  => 'tftp',
     group  => 'tftp',
-    source => 'puppet:///svn/$current_event/services/voipplan',
+    source => 'puppet:///svn/allevents/services/voipplan',
   }
 }

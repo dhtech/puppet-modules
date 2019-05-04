@@ -8,12 +8,18 @@ route:
     - receiver: 'core'
       match_re:
         layer: dist|core|firewall
+    - receiver: 'wifi'
+      match_re:
+        layer: wifi
     - receiver: 'access'
       match_re:
-        layer: access|wifi
+        layer: access
     - receiver: 'services'
       match_re:
         layer: services
+    - receiver: 'powerpatrol'
+      match_re:
+        layer: powerpatrol
     - receiver: 'core'
       match_re:
         team: core
@@ -26,6 +32,15 @@ route:
     - receiver: 'powerpatrol'
       match_re:
         team: powerpatrol
+    - receiver: 'heartbeat'
+      group_wait: 1s
+      group_interval: 5s
+      repeat_interval: 5s
+      group_by: [alertname]
+      routes:
+        - receiver: 'heartbeat'
+          match_re:
+            type: heartbeat
 
 receivers:
 - name: 'default-receiver'
@@ -34,16 +49,31 @@ receivers:
 - name: 'core'
   webhook_configs:
   - url: 'https://ticket.tech.dreamhack.se/tech/prometheus.php'
-  - url: 'http://circus.tech.event.dreamhack.se/api/v1/alerts?team=core'
+  - url: 'http://alertringer.tech.event.dreamhack.se/api/v1/alerts?team=core'
+- name: 'wifi'
+  webhook_configs:
+  - url: 'https://ticket.tech.dreamhack.se/tech/prometheus.php'
+  - url: 'http://alertringer.tech.event.dreamhack.se/api/v1/alerts?team=wifi'
 - name: 'access'
   webhook_configs:
   - url: 'https://ticket.tech.dreamhack.se/tech/prometheus.php'
-  - url: 'http://circus.tech.event.dreamhack.se/api/v1/alerts?team=access'
+  - url: 'http://alertringer.tech.event.dreamhack.se/api/v1/alerts?team=access'
 - name: 'services'
   webhook_configs:
   - url: 'https://ticket.tech.dreamhack.se/tech/prometheus.php'
-  - url: 'http://circus.tech.event.dreamhack.se/api/v1/alerts?team=services'
+  - url: 'http://alertringer.tech.event.dreamhack.se/api/v1/alerts?team=services'
 - name: 'powerpatrol'
   webhook_configs:
   - url: 'https://ticket.tech.dreamhack.se/tech/prometheus.php'
-  - url: 'http://circus.tech.event.dreamhack.se/api/v1/alerts?team=powerpatrol'
+  - url: 'http://alertringer.tech.event.dreamhack.se/api/v1/alerts?team=powerpatrol'
+- name: 'heartbeat'
+  webhook_configs:
+  - url: 'http://alertringer.tech.event.dreamhack.se/api/v1/alerts?team=heartbeat'
+
+inhibit_rules:
+    # If you cannot ping, you most likely cannot SSH
+  - source_match:
+      alertname: HostDown
+    target_match_re:
+      alertname: SshFrom.*
+    equal: ['host']

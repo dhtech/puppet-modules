@@ -1,0 +1,10 @@
+apiVersion: kubeadm.k8s.io/v1alpha3
+kind: JoinConfiguration
+discoveryTokenAPIServers:
+  - "<%= @apiserver %>:6443"
+discoveryTokenCACertHashes:
+  - sha256:<%= @cert_hash %>
+token: <%= @token %>
+nodeRegistration:
+  name: "<%= @hostname %>"
+  criSocket: "/var/run/dockershim.sock"
