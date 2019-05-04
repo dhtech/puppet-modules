@@ -14,7 +14,7 @@
 #   not do LDAP authentication.
 #
 
-class apache($ldap) {
+class apache($ldap = '') {
 
   package { 'apache2':
     ensure => installed,
