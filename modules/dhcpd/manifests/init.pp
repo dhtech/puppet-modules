@@ -173,7 +173,7 @@ class dhcpd ($current_event, $active = 0, $active_node = '', $scopes = '', $loca
   }
 
   if $active == 1 {
-    service { 'dhcpd':
+    service { 'isc-dhcp-server':
       ensure => 'running',
       name   => $rc_name,
       enable => true,
