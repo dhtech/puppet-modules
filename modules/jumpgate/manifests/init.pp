@@ -17,7 +17,7 @@ class jumpgate {
   ensure_packages([
       'mtr-tiny', 'rancid', 'snmp', 'dnsutils', 'nmap', 'bash-completion',
       'ndisc6', 'python-paramiko', 'python-requests', 'netcat', 'ipmitool',
-      'prometheus-blackbox-exporter'])
+      'prometheus-blackbox-exporter', 'python-redis'])
 
   service { 'prometheus-blackbox-exporter':
     ensure => 'running',
