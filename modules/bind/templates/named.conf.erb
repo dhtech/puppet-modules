@@ -101,6 +101,12 @@ logging {
 category default { syslog; };
 };
 
+# root hints provided by dns-root-data package
+zone "." {
+  type hint;
+  file "/usr/share/dns/root.hints";
+};
+
 zone "localhost" {
     type master;
     file "<%= @standard_zone_cfg %>/db.local";
