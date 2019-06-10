@@ -79,7 +79,7 @@ class prometheus ($scrape_configs) {
   }
   file { 'puppet':
     ensure  => directory,
-    path    => '/etc/prometheus/external',
+    path    => '/opt/prometheus/external',
     recurse => true,
     owner   => 'prometheus',
     group   => 'prometheus',
