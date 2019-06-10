@@ -23,11 +23,11 @@ class grafana($current_event) {
   file { 'grafana-source-add':
     ensure  => file,
     path    => '/etc/apt/sources.list.d/grafana.list',
-    content => 'deb https://packagecloud.io/grafana/stable/debian/ stretch main',
+    content => 'deb https://packages.grafana.com/oss/deb beta main',
     notify  => Exec['grafana-source-key'],
   }
   exec { 'grafana-source-key':
-    command     => '/usr/bin/curl https://packagecloud.io/gpg.key | sudo apt-key add -',
+    command     => '/usr/bin/curl https://packages.grafana.com/gpg.key | sudo apt-key add -',
     logoutput   => 'on_failure',
     try_sleep   => 1,
     refreshonly => true,

@@ -43,10 +43,10 @@ export LDAPTLS_CACERT="$CA"
 
 # Install certificates
 if [ "$(hostname -d)" == "tech.dreamhack.se" ]; then
-  # Calculate the TTL to 2018-04-28 which is when the LDAP IM cert expires
+  # Calculate the TTL to 2028-04-28 which is when the LDAP IM cert expires
   TTL="$(python -c 'import time; print int((1840492800 - time.time())/3600)')h"
 else
-  TTL="720h" # 30d
+  TTL="2160h" # 90d
 fi
 
 echo "Using TTL $TTL"

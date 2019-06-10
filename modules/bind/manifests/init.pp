@@ -78,6 +78,10 @@ class bind($role='resolver', $networks = [], $zones = [], $private_zones = [],
     ensure => installed,
   }
 
+  package { 'dns-root-data':
+    ensure => installed,
+  }
+
   # It is nice to have dig(1) on a DNS server
   if $needs_tools == 1 {
     package { 'dnsutils':
