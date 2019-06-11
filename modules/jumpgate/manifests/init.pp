@@ -53,9 +53,10 @@ class jumpgate {
   }
 
   file { 'blackbox-config':
-    ensure => file,
-    path   => '/etc/prometheus/blackbox.yml',
-    source => 'puppet:///modules/jumpgate/blackbox.yml',
+    ensure  => file,
+    path    => '/etc/prometheus/blackbox.yml',
+    source  => 'puppet:///modules/jumpgate/blackbox.yml',
+    notify  => Service['prometheus-blackbox-exporter'],
   }
 
   file { 'ipplan-completion.py':
