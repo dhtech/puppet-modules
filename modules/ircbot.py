@@ -6,15 +6,12 @@
 
 def generate(host, *args):
 
-    admins = [
-      'soundgoof',
-      'bluecmd',
-      'misse',
-      'tisteagle',
-    ]
+    ircds = sorted(lib.get_nodes_with_package('ircd', 'event').keys())
 
     info = {}
-    info['admins'] = admins
+    if ircds:
+        info['ircserver'] = ircds[0]
+    info['admins'] = sorted(grp.getgrnam('ircbot-admin-access').gr_mem)
 
     return {'ircbot': info}
 

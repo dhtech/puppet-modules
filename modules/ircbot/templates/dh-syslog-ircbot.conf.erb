@@ -1,6 +1,6 @@
 [irc]
 nick=Syslog
-server = irc0.event.dreamhack.se
+server = <%= @ircserver %>
 port = 6666 
 admins = "<% @admins.each do |admin|%><%= admin %> <% end -%>"
 
