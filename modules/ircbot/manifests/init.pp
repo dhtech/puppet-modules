@@ -13,7 +13,7 @@
 #   Defines the admins of the bot, based on nicknames. 
 #
 
-class ircbot($admins=[]) {
+class ircbot($ircserver, $admins = []) {
 
   group{'ircbot':
     ensure => 'present',
