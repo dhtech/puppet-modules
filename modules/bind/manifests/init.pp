@@ -142,6 +142,20 @@ class bind($role='resolver', $networks = [], $zones = [], $private_zones = [],
     require => Package[$package_name],
   }
 
+  file { 'bind_exporter.service':
+    ensure  => file,
+    path    => '/etc/systemd/system/bind_exporter.service',
+    content => template('bind/exporter.erb'),
+  }
+  ~> exec { '/bin/systemctl daemon-reload':
+    refreshonly => true,
+  }
+  ~> exec { '/bin/systemctl restart bind_exporter':
+    logoutput   => 'on_failure',
+    try_sleep   => 1,
+    refreshonly => true,
+  }
+
   file { 'named.conf.slave':
     ensure  => file,
     path    => "${conf_dir}/named.conf.slave",
