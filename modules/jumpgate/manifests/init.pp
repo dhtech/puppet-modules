@@ -20,8 +20,9 @@ class jumpgate {
       'prometheus-blackbox-exporter', 'python-redis', 'python-yaml'])
 
   service { 'prometheus-blackbox-exporter':
-    ensure => 'running',
-    enable => true
+    ensure  => 'running',
+    enable  => true,
+    require => File['blackbox-config'],
   }
 
   file {
@@ -49,6 +50,12 @@ class jumpgate {
     ensure => file,
     path   => '/etc/profile.d/dreamhack.sh',
     source => 'puppet:///modules/jumpgate/dreamhack.sh',
+  }
+
+  file { 'blackbox-config':
+    ensure => file,
+    path   => '/etc/prometheus/blackbox.yml',
+    source => 'puppet:///modules/jumpgate/blackbox.yml',
   }
 
   file { 'ipplan-completion.py':
