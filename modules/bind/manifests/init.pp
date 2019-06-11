@@ -144,7 +144,7 @@ class bind($role='resolver', $networks = [], $zones = [], $private_zones = [],
 
   file { 'bind_exporter.service':
     ensure  => file,
-    path    => "/etc/systemd/system/bind_exporter.service",
+    path    => '/etc/systemd/system/bind_exporter.service',
     content => template('bind/exporter.erb'),
   }
   ~> exec { '/bin/systemctl daemon-reload':
