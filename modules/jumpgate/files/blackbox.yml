@@ -21,4 +21,5 @@ modules:
       ip_protocol_fallback: false
   tls:
     prober: tcp
-    tls: true
+    tcp:
+      tls: true
