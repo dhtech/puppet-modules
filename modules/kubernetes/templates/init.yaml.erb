@@ -9,14 +9,6 @@ apiEndpoint:
 ---
 apiVersion: kubeadm.k8s.io/v1beta1
 kind: ClusterConfiguration
-etcd:
-  external:
-    endpoints:<% @etcd.each do |endpoint|%>
-    - "https://<%= endpoint %>:2379"<% end -%>
-
-    caFile: "/etc/ssl/dhtech-ca.crt"
-    certFile: "/var/lib/puppet/ssl/certs/<%= @hostname %>.event.dreamhack.se.pem"
-    keyFile: "/var/lib/puppet/ssl/private_keys/<%= @hostname %>.event.dreamhack.se.pem"
 networking:
   serviceSubnet: "<%= @servicenet %>"
   podSubnet: "<%= @podnet %>"

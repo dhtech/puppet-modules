@@ -34,21 +34,12 @@ def generate(host, *args):
                 'token': secrets['token']
             }
         if 'control' in args:
-            # find which etcd matches this host
-            etcd = []
-            e = lib.get_nodes_with_package("etcd")
-            for h, o in lib.get_nodes_with_package("etcd").items():
-                if variant in o:
-                    etcd.append(h)
-            if len(etcd) == 0:
-                raise Exception("No etcd nodes found")
             servicenet = lib.match_networks_name("EVENT@" + variant.upper() + ".*K8S-SVC")
             podnet = lib.match_networks_name("EVENT@" + variant.upper() + ".*K8S-POD")
             if len(servicenet) == 0 or len(podnet) == 0:
                 raise Exception("service- and/or podnet not found in ipplan")      
             info['kubernetes::master'] = {
                 'variant': variant,
-                'etcd': etcd,
                 'podnet': podnet[0],
                 'servicenet': servicenet[0],
                 'current_event': current_event
