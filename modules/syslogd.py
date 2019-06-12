@@ -12,7 +12,7 @@ def generate(host, *args):
     if 'rsyslog' in args:
         if ircbots:
             info['rsyslog'] = {'ircbot': ircbots[0]}
-        else
+        else:
             info['rsyslog'] = {}
 
     return info
