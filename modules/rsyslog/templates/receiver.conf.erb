@@ -18,7 +18,9 @@ $template aggr,"/var/log/dh/%fromhost%/all.log"
 *.* -?split;RSYSLOG_SyslogProtocol23Format
 
 # ircbot
-*.*     @77.80.231.166:50007
+<% if @ircbot -%>
+*.*	@<%= @ircbot %>:50007
+<% end -%>
 
 # rancid-trigger
 *.*     @localhost:1514
