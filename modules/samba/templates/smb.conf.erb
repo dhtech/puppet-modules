@@ -1,0 +1,30 @@
+[global]
+  server string = samba
+  workgroup = dreamhack
+  smb ports = 445
+  dns proxy = no
+  log level = 2
+  logging = syslog
+  panic action = /usr/share/samba/panic-action %d
+  server role = standalone server
+  passdb backend = smbpasswd
+  #obey pam restrictions = yes
+  unix password sync = yes
+  passwd program = /usr/bin/passwd %u
+  passwd chat = *Enter\snew\s*\spassword:* %n\n *Retype\snew\s*\spassword:* %n\n *password\supdated\ssuccessfully* .
+  pam password change = yes
+  map to guest = bad user
+  usershare allow guests = yes
+
+<% @shares.each do |share| -%>
+[<%= share %>]
+  path = /storage/<%= share %>
+  valid users = <%= share %>
+  browsable = yes
+  create mask = 0660
+  directory mask = 0771
+  writable = yes
+  read only = no
+  public = yes
+  guest ok = no
+<% end -%>
