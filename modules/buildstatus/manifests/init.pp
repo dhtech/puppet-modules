@@ -11,12 +11,6 @@
 #
 
 class buildstatus {
-  file { 'webmon':
-    path    => '/var/www/html/webmon',
-    source  => 'puppet:///scripts/webmon',
-    recurse => true,
-  }
-
   exec { 'download-buildstatus':
     command     => '/usr/bin/git clone https://github.com/dhtech/buildstatus /var/www/html/buildstatus',
     refreshonly =>  true,
