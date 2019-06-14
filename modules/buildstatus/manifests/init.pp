@@ -17,4 +17,15 @@ class buildstatus {
     recurse => true,
   }
 
+  exec { 'download-buildstatus':
+    command     => '/usr/bin/git clone https://github.com/dhtech/buildstatus /var/www/html/buildstatus',
+    refreshonly =>  true,
+  }
+
+  cron { 'update-buildstatus':
+    command => '/usr/bin/git --git-dir=/var/www/html/buildstatus.git --work-tree=/var/www/html/buildstatus pull',
+    minute  => '*',
+    require => Exec['download-buildstatus'],
+  }
+
 }
