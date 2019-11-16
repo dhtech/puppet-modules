@@ -15,10 +15,12 @@ $InputTCPServerRun 514
 $template split,"/var/log/dh/%fromhost%/%syslogseverity-text%.log"
 $template aggr,"/var/log/dh/%fromhost%/all.log"
 
-*.* -?split
+*.* -?split;RSYSLOG_SyslogProtocol23Format
 
 # ircbot
-*.*     @77.80.231.166:50007
+<% if @ircbot -%>
+*.*	@<%= @ircbot %>:50007
+<% end -%>
 
 # rancid-trigger
 *.*     @localhost:1514

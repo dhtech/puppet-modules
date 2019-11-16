@@ -2,19 +2,17 @@
 #
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file
-
+import lib
+import grp
 
 def generate(host, *args):
 
-    admins = [
-      'soundgoof',
-      'bluecmd',
-      'misse',
-      'tisteagle',
-    ]
+    ircds = sorted(lib.get_nodes_with_package('ircd', 'event').keys())
 
     info = {}
-    info['admins'] = admins
+    if ircds:
+        info['ircserver'] = ircds[0]
+    info['admins'] = sorted(grp.getgrnam('ircbot-admin-access').gr_mem)
 
     return {'ircbot': info}
 

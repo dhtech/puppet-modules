@@ -41,7 +41,7 @@ class prometheus ($scrape_configs) {
   #Copy prometheus tar bundle to the server
   file { '/tmp/prometheus.tar.gz':
     ensure => file,
-    source => 'puppet:///data/prometheus-2.3.0.linux-amd64.tar.gz',
+    source => 'puppet:///data/prometheus-2.10.0.linux-amd64.tar.gz',
     notify => Exec[ 'untar-prometheus' ],
   }
   #Unpackage prometheus
@@ -79,7 +79,7 @@ class prometheus ($scrape_configs) {
   }
   file { 'puppet':
     ensure  => directory,
-    path    => '/etc/prometheus/external',
+    path    => '/opt/prometheus/external',
     recurse => true,
     owner   => 'prometheus',
     group   => 'prometheus',

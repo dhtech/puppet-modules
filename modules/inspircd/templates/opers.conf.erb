@@ -25,6 +25,14 @@
       name="tisteagle"
       # Create hashed passwords with: /mkpasswd <hash> <password>
       hash="hmac-sha256"
-      password="<%= @secret["oper_hash"] %>"
+      password="<%= @secret["oper_hash_tisteagle"] %>"
       host="*@127.0.0.1 *@185.69.168.73 *@irc.ax"
+      type="NetAdmin">
+      
+<oper
+      name="soundgoof"
+      # Create hashed passwords with: /mkpasswd <hash> <password>
+      hash="hmac-sha256"
+      password="<%= @secret["oper_hash_soundgoof"] %>"
+      host="*@127.0.0.1 *@skalman.tech.dreamhack.se"
       type="NetAdmin">

@@ -78,6 +78,10 @@ class bind($role='resolver', $networks = [], $zones = [], $private_zones = [],
     ensure => installed,
   }
 
+  package { 'dns-root-data':
+    ensure => installed,
+  }
+
   # It is nice to have dig(1) on a DNS server
   if $needs_tools == 1 {
     package { 'dnsutils':
@@ -136,6 +140,20 @@ class bind($role='resolver', $networks = [], $zones = [], $private_zones = [],
     content => template('bind/named.conf.erb'),
     notify  => Service['named'],
     require => Package[$package_name],
+  }
+
+  file { 'bind_exporter.service':
+    ensure  => file,
+    path    => '/etc/systemd/system/bind_exporter.service',
+    content => template('bind/exporter.erb'),
+  }
+  ~> exec { '/bin/systemctl daemon-reload':
+    refreshonly => true,
+  }
+  ~> exec { '/bin/systemctl restart bind_exporter':
+    logoutput   => 'on_failure',
+    try_sleep   => 1,
+    refreshonly => true,
   }
 
   file { 'named.conf.slave':
