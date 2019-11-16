@@ -113,7 +113,7 @@ class provision ($vault_mount, $esxi = [], $c7000 = [], $domain = '', $mgmt_if =
   file { 'data:vsphere_vcsa.iso':
     ensure => file,
     path   => '/srv/vmware-vcenter.iso',
-    source => 'puppet:///data/VMware-VCSA-all-6.7.0-13010631.iso',
+    source => 'puppet:///data/VMware-VCSA-all-latest.iso',
   }
   -> supervisor::register { 'provisiond':
     command     => '/usr/local/bin/provisiond',
