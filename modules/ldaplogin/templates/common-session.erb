@@ -18,7 +18,7 @@
 session	[default=1]			pam_permit.so
 # here's the fallback if no module succeeds
 session	requisite			pam_deny.so
-session	required			pam_mkhomedir.so skel=/etc/skel umask=0027
+session	required			pam_mkhomedir.so skel=/etc/skel umask=0077
 # prime the stack with a positive return value if there isn't one already;
 # this avoids us returning an error just because nothing sets a success code
 # since the modules above will each just jump around
