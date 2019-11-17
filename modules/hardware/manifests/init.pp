@@ -4,8 +4,6 @@
 # license that can be found in the LICENSE file
 #
 
-include apt
-
 # == Class: hardware
 #
 # Install hardware specific packages and configs.
@@ -15,6 +13,9 @@ include apt
 # None. Everything is driven by facts.
 #
 class hardware {
+
+  include apt
+
   if defined('$::productname') and $::productname =~ /VMware/ {
     # OpenBSD does not use open-vm-tools, see the vmt(4) driver.
     if $::operatingsystem != 'OpenBSD' {
