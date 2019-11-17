@@ -169,6 +169,8 @@ def requires(host, *args):
 
 
 def generate(host, *args):
+    current_event = lib.get_current_event()
+    
     info = {}
     local_targets = []
     local_targets.append({
@@ -176,6 +178,7 @@ def generate(host, *args):
         'scheme': 'http',
         'static_configs': [{'targets': ['localhost:9090']}]})
     info['prometheus'] = generate_backend(host, local_targets)
+    info['current_event'] = current_event
 
     return info
 
