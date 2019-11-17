@@ -170,7 +170,7 @@ def requires(host, *args):
 
 def generate(host, *args):
     current_event = lib.get_current_event()
-    
+
     info = {}
     local_targets = []
     local_targets.append({
