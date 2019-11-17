@@ -3,7 +3,7 @@
     'scrape_interval' => '30s',
     'scrape_timeout' => '25s',
     'external_labels' => {
-      'cluster' => 'event-@current_event'
+      'cluster' => 'event-<%= @current_event %>'
     }
   },
   'rule_files' => [
