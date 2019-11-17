@@ -97,7 +97,7 @@ class App:
         c = self.db.cursor()
         c.execute("""select host.name, ipv4_addr_txt, option.value
             from host, option
-            where option.name='mac' and host.node_id = option.node_id""")
+            where option.name='mac' and host.node_id = option.node_id and ipv4_addr_txt is not null""")
         host_index = collections.defaultdict(int)
         for row in c.fetchall():
             host, ip, mac = row
