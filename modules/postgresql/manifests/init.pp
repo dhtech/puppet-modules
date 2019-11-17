@@ -37,7 +37,7 @@ class postgresql($allowed_hosts, $db_list, $current_event, $domain, $version) {
   }
 
   file_line {'listen-on-network':
-    path    => '/etc/postgresql/${version}/main/postgresql.conf',
+    path    => "/etc/postgresql/${version}/main/postgresql.conf",
     line    => "listen_addresses = '*'",
     notify  => Service['postgresql'],
     require => Package["postgresql-${version}"],
