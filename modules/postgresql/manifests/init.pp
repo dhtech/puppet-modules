@@ -33,14 +33,14 @@ class postgresql($allowed_hosts, $db_list, $current_event, $domain, $version) {
   service {'postgresql':
     ensure  => running,
     enable  => true,
-    require => Package['postgresql'],
+    require => Package["postgresql-${version}"],
   }
 
   file_line {'listen-on-network':
     path    => '/etc/postgresql/11/main/postgresql.conf',
     line    => "listen_addresses = '*'",
     notify  => Service['postgresql'],
-    require => Package['postgresql'],
+    require => Package["postgresql-${version}"],
   }
 
   file {"/etc/postgresql/${version}/main/pg_hba.conf":
@@ -49,7 +49,7 @@ class postgresql($allowed_hosts, $db_list, $current_event, $domain, $version) {
     owner   => 'postgres',
     group   => 'postgres',
     notify  => Service['postgresql'],
-    require => Package['postgresql'],
+    require => Package["postgresql-${version}"],
   }
 
   file { '/opt/postgresql':
@@ -105,7 +105,7 @@ class postgresql($allowed_hosts, $db_list, $current_event, $domain, $version) {
     command => "/bin/echo 'CREATE USER root SUPERUSER' | /usr/bin/psql",
     unless  => '/opt/postgresql/bin/psql_database_exists root',
     require => [
-      Package['postgresql'],
+      Package["postgresql-${version}"],
       File['/opt/postgresql/bin/psql_user_exists'],
     ],
   }
