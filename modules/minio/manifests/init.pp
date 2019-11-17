@@ -15,7 +15,6 @@ class minio {
     mode   => '0644',
     source => 'puppet:///letsencrypt/fullchain.pem',
     links  => 'follow',
-    notify => Service['apache2'],
   }
 
   file { '/etc/ssl/private/minio.key':
@@ -25,7 +24,6 @@ class minio {
     mode   => '0640',
     source => 'puppet:///letsencrypt/privkey.pem',
     links  => 'follow',
-    notify => Service['apache2'],
   }
 
 
