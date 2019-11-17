@@ -11,7 +11,7 @@ class minio {
   file { '/etc/ssl/certs/minio-fullchain.crt':
     ensure => file,
     owner  => 'root',
-    group  => 'ssl-cert',
+    group  => 'root',
     mode   => '0644',
     source => 'puppet:///letsencrypt/fullchain.pem',
     links  => 'follow',
@@ -20,7 +20,7 @@ class minio {
   file { '/etc/ssl/private/minio.key':
     ensure => file,
     owner  => 'root',
-    group  => 'ssl-cert',
+    group  => 'root',
     mode   => '0640',
     source => 'puppet:///letsencrypt/privkey.pem',
     links  => 'follow',
