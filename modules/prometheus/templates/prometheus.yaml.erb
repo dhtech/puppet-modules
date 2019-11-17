@@ -4,6 +4,7 @@
     'scrape_timeout' => '25s',
     'external_labels' => [
       'cluster' => 'event-<%= @current_event %>'
+    ]
   },
   'rule_files' => [
     '/opt/prometheus/rules/*.prom.yml',
