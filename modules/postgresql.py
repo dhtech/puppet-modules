@@ -57,7 +57,6 @@ def generate(host, *args):
     if len(args) > 0:
         m = re.match(r'^v(\d+)$', args[0])
         if m is not None:
-            del args[0]
             version = m.group(1)
 
     if version is None:
@@ -65,7 +64,7 @@ def generate(host, *args):
 
     # Read list of database to create on this server
     db_list = []
-    for arg in args:
+    for arg in args[1:]:
         db_list.append(arg)
 
     current_event = lib.get_current_event()
