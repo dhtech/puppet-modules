@@ -21,9 +21,12 @@
 # [*domain*]
 #   Used for naming databases.
 #
+# [*version*]
+#   Major version of PostgreSQL
+#
 
-class postgresql($allowed_hosts, $db_list, $current_event, $domain) {
-  package {'postgresql':
+class postgresql($allowed_hosts, $db_list, $current_event, $domain, $version) {
+  package {"postgresql-${version}":
     ensure => 'installed',
   }
 
@@ -40,7 +43,7 @@ class postgresql($allowed_hosts, $db_list, $current_event, $domain) {
     require => Package['postgresql'],
   }
 
-  file {'/etc/postgresql/11/main/pg_hba.conf':
+  file {"/etc/postgresql/${version}/main/pg_hba.conf":
     content => template('postgresql/pg_hba.conf.erb'),
     mode    => '0640',
     owner   => 'postgres',
