@@ -16,7 +16,7 @@
 #   The current event name, e.g. dhs19
 #
 
-class prometheus ($current_event = '', $scrape_configs) {
+class prometheus ($scrape_configs, $current_event = '') {
 
   #Create user/group for Prometheus
   group { 'prometheus':
