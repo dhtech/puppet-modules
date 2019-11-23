@@ -17,6 +17,7 @@
 #
 
 class prometheus ($scrape_configs, $current_event = '') {
+  $thanos_s3 = vault('minio:minio1.tech.dreamhack.se', {})
 
   #Create user/group for Prometheus
   group { 'prometheus':
@@ -125,6 +126,24 @@ class prometheus ($scrape_configs, $current_event = '') {
     command => '/usr/local/bin/prometheus-presence-exporter > /var/tmp/export/presence.prom',
     minute  => '*',
     require => [ File['prometheus-presence-exporter'] ],
+  }
+
+  #Thanos
+  file { '/opt/thanos/':
+    ensure => directory,
+    owner  => prometheus,
+    group  => prometheus,
+    mode   => '0700'
+  }
+  file { '/opt/thanos/bucket.yaml':
+    ensure  => file,
+    content => template('prometheus/bucket.yaml.erb')
+  }
+  file { '/opt/thanos/docker-compose.yml':
+    ensure => file,
+    path   => '/',
+    source => 'puppet:///modules/prometheus/thanos-docker-compose.yaml',
+    mode   => '0755',
   }
 
 }
