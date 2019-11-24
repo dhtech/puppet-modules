@@ -54,7 +54,7 @@ class ldaplogin ($ca, $logon, $sudo, $ldap, $ssh_ports, $panic_users,
     'sssd-pam-priv.socket', 'sssd-ssh.socket', 'sssd-sudo.socket']:
     ensure   => 'disable',
     provider => 'systemd',
- }
+  }
 
   service { 'openssh-server':
     ensure => 'running',
