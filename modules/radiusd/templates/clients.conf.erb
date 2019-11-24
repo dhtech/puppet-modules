@@ -2,7 +2,7 @@
 # All manual changes will be overwritten
 
 # Core IPv4 hosts
-<% if not @core_secret['key'].empty? -%>
+<% if not @core_secret['key'].nil? -%>
 <% @core_ips.each do |node, ipv4_addr| -%>
 client <%= ipv4_addr %>/32 {
     ipaddr    = <%= ipv4_addr %>
@@ -13,7 +13,7 @@ client <%= ipv4_addr %>/32 {
 <% end -%>
 
 # Dist IPv4 hosts
-<% if not @dist_secret['key'].empty? -%>
+<% if not @dist_secret['key'].nil? -%>
 <% @dist_ips.each do |node, ipv4_addr| -%>
 client <%= ipv4_addr %>/32 {
     ipaddr    = <%= ipv4_addr %>
@@ -24,7 +24,7 @@ client <%= ipv4_addr %>/32 {
 <% end -%>
 
 # Access IPv4 hosts
-<% if not @access_secret['key'].empty? -%>
+<% if not @access_secret['key'].nil? -%>
 <% @access_ips.each do |node, ipv4_addr| -%>
 client <%= ipv4_addr %>/32 {
     ipaddr    = <%= ipv4_addr %>
@@ -35,7 +35,7 @@ client <%= ipv4_addr %>/32 {
 <% end -%>
 
 # Firewall IPv4 hosts
-<% if not @firewall_secret['key'].empty? -%>
+<% if not @firewall_secret['key'].nil? -%>
 <% @firewall_ips.each do |node, ipv4_addr| -%>
 client <%= ipv4_addr %>/32 {
     ipaddr    = <%= ipv4_addr %>
@@ -46,7 +46,7 @@ client <%= ipv4_addr %>/32 {
 <% end -%>
 
 # Partner IPv4 hosts
-<% if not @partner_secret['key'].empty? -%>
+<% if not @partner_secret['key'].nil? -%>
 <% @partner_ips.each do |node, ipv4_addr| -%>
 client <%= ipv4_addr %>/32 {
     ipaddr    = <%= ipv4_addr %>
