@@ -1,0 +1,12 @@
+version: '3'
+services:
+  thanos:
+    ports:
+      - "10901:10901"
+      - "10902:10902"
+  redis:
+    image: "quay.io/thanos/thanos:v0.8.1"
+    command: ["--tsdb.path='/srv/data'", "--prometheus.url='http://localhost:9090'", "--objstore.config-file='/opt/thanos/bucket.yml'"]
+    volumes:
+      - /opt/thanos:/opt/thanos
+      - /srv/metrics:/srv/metrics

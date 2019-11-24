@@ -14,6 +14,7 @@
 #
 #
 
+
 class prometheus ($scrape_configs) {
   #Create user/group for Prometheus
   group { 'prometheus':
@@ -122,6 +123,24 @@ class prometheus ($scrape_configs) {
     command => '/usr/local/bin/prometheus-presence-exporter > /var/tmp/export/presence.prom',
     minute  => '*',
     require => [ File['prometheus-presence-exporter'] ],
+  }
+
+  #Thanos
+  file { '/opt/thanos/':
+    ensure => directory,
+    owner  => prometheus,
+    group  => prometheus,
+    mode   => '0700'
+  }
+  file { '/opt/thanos/bucket.yaml':
+    ensure  => file,
+    content => template('prometheus/bucket.yaml.erb')
+  }
+  file { '/opt/thanos/docker-compose.yml':
+    ensure => file,
+    path   => '/',
+    source => 'puppet:///modules/prometheus/thanos-docker-compose.yaml',
+    mode   => '0755',
   }
 
 }
