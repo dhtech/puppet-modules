@@ -49,7 +49,7 @@ class ldaplogin ($ca, $logon, $sudo, $ldap, $ssh_ports, $panic_users,
     enable  => true,
     require => Package['sssd'],
   }
-  
+
   service { ['sssd-nss.socket', 'sssd-autofs.socket', 'sssd-pac.socket',
              'sssd-pam-priv.socket', 'sssd-ssh.socket', 'sssd-sudo.socket']:
     ensure => 'disable',
