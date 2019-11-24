@@ -138,7 +138,7 @@ class prometheus ($scrape_configs) {
   }
   file { '/opt/thanos/docker-compose.yml':
     ensure => file,
-    path   => '/',
+    path   => '/opt/thanos/docker-compose.yml',
     source => 'puppet:///modules/prometheus/thanos-docker-compose.yaml',
     mode   => '0755',
   }
