@@ -22,15 +22,20 @@ class dnsstatd($current_event) {
     'python-psycopg2'])
 
   package { 'dnslib':
+    ensure   => installed,
     provider => 'pip',
   }
+
   package { 'libpcap':
+    ensure   => installed,
     provider => 'pip',
   }
+
   package { 'dpkt':
+    ensure   => installed,
     provider => 'pip',
   }
- 
+
   if $secret_db_dnsstatd != {} {
     file { '/scripts/dnsstatd/config':
       ensure  => file,
