@@ -12,13 +12,9 @@
 # [*scrape_configs*]
 #   Map of the same structure as Prometheus' scrape_configs.
 #
-# [*current_event*]
-#   The current event name, e.g. dhs19
 #
 
 class prometheus ($scrape_configs) {
-  $current_event = lib.get_current_event()
-
   #Create user/group for Prometheus
   group { 'prometheus':
     ensure => 'present',
