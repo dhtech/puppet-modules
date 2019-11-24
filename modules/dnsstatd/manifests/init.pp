@@ -19,11 +19,20 @@ class dnsstatd($current_event) {
 
   ensure_packages([
     'python-netifaces',
-    'python-libpcap',
-    'python-dpkt',
     'python-psycopg2'])
 
   package { 'dnslib':
+    ensure   => installed,
+    provider => 'pip',
+  }
+
+  package { 'libpcap':
+    ensure   => installed,
+    provider => 'pip',
+  }
+
+  package { 'dpkt':
+    ensure   => installed,
     provider => 'pip',
   }
 
