@@ -12,13 +12,10 @@
 # [*scrape_configs*]
 #   Map of the same structure as Prometheus' scrape_configs.
 #
-# [*current_event*]
-#   The current event name, e.g. dhs19
 #
 
-class prometheus ($scrape_configs, $current_event = '') {
-  $thanos_s3 = vault('minio:minio1.tech.dreamhack.se', {})
 
+class prometheus ($scrape_configs) {
   #Create user/group for Prometheus
   group { 'prometheus':
     ensure => 'present',
