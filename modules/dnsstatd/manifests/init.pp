@@ -19,14 +19,18 @@ class dnsstatd($current_event) {
 
   ensure_packages([
     'python-netifaces',
-    'python-libpcap',
-    'python-dpkt',
     'python-psycopg2'])
 
   package { 'dnslib':
     provider => 'pip',
   }
-
+  package { 'libpcap':
+    provider => 'pip',
+  }
+  package { 'dpkt':
+    provider => 'pip',
+  }
+ 
   if $secret_db_dnsstatd != {} {
     file { '/scripts/dnsstatd/config':
       ensure  => file,
