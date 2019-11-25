@@ -83,6 +83,10 @@ class swbootd($current_event) {
     command => '/scripts/swboot/swtftpd.py',
   }
 
+  supervisor::register{ 'swhttpd':
+    command => '/scripts/swboot/swhttpd.py',
+  }
+
   file { '/scripts/swboot/switchconfig':
     ensure  => directory,
     recurse => remote,
