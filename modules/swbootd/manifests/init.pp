@@ -29,7 +29,7 @@ class swbootd($current_event) {
     'python3-tempita',
     'python3-yaml',
     'snmp'])
-    
+
   package { 'python3-netsnmp':
     provider => pip3,
   }
