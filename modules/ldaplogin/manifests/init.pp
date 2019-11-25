@@ -51,8 +51,8 @@ class ldaplogin ($ca, $logon, $sudo, $ldap, $ssh_ports, $panic_users,
   }
 
   service { ['sssd-nss.socket', 'sssd-autofs.socket', 'sssd-pac.socket',
-    'sssd-pam-priv.socket', 'sssd-ssh.socket', 'sssd-sudo.socket']:
-    enable   => false,
+    'sssd-pam-priv.socket', 'sssd-ssh.socket', 'sssd-sudo.socket', 'sssd-pam.socket']:
+    enable   => mask,
   }
 
   service { 'openssh-server':
