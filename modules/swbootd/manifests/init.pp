@@ -28,6 +28,8 @@ class swbootd($current_event) {
     'python3-redis',
     'python3-tempita',
     'python3-yaml',
+    'python3-pip',
+    'python3-setuptools',
     'snmp'])
 
   package { 'python3-netsnmp':
