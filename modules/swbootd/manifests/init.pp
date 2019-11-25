@@ -30,6 +30,10 @@ class swbootd($current_event) {
     'python3-yaml',
     'python3-pip',
     'python3-setuptools',
+    'libsnmp-dev',
+    'build-essential',
+    'python3-dev',
+    'python3-wheel',
     'snmp'])
 
   package { 'python3-netsnmp':
