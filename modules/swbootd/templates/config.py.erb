@@ -12,7 +12,7 @@ from tempita import bunch
 from collections import namedtuple
 import hashlib
 
-f = file('/scripts/swboot/switchconfig/config.yaml', 'r')
+f = open('/scripts/swboot/switchconfig/config.yaml', 'r')
 yaml_conf = yaml.load(f)
 
 # Note: To add new variables, the generate function will need to 
