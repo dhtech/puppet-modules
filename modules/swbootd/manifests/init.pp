@@ -33,6 +33,7 @@ class swbootd($current_event) {
     'libsnmp-dev',
     'build-essential',
     'python3-dev',
+    'python3-six',
     'python3-wheel',
     'snmp'])
 
