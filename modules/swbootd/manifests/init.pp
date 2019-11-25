@@ -82,7 +82,7 @@ class swbootd($current_event) {
   supervisor::register{ 'swtftpd':
     command => '/scripts/swboot/swtftpd.py',
   }
-  
+
   supervisor::register{ 'swhttpd':
     command => '/scripts/swboot/swhttpd.py',
   }
