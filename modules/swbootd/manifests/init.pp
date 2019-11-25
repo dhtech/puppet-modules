@@ -94,4 +94,8 @@ class swbootd($current_event) {
     source  => "puppet:///svn/${current_event}/access/switchconfig",
     notify  => Supervisor::Restart['swtftpd'],
   }
+
+  file { '/srv/tftp':
+    ensure  => directory,
+  }
 }
