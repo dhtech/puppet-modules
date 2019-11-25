@@ -119,8 +119,7 @@ def generate(switch, model_id):
   # Template function definition
   #
   cfg = tempita.Template(open(model.template).read())
-  return \
-      cfg.substitute(
+  cfg_subbed = cfg.substitute(
             hostname=switch,
             model=model,
             mgmt_ip=mgmt['ip'],
@@ -135,13 +134,17 @@ def generate(switch, model_id):
             enable=config.enable,
             radius=config.radius,
             snmp_ro=config.snmp_ro,
-            snmp_rw=hashlib.sha1(config.snmp_salt + mgmt['ip']).hexdigest(),
+            snmp_rw=hashlib.sha1((config.snmp_salt + mgmt['ip']).encode()).hexdigest(),
             ipplan_host=lambda h: ipplan_host(h),
             ipplan_pkg=lambda p: ipplan_package(p),
 #           snmp_user=config.snmp_user,
 #           snmp_auth=config.snmp_auth,
 #           snmp_priv=config.snmp_priv
             )
+  if "Juniper" in model_id:
+    jcfg = tempita.Template(open('juniper.sh.template').read())
+    cfg_subbed = jcfg.substitute(config=cfg_subbed)
+  return cfg_subbed
 
 def parse_metadata(switch):
   sql = '''SELECT n_mgmt.ipv4_txt, h.ipv4_addr_txt, n_mgmt.ipv4_gateway_txt, 
