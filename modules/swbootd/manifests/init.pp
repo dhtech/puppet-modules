@@ -25,13 +25,17 @@ class swbootd($current_event) {
   ensure_packages([
     'isc-dhcp-server',
     'redis-server',
-    'python-redis',
-    'python-netsnmp',
-    'python-tempita',
-    'python-ipcalc',
-    'python-yaml',
-    'python-six',
+    'python3-redis',
+    'python3-tempita',
+    'python3-yaml',
     'snmp'])
+    
+  package { 'python3-netsnmp':
+    provider => pip3,
+  }
+  package { 'ipcalc':
+    provider => pip3,
+  }
 
   # The default configuration file
   file { 'default-isc-dhcp-server':
