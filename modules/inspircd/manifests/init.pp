@@ -147,8 +147,8 @@ class inspircd ($peers, $sid) {
   }
 
   exec { 'generete-dhparams':
-    command => 'openssl dhparam -out /etc/inspircd/ssl/certs/dhparms.pem 4096',
-    creates => '/etc/inspircd/ssl/certs/dhparms.pem',
+    command => 'openssl dhparam -out /etc/inspircd/ssl/certs/dhparams.pem 4096',
+    creates => '/etc/inspircd/ssl/certs/dhparams.pem',
     path    => ['/usr/bin', '/usr/sbin',],
   }
 
