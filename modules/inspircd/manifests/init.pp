@@ -145,10 +145,10 @@ class inspircd ($peers, $sid) {
     notify  => Service['inspircd'],
   }
   file { '/etc/apparmor.d/usr.sbin.inspircd':
+    ensure => 'file',
     owner  => 'root',
     group  => 'root',
-    mode   => '644',
-    ensure => 'file',
+    mode   => '0644',
     source => 'puppet:///modules/inspircd/usr.sbin.inspircd',
   }
   service { 'apparmor':
