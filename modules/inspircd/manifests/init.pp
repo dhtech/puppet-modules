@@ -150,9 +150,9 @@ class inspircd ($peers, $sid) {
         mode => 644,
         ensure => 'file',
         source => 'puppet:///modules/inspircd/usr.sbin.inspircd',
-  } ~>
+  }
  service { 'apparmor':
-    ensure => 'runing',
+   ensure => 'runing',
    enable => true,
  }
 
