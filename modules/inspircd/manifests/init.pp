@@ -145,8 +145,8 @@ class inspircd ($peers, $sid) {
     notify  => Service['inspircd'],
   }
   file { '/etc/apparmor.d/usr.sbin.inspircd':
-    notify  => Service['apparmor'],
     ensure => 'file',
+    notify => Service['apparmor'],
     owner  => 'root',
     group  => 'root',
     mode   => '0644',
