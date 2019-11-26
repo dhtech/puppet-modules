@@ -1,0 +1,27 @@
+#This is handled by puppet
+#include <tunables/global>
+
+# AppArmor profile for inspircd
+# Thanks Zunken
+# vim:syntax=apparmor
+
+
+/usr/sbin/inspircd flags=(complain) {
+  #include <abstractions/base>
+  #include <abstractions/nameservice>
+
+  capability net_bind_service,
+  capability setgid,
+  capability setuid,
+  capability sys_chroot,
+  capability sys_resource,
+
+  /etc/inspircd/** r,
+  /etc/ldap/ldap.conf r,
+  /run/inspircd.pid w,
+  /usr/lib{,32,64}/** mr,
+  /usr/sbin/inspircd rix,
+  /var/log/inspircd.log* rw,
+  owner /run/inspircd/inspircd.pid w,
+
+}
