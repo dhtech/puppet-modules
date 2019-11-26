@@ -18,4 +18,4 @@
       type="clients">
 <gnutls 
       cafile="/etc/inspircd/ssl/certs/ca.pem" crlfile="" certfile="/etc/inspircd/ssl/certs/<%= @fqdn %>.pem" 
-      keyfile="/etc/inspircd/ssl/private_keys/<%= @fqdn %>.pem" priority="NORMAL:-MD5" hash="sha1">
+      keyfile="/etc/inspircd/ssl/private_keys/<%= @fqdn %>.pem" priority="NORMAL:-MD5" hash="sha1" dhbits="4096">
