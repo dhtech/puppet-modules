@@ -79,6 +79,7 @@ class ldaplogin ($ca, $logon, $sudo, $ldap, $ssh_ports, $panic_users,
   ensure_packages([
     'sudo',
     'sssd-tools',
+    'sssd-dbus',
     'libpam-sss',
     'libnss-sss'])
 
