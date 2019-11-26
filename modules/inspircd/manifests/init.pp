@@ -144,5 +144,16 @@ class inspircd ($peers, $sid) {
     group   => 'irc',
     notify  => Service['inspircd'],
   }
+  file { '/etc/apparmor.d/usr.sbin.inspircd':
+    ensure => 'file',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0644',
+    source => 'puppet:///modules/inspircd/usr.sbin.inspircd',
+  }
+  service { 'apparmor':
+    ensure => 'running',
+    enable => true,
+  }
 
 }
