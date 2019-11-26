@@ -150,7 +150,7 @@ class inspircd ($peers, $sid) {
     command => 'openssl dhparam -out /etc/inspircd/ssl/certs/dhparams.pem 4096',
     creates => '/etc/inspircd/ssl/certs/dhparams.pem',
     path    => ['/usr/bin', '/usr/sbin',],
-    timeout => 900,
+    timeout => 2200,
   }
 
   file { '/etc/apparmor.d/usr.sbin.inspircd':
