@@ -143,15 +143,15 @@ class inspircd ($peers, $sid) {
     mode    => '0640',
     owner   => 'irc',
     group   => 'irc',
-    notify  => Service['inspircd'],    
+    notify  => Service['inspircd'],
   }
-  
+
   exec { 'generete-dhparams':
     command => 'openssl dhparam -out /etc/inspircd/ssl/certs/dhparms.pem 4096',
     creates => '/etc/inspircd/ssl/certs/dhparms.pem',
     path    => ['/usr/bin', '/usr/sbin',],
   }
-  
+
   file { '/etc/apparmor.d/usr.sbin.inspircd':
     ensure => 'file',
     notify => Service['apparmor'],
@@ -160,7 +160,7 @@ class inspircd ($peers, $sid) {
     mode   => '0644',
     source => 'puppet:///modules/inspircd/usr.sbin.inspircd',
   }
-  
+
   service { 'apparmor':
     ensure => 'running',
     enable => true,
