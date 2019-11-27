@@ -214,6 +214,7 @@ class rancid($current_event = '', $router_db_lines = []) {
 
   exec { 'prometheus-exporter-distconfcheck-venv':
     command => '/usr/bin/virtualenv /var/local/prometheus-exporter-distconfcheck-venv;
+                /var/local/prometheus-exporter-distconfcheck-venv/bin/pip install junos-eznc';
                 /var/local/prometheus-exporter-distconfcheck-venv/bin/pip install ciscoconfparse',
     require => Package['virtualenv'],
     unless  => '/usr/bin/test -d /var/local/prometheus-exporter-distconfcheck-venv',
