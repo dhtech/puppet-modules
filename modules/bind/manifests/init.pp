@@ -222,8 +222,10 @@ class bind($role='resolver', $networks = [], $zones = [], $private_zones = [],
     source => 'puppet:///modules/bind/usr.sbin.named',
   }
 
+  if $::lsbdistcodename != 'buster' {
   service { 'apparmor':
     ensure => 'running',
     enable => true,
+    }
   }
 }
