@@ -45,6 +45,7 @@ class swbootd($current_event) {
   }
   package { 'passlib':
     provider => pip3,
+  }
 
   # The default configuration file
   file { 'default-isc-dhcp-server':
