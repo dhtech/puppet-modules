@@ -152,7 +152,7 @@ class inspircd ($peers, $sid) {
     path    => ['/usr/bin', '/usr/sbin',],
     timeout => 2200,
   }
-
+  if $::lsbdistcodename != 'buster' {
   file { '/etc/apparmor.d/usr.sbin.inspircd':
     ensure => 'file',
     notify => Service['apparmor'],
@@ -162,7 +162,6 @@ class inspircd ($peers, $sid) {
     source => 'puppet:///modules/inspircd/usr.sbin.inspircd',
   }
 
-  if $::lsbdistcodename != 'buster' {
     service { 'apparmor':
       ensure => 'running',
       enable => true,
