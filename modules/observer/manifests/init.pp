@@ -29,10 +29,11 @@ class observer($nameservers, $icmp_target, $dns_target) {
     notify => Exec['extract-observer'],
   }
   exec { 'extract-observer':
-    command     => '/usr/bin/gunzip -n /opt/observer/observer.gz',
-    refreshonly => true,
-    user        => 'root',
-    notify      => Service['observer'],
+    command => 'gunzip -n /opt/observer/observer.gz',
+    creates => '/opt/observer/observer',
+    user    => 'root',
+    path    => ['/bin', '/usr/bin',],
+    notify  => Service['observer'],
   }
 
   # Observer default file
