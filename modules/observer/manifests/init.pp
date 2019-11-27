@@ -45,7 +45,7 @@ class observer($nameservers, $icmp_target, $dns_target) {
   file { '/etc/systemd/system/observer.service':
     ensure  => file,
     content => template('observer/observer.service.erb'),
-    notify  => Service['observer-systemctl-daemon-reload'],
+    notify  => Exec['observer-systemctl-daemon-reload'],
   }
   exec { 'observer-systemctl-daemon-reload':
     command     => '/bin/systemctl daemon-reload',
