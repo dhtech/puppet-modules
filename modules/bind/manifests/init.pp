@@ -219,7 +219,7 @@ class bind($role='resolver', $networks = [], $zones = [], $private_zones = [],
     owner  => 'root',
     group  => 'root',
     mode   => '0644',
-    source => 'puppet:///modules/dnsstatd/usr.sbin.named',
+    source => 'puppet:///modules/bind/usr.sbin.named',
   }
 
   service { 'apparmor':
