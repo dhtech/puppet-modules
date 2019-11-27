@@ -48,17 +48,5 @@ class dnsstatd($current_event) {
   supervisor::register { 'dnsstatd':
     command => '/scripts/dnsstatd/dnsstatd.py',
   }
-    file { '/etc/apparmor.d/usr.sbin.named':
-    ensure => 'file',
-    notify => Service['apparmor'],
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
-    source => 'puppet:///modules/dnsstatd/usr.sbin.named',
-  }
 
-  service { 'apparmor':
-    ensure => 'running',
-    enable => true,
-  }
 }
