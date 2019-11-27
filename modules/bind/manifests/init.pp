@@ -214,7 +214,7 @@ class bind($role='resolver', $networks = [], $zones = [], $private_zones = [],
     require => Package[$package_name],
   }
 
-  if fact('os.distro.codename') != 'buster' {
+  if $::lsbdistcodename != 'buster' {
     file { '/etc/apparmor.d/usr.sbin.named':
     ensure => 'file',
     notify => Service['apparmor'],
