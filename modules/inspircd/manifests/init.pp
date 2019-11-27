@@ -162,7 +162,7 @@ class inspircd ($peers, $sid) {
     source => 'puppet:///modules/inspircd/usr.sbin.inspircd',
   }
 
-  if $::lsbdistcodename != 'buster' {
+  if fact('os.distro.codename') != 'buster' {
     service { 'apparmor':
       ensure => 'running',
       enable => true,
