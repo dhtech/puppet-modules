@@ -15,6 +15,6 @@ def generate(host):
     info['icmp_target'] = 'ping.sunet.se'
     info['dns_target'] = 'slashdot.org'
 
-    return {'observer': None}
+    return {'observer': info}
 
 # vim: ts=4: sts=4: sw=4: expandtab
