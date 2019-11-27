@@ -1,0 +1,23 @@
+---
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /var/tmp/promtail-positions.yaml
+
+clients:
+  - url: <%= @loki_url %>
+    external_labels:
+      host: <%= @fqdn %>
+
+scrape_configs:
+  - job_name: journal
+    journal:
+      path: /run/log/journal
+      max_age: 12h
+      labels:
+        job: systemd-journal
+    relabel_configs:
+      - source_labels: ['__journal__systemd_unit']
+        target_label: 'unit'
