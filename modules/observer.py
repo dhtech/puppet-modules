@@ -13,7 +13,7 @@ def generate(host):
     info['nameservers'] = [ips[x][0] for x in resolvers]
 
     info['icmp_target'] = 'ping.sunet.se'
-    info['dns_target'] = 'slashdot.org'
+    info['dns_target'] = 'slashdot.org.'
 
     return {'observer': info}
 
