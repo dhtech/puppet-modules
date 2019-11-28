@@ -8,8 +8,6 @@ positions:
 
 clients:
   - url: <%= @loki_uri %>
-    external_labels:
-      host: <%= @fqdn %>
 
 scrape_configs:
   - job_name: journal
@@ -18,6 +16,7 @@ scrape_configs:
       max_age: 12h
       labels:
         job: systemd-journal
+        hostname: <%= @fqdn %>
     relabel_configs:
       - source_labels: ['__journal__systemd_unit']
         target_label: 'unit'
