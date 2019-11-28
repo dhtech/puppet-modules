@@ -21,6 +21,6 @@ def generate(host):
 
     info = {}
     info['loki_uri'] = '{protocol}://{hostname}:{port}{path}'.format(**loki)
-    return {'snmpexporter': info}
+    return {'promtail': info}
 
 # vim: ts=4: sts=4: sw=4: expandtab
