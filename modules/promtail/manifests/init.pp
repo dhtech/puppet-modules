@@ -14,21 +14,11 @@
 
 class promtail($loki_uri) {
 
-  # Create user/group for promtail
-  group { 'promtail':
-    ensure => 'present',
-  }
-
-  user { 'promtail':
-    ensure => 'present',
-    system => true,
-  }
-
   # Create directories for promtail
   file { '/opt/promtail':
     ensure => 'directory',
-    owner  => 'promtail',
-    group  => 'promtail',
+    owner  => 'root',
+    group  => 'root',
     mode   => '0700',
   }
 
@@ -41,7 +31,7 @@ class promtail($loki_uri) {
   exec { 'extract-promtail':
     command     => 'rm -f /opt/promtail/promtail; gunzip -nk /opt/promtail/promtail.gz && chmod +x /opt/promtail/promtail',
     refreshonly => true,
-    user        => 'promtail',
+    user        => 'root',
     path        => ['/bin', '/usr/bin'],
     notify      => Service['promtail'],
   }
