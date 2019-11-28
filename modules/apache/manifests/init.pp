@@ -47,7 +47,7 @@ class apache($ldap = '') {
     notify  => Service['apache2'],
   }
 
-  if $::fqdn == 'status.event.dreamhack.se' {
+  if $::fqdn == 'status.event.dreamhack.se' or $::fqdn == 'grafana.event.dreamhack.se' {
     file { 'apache-security.conf':
         ensure  => present,
         path    => '/etc/apache2/conf-available/security.conf',
