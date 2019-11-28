@@ -13,7 +13,7 @@ def generate(host):
         return {}
 
     loki = {
-        "protocol": "https",
+        "protocol": "http",
         "hostname": lib.get_servers_for_node('loki', host)[0],
         "port": 3100,
         "path": "/loki/api/v1/push",
