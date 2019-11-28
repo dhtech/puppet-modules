@@ -7,7 +7,7 @@ positions:
   filename: /var/tmp/promtail-positions.yaml
 
 clients:
-  - url: <%= @loki_url %>
+  - url: <%= @loki_uri %>
     external_labels:
       host: <%= @fqdn %>
 
