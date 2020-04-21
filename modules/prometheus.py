@@ -131,6 +131,20 @@ def generate_backend(host, local_services):
     }
     scrape_configs.append(external)
 
+    if host.endswith('event.dreamhack.se'):
+        # Event should scrape puppet.tech.dreamhack.se to get information about
+        # puppet runs
+        puppet = {
+          'job_name': 'puppet_runs',
+          'metrics_path': '/metrics',
+          'scrape_interval': '60s',
+          'scrape_timeout': '55s',
+          'static_configs': [{
+              'targets': ['puppet.tech.dreamhack.se:9100'],
+          }],
+        }
+        scrape_configs.append(puppet)
+
     vcenter = {
       'job_name': 'vmware_vcenter',
       'metrics_path': '/metrics',
