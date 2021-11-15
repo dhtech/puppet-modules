@@ -17,15 +17,11 @@ def generate(host):
         # If no loki servers are configured, do not setup promtail
         return {}
 
-    loki = {
-        "protocol": "http",
-        "hostname": loki_servers[0],
-        "port": 3100,
-        "path": "/loki/api/v1/push",
-    }
+    def build_uri(server):
+        return "http://{}:3100/loki/api/v1/push".format(server)
 
     info = {}
-    info['loki_uri'] = '{protocol}://{hostname}:{port}{path}'.format(**loki)
+    info['loki_uris'] = map(build_uri, loki_servers)
     return {'promtail': info}
 
 # vim: ts=4: sts=4: sw=4: expandtab

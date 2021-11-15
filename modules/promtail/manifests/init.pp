@@ -12,7 +12,7 @@
 # No parameters;
 #
 
-class promtail($loki_uri) {
+class promtail($loki_uris) {
 
   # Create directories for promtail
   file { '/opt/promtail':
