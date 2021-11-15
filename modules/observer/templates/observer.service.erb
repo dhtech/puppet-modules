@@ -1,0 +1,13 @@
+[Unit]
+Description=Observer
+Documentation=https://github.com/dhtech/observer
+
+[Service]
+Restart=always
+User=root
+EnvironmentFile=/etc/default/observer
+ExecStart=/opt/observer/observer $ARGS
+ExecReload=/bin/kill -HUP $MAINPID
+
+[Install]
+WantedBy=multi-user.target

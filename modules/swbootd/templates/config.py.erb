@@ -6,14 +6,16 @@ import config
 import ipcalc
 import sqlite3
 import sys
+import os
 import tempita
 import yaml
 from tempita import bunch
 from collections import namedtuple
+from passlib.hash import sha512_crypt
 import hashlib
 
-f = file('/scripts/swboot/switchconfig/config.yaml', 'r')
-yaml_conf = yaml.load(f)
+f = open('/scripts/swboot/switchconfig/config.yaml', 'r')
+yaml_conf = yaml.safe_load(f)
 
 # Note: To add new variables, the generate function will need to 
 # be modified as well
@@ -118,29 +120,35 @@ def generate(switch, model_id):
   #
   # Template function definition
   #
-  cfg = tempita.Template(file(model.template).read())
-  return \
-      cfg.substitute(
+  cfg = tempita.Template(open(model.template).read())
+  cfg_subbed = cfg.substitute(
             hostname=switch,
             model=model,
             mgmt_ip=mgmt['ip'],
             mgmt_mask=mgmt['mask'],
+            mgmt_mask_cidr=mgmt['mask_cidr'],
             mgmt_gw=mgmt['gw'],
             mgmt_vlanid=mgmt['vlanid'],
             vlanid=vlanid,
             wifi_switches=config.wifi_switches,
             wifi_vlanid=config.wifi_vlanid,
             password=config.password,
+            password_sha512=sha512_crypt.hash(config.password),
             enable=config.enable,
+            enable_sha512=sha512_crypt.hash(config.enable),
             radius=config.radius,
             snmp_ro=config.snmp_ro,
-            snmp_rw=hashlib.sha1(config.snmp_salt + mgmt['ip']).hexdigest(),
+            snmp_rw=hashlib.sha1((config.snmp_salt + mgmt['ip']).encode()).hexdigest(),
             ipplan_host=lambda h: ipplan_host(h),
             ipplan_pkg=lambda p: ipplan_package(p),
 #           snmp_user=config.snmp_user,
 #           snmp_auth=config.snmp_auth,
 #           snmp_priv=config.snmp_priv
             )
+  if "Juniper" in model_id:
+    jcfg = tempita.Template(open(os.path.join(os.path.dirname(sys.argv[0]), 'juniper.sh.template')).read())
+    cfg_subbed = jcfg.substitute(config=cfg_subbed)
+  return cfg_subbed
 
 def parse_metadata(switch):
   sql = '''SELECT n_mgmt.ipv4_txt, h.ipv4_addr_txt, n_mgmt.ipv4_gateway_txt, 
@@ -162,6 +170,7 @@ AND h.name = s.switch_name AND n_mgmt.node_id = h.network_id'''
   mgmt = {}
   mgmt['ip'] = mgmt_ip
   mgmt['mask'] = str(network.netmask())
+  mgmt['mask_cidr'] = str(network.subnet())
   mgmt['gw'] = str(network.host_first())
   mgmt['vlanid'] = mgmt_vlan
 
@@ -170,6 +179,6 @@ AND h.name = s.switch_name AND n_mgmt.node_id = h.network_id'''
 if __name__ == '__main__':
   if len(sys.argv) == 3 and sys.argv[1] == 'dump-snmp-rw':
     mgmt, _ = parse_metadata(sys.argv[2])
-    print hashlib.sha1(config.snmp_salt + mgmt['ip']).hexdigest()
+    print(hashlib.sha1(config.snmp_salt + mgmt['ip']).hexdigest())
   else:
-    print generate("D23-A", "WS-C2950T-24")
+    print(generate("D23-A", "WS-C2950T-24"))

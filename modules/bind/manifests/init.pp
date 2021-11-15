@@ -213,4 +213,20 @@ class bind($role='resolver', $networks = [], $zones = [], $private_zones = [],
     enable  => true,
     require => Package[$package_name],
   }
+
+  if $::lsbdistcodename != 'buster' {
+    file { '/etc/apparmor.d/usr.sbin.named':
+    ensure => 'file',
+    notify => Service['apparmor'],
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0644',
+    source => 'puppet:///modules/bind/usr.sbin.named',
+  }
+
+  service { 'apparmor':
+    ensure => 'running',
+    enable => true,
+    }
+  }
 }

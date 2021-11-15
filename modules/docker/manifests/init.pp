@@ -51,6 +51,10 @@ class docker {
     ensure  => installed,
     require => [File['docker-source-add'], Exec['docker-source-key'], Exec['docker-source-update'], File['docker-apt-pin']],
   }
+  package { 'docker-compose':
+    ensure  => installed,
+    require => [File['docker-source-add'], Exec['docker-source-key'], Exec['docker-source-update'], File['docker-apt-pin']],
+  }
 
   # Update sysctl to handle forwarding
   file { '/etc/sysctl.d/dh-docker.conf':

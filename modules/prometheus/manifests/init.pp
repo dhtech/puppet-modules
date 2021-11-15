@@ -12,12 +12,10 @@
 # [*scrape_configs*]
 #   Map of the same structure as Prometheus' scrape_configs.
 #
-# [*current_event*]
-#   The current event name, e.g. dhs19
 #
 
-class prometheus ($scrape_configs, $current_event = '') {
 
+class prometheus ($scrape_configs) {
   #Create user/group for Prometheus
   group { 'prometheus':
     ensure => 'present',
@@ -125,6 +123,24 @@ class prometheus ($scrape_configs, $current_event = '') {
     command => '/usr/local/bin/prometheus-presence-exporter > /var/tmp/export/presence.prom',
     minute  => '*',
     require => [ File['prometheus-presence-exporter'] ],
+  }
+
+  #Thanos
+  file { '/opt/thanos/':
+    ensure => directory,
+    owner  => prometheus,
+    group  => prometheus,
+    mode   => '0700'
+  }
+  file { '/opt/thanos/bucket.yaml':
+    ensure  => file,
+    content => template('prometheus/bucket.yaml.erb')
+  }
+  file { '/opt/thanos/docker-compose.yml':
+    ensure => file,
+    path   => '/opt/thanos/docker-compose.yml',
+    source => 'puppet:///modules/prometheus/thanos-docker-compose.yaml',
+    mode   => '0755',
   }
 
 }

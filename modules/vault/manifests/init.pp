@@ -14,7 +14,7 @@
 
 class vault {
 
-  ensure_packages(['apg', 'python-setuptools', 'python-wheel'])
+  ensure_packages(['apg', 'python-setuptools', 'python-wheel-common'])
 
   package { 'hvac':
     provider => 'pip',

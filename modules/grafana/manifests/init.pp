@@ -81,6 +81,6 @@ class grafana($current_event) {
   # Setting up the Apache proxy
   apache::proxy { 'grafana-backend':
     url     => '/',
-    backend => 'http://localhost:3001',
+    backend => 'http://localhost:3001/',
   }
 }
