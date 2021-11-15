@@ -25,13 +25,27 @@ class swbootd($current_event) {
   ensure_packages([
     'isc-dhcp-server',
     'redis-server',
-    'python-redis',
-    'python-netsnmp',
-    'python-tempita',
-    'python-ipcalc',
-    'python-yaml',
-    'python-six',
+    'python3-redis',
+    'python3-tempita',
+    'python3-yaml',
+    'python3-pip',
+    'python3-setuptools',
+    'libsnmp-dev',
+    'build-essential',
+    'python3-dev',
+    'python3-six',
+    'python3-wheel',
     'snmp'])
+
+  package { 'python3-netsnmp':
+    provider => pip3,
+  }
+  package { 'ipcalc':
+    provider => pip3,
+  }
+  package { 'passlib':
+    provider => pip3,
+  }
 
   # The default configuration file
   file { 'default-isc-dhcp-server':
@@ -73,10 +87,18 @@ class swbootd($current_event) {
     command => '/scripts/swboot/swtftpd.py',
   }
 
+  supervisor::register{ 'swhttpd':
+    command => '/scripts/swboot/swhttpd.py',
+  }
+
   file { '/scripts/swboot/switchconfig':
     ensure  => directory,
     recurse => remote,
     source  => "puppet:///svn/${current_event}/access/switchconfig",
     notify  => Supervisor::Restart['swtftpd'],
+  }
+
+  file { '/srv/tftp':
+    ensure  => directory,
   }
 }

@@ -21,32 +21,35 @@
 # [*domain*]
 #   Used for naming databases.
 #
+# [*version*]
+#   Major version of PostgreSQL
+#
 
-class postgresql($allowed_hosts, $db_list, $current_event, $domain) {
-  package {'postgresql':
+class postgresql($allowed_hosts, $db_list, $current_event, $domain, $version) {
+  package {"postgresql-${version}":
     ensure => 'installed',
   }
 
   service {'postgresql':
     ensure  => running,
     enable  => true,
-    require => Package['postgresql'],
+    require => Package["postgresql-${version}"],
   }
 
   file_line {'listen-on-network':
-    path    => '/etc/postgresql/11/main/postgresql.conf',
+    path    => "/etc/postgresql/${version}/main/postgresql.conf",
     line    => "listen_addresses = '*'",
     notify  => Service['postgresql'],
-    require => Package['postgresql'],
+    require => Package["postgresql-${version}"],
   }
 
-  file {'/etc/postgresql/11/main/pg_hba.conf':
+  file {"/etc/postgresql/${version}/main/pg_hba.conf":
     content => template('postgresql/pg_hba.conf.erb'),
     mode    => '0640',
     owner   => 'postgres',
     group   => 'postgres',
     notify  => Service['postgresql'],
-    require => Package['postgresql'],
+    require => Package["postgresql-${version}"],
   }
 
   file { '/opt/postgresql':
@@ -102,7 +105,7 @@ class postgresql($allowed_hosts, $db_list, $current_event, $domain) {
     command => "/bin/echo 'CREATE USER root SUPERUSER' | /usr/bin/psql",
     unless  => '/opt/postgresql/bin/psql_database_exists root',
     require => [
-      Package['postgresql'],
+      Package["postgresql-${version}"],
       File['/opt/postgresql/bin/psql_user_exists'],
     ],
   }

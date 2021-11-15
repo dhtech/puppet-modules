@@ -1,0 +1,15 @@
+[Unit]
+Description=Promtail
+Documentation=https://github.com/grafana/loki
+
+[Service]
+Restart=always
+User=root
+EnvironmentFile=/etc/default/promtail
+ExecStart=/opt/promtail/promtail $ARGS
+ExecReload=/bin/kill -HUP $MAINPID
+TimeoutStopSec=60s
+SendSIGKILL=no
+
+[Install]
+WantedBy=multi-user.target

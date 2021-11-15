@@ -5,6 +5,7 @@
 import lib
 import os
 import sqlite3
+import re
 
 DB_FILE = '/etc/ipplan.db'
 
@@ -51,9 +52,20 @@ def generate(host, *args):
             allowed_hosts.append(ipv4)
             allowed_hosts.append(ipv6)
 
+    # Check first option for version
+    version = None
+    if len(args) > 0:
+        m = re.match(r'^v(\d+)$', args[0])
+        if m is not None:
+            version = m.group(1)
+
+    if version is None:
+        raise Exception('No or invalid version for PostgreSQL specified')
+
+    # Read list of database to create on this server
     db_list = []
-    for db in args:
-        db_list.append(db)
+    for arg in args[1:]:
+        db_list.append(arg)
 
     current_event = lib.get_current_event()
 
@@ -62,6 +74,7 @@ def generate(host, *args):
     info['db_list'] = db_list
     info['current_event'] = current_event
     info['domain'] = get_domain(host)
+    info['version'] = version
 
     return {'postgresql': info}
 

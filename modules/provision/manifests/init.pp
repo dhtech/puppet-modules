@@ -113,11 +113,13 @@ class provision ($vault_mount, $esxi = [], $c7000 = [], $domain = '', $mgmt_if =
   file { 'data:vsphere_vcsa.iso':
     ensure => file,
     path   => '/srv/vmware-vcenter.iso',
-    source => 'puppet:///data/VMware-VCSA-all-6.7.0-13010631.iso',
+    source => 'puppet:///data/VMware-VCSA-all-latest.iso',
+    links  => follow,
   }
   -> supervisor::register { 'provisiond':
     command     => '/usr/local/bin/provisiond',
     environment => [
+      "VAULT_ADDR=\"https://vault.tech.dreamhack.se:1443/\"",
       "VAULT_MOUNT=\"${vault_mount}\"",
       "VAULT_CERT=\"/var/lib/puppet/ssl/certs/${::fqdn}.pem\"",
       "VAULT_KEY=\"/var/lib/puppet/ssl/private_keys/${::fqdn}.pem\"",
