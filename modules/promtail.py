@@ -12,9 +12,14 @@ def generate(host):
     if not my_domain == 'EVENT':
         return {}
 
+    loki_servers = lib.get_servers_for_node('loki', host)
+    if len(loki_servers) == 0:
+        # If no loki servers are configured, do not setup promtail
+        return {}
+
     loki = {
         "protocol": "http",
-        "hostname": lib.get_servers_for_node('loki', host)[0],
+        "hostname": loki_servers[0],
         "port": 3100,
         "path": "/loki/api/v1/push",
     }
