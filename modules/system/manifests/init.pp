@@ -87,25 +87,12 @@ class system($ca) {
     'curl',
     'git',
     'console-data',
-    'python',
-    $pip_package,
+    'python'
   ])
 
-  if $::operatingsystem == 'OpenBSD' {
-    file {'/usr/local/bin/pip':
-      ensure  => link,
-      target  => '/usr/local/bin/pip2.7',
-      require => Package[$pip_package],
-    }
-    exec { 'update-ca':
-      command     => '/bin/true',
-      refreshonly => true,
-    }
-  } else {
-    exec { 'update-ca':
-      command     => '/usr/sbin/update-ca-certificates',
-      refreshonly => true,
-    }
+  exec { 'update-ca':
+    command     => '/usr/sbin/update-ca-certificates',
+    refreshonly => true,
   }
 
   exec {'git-scripts-checkout':
