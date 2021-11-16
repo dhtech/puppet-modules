@@ -25,7 +25,7 @@ class radiusd ($access_ips = [], $dist_ips = [], $core_ips = [], $firewall_ips =
   $radtest_secret = vault('login:backup', {})
 
   ensure_packages([
-    'freeradius', 'freeradius-common', 'freeradius-python2',
+    'freeradius', 'freeradius-common', 'freeradius-python3',
     'freeradius-utils'])
 
   service { 'freeradius':
@@ -37,7 +37,7 @@ class radiusd ($access_ips = [], $dist_ips = [], $core_ips = [], $firewall_ips =
     status     => 'pgrep freeradius',
   }
 
-  package { 'python-pam':
+  package { 'python3-pam':
     ensure => installed,
   }
 
@@ -57,22 +57,22 @@ class radiusd ($access_ips = [], $dist_ips = [], $core_ips = [], $firewall_ips =
 
   file { 'radius-module':
     ensure => file,
-    path   => '/etc/freeradius/3.0/mods-available/python',
-    source => 'puppet:///scripts/radius/modules/python',
+    path   => '/etc/freeradius/3.0/mods-available/python3',
+    source => 'puppet:///scripts/radius/modules/python3',
     notify => Service['freeradius'],
   }
 
   file { 'radius-module-link':
     ensure => link,
-    path   => '/etc/freeradius/3.0/mods-enabled/python',
-    target => '/etc/freeradius/3.0/mods-available/python',
+    path   => '/etc/freeradius/3.0/mods-enabled/python3',
+    target => '/etc/freeradius/3.0/mods-available/python3',
     notify => Service['freeradius'],
   }
 
   file { 'dh-radius-login':
     ensure => file,
-    path   => '/usr/lib/python2.7/dh-radius-login.py',
-    source => 'puppet:///scripts/radius/login.py',
+    path   => '/usr/lib/python3/dh-radius-login.py',
+    source => 'puppet:///scripts/radius/login-v2.py',
     notify => Service['freeradius'],
   }
 
