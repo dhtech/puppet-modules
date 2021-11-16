@@ -72,7 +72,7 @@ class radiusd ($access_ips = [], $dist_ips = [], $core_ips = [], $firewall_ips =
   file { 'dh-radius-login':
     ensure => file,
     path   => '/usr/lib/python3/dh-radius-login.py',
-    source => 'puppet:///scripts/radius/login-v2.py',
+    source => 'puppet:///scripts/radius/login.py3',
     notify => Service['freeradius'],
   }
 
