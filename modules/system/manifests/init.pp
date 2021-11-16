@@ -15,14 +15,8 @@
 class system($ca) {
   include stdlib::stages
 
-  if $::operatingsystem == 'OpenBSD' {
-    $git_binary  = '/usr/local/bin/git'
-    $pip_package = 'py-pip'
-  }
-  else {
-    $git_binary  = '/usr/bin/git'
-    $pip_package = 'python-pip'
-  }
+  $git_binary  = '/usr/bin/git'
+  $pip_package = 'python3-pip'
 
   $readonly = vault('source:readonly')
   $username = $readonly['username']
@@ -87,7 +81,7 @@ class system($ca) {
     'curl',
     'git',
     'console-data',
-    'python'
+    'python3'
   ])
 
   exec { 'update-ca':
