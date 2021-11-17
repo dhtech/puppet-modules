@@ -21,9 +21,13 @@ class whereami($current_event) {
   $secret_db_whereami    = vault('postgresql:whereami', {})
 
   ensure_packages([
-    'python-netsnmp',
-    'python-psycopg2',
-    'python-flask'])
+    'python3-netsnmp',
+    'python3-psycopg2',
+    'python3-flask'])
+  
+  package { 'python3-netsnmp':
+    provider => 'pip',
+  }
 
   apache::proxy { 'whereami-backend':
     url     => '/',
@@ -112,9 +116,9 @@ class whereami($current_event) {
       File['/opt/whereami/whereami3.py'],
       File['/opt/whereami/check_ipv6_api.py'],
       File['/opt/whereami/config'],
-      Package['python-netsnmp'],
-      Package['python-psycopg2'],
-      Package['python-flask'],
+      Package['python3-netsnmp'],
+      Package['python3-psycopg2'],
+      Package['python3-flask'],
     ],
   }
 
