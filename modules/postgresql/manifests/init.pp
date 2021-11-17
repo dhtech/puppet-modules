@@ -148,6 +148,7 @@ class postgresql($allowed_hosts, $db_list, $current_event, $domain, $version) {
       owner   => 'postgres',
       group   => 'postgres',
       require => File['/opt/postgresql'],
+      before  => Exec["create_${dbname}"],
     }
 
     exec { "create_${dbname}":
@@ -160,6 +161,7 @@ class postgresql($allowed_hosts, $db_list, $current_event, $domain, $version) {
         File['/opt/postgresql/bin/psql_database_exists'],
         Exec['create_user_root'],
       ],
+      before  => Exec["initialize_${dbname}"],
     }
 
     exec { "initialize_${dbname}":
@@ -167,6 +169,12 @@ class postgresql($allowed_hosts, $db_list, $current_event, $domain, $version) {
       cwd         => '/var/lib/postgresql',
       command     => "/usr/bin/psql ${dbname} < /opt/postgresql/${db}.sql",
       refreshonly => true,
+      require     => File["/opt/postgresql/${db}.sql"],
+      before      => [
+        Exec["alter_user_${db}"],
+        Exec["check_user_${db}"],
+        Exec["create_user_${db}"],
+      ],
     }
 
     exec { "alter_user_${db}":
