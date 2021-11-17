@@ -24,7 +24,7 @@ class whereami($current_event) {
     'python3-netsnmp',
     'python3-psycopg2',
     'python3-flask'])
-  
+
   package { 'python3-netsnmp':
     provider => 'pip',
   }
