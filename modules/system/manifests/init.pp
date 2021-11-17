@@ -16,7 +16,6 @@ class system($ca) {
   include stdlib::stages
 
   $git_binary  = '/usr/bin/git'
-  $pip_package = 'python3-pip'
 
   $readonly = vault('source:readonly')
   $username = $readonly['username']
@@ -81,7 +80,8 @@ class system($ca) {
     'curl',
     'git',
     'console-data',
-    'python3'
+    'python3',
+    'python3-pip',
   ])
 
   exec { 'update-ca':
