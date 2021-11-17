@@ -55,17 +55,37 @@ class vault {
     path   => '/usr/local/bin/vault-auth',
   }
 
-  file { 'vault-machine':
-    ensure => file,
-    path   => '/usr/local/bin/vault-machine',
-    mode   => '0755',
-    source => 'puppet:///scripts/vault/vault-machine',
+  if $::operatingsystem == 'Debian' and $::operatingsystemmajrelease == '11' {
+    file { 'vault-machine':
+      ensure => file,
+      path   => '/usr/local/bin/vault-machine',
+      mode   => '0755',
+      source => 'puppet:///scripts/vault/vault-machine-v2',
+    }
+  }
+  else {
+    file { 'vault-machine':
+      ensure => file,
+      path   => '/usr/local/bin/vault-machine',
+      mode   => '0755',
+      source => 'puppet:///scripts/vault/vault-machine',
+    }
   }
 
-  file { 'dh-create-service-account':
-    ensure => file,
-    path   => '/usr/local/bin/dh-create-service-account',
-    mode   => '0755',
-    source => 'puppet:///scripts/vault/dh-create-service-account',
+  if $::operatingsystem == 'Debian' and $::operatingsystemmajrelease == '11' {
+    file { 'dh-create-service-account':
+      ensure => file,
+      path   => '/usr/local/bin/dh-create-service-account',
+      mode   => '0755',
+      source => 'puppet:///scripts/vault/dh-create-service-account.py3',
+    }
+  }
+  else {
+    file { 'dh-create-service-account':
+      ensure => file,
+      path   => '/usr/local/bin/dh-create-service-account',
+      mode   => '0755',
+      source => 'puppet:///scripts/vault/dh-create-service-account',
+    }
   }
 }
