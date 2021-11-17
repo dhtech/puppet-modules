@@ -122,24 +122,25 @@ class postgresql($allowed_hosts, $db_list, $current_event, $domain, $version) {
   }
 
   each($db_list) |$db| {
+    if $domain == 'EVENT' {
+      $dbname = "${db}_${current_event}"
+    } else {
+      $dbname = $db
+    }
+
     $_secret = vault("postgresql:${db}")
     # If secret does not yet exist in vault, create it and re-read the secret
     if $_secret == {} {
       exec { "create_service_account_${db}":
         command => "/usr/local/bin/dh-create-service-account --type postgresql --product ${db}",
         notify  => Exec["alter_user_${db}"],
+        before  => Exec["create_${dbname}"],
       }
       $secret = vault("postgresql:${db}")
     } else {
       $secret = $_secret
     }
     $dbusername = $secret['username']
-
-    if $domain == 'EVENT' {
-      $dbname = "${db}_${current_event}"
-    } else {
-      $dbname = $db
-    }
 
     file { "/opt/postgresql/${db}.sql":
       content => template("postgresql/${db}.sql.erb"),
