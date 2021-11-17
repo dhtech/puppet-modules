@@ -122,14 +122,16 @@ class postgresql($allowed_hosts, $db_list, $current_event, $domain, $version) {
   }
 
   each($db_list) |$db| {
-    $secret = vault("postgresql:${db}")
-    if $secret == {} {
-      # If secret does not yet exist in vault, create it and re-read the secret
+    $_secret = vault("postgresql:${db}")
+    # If secret does not yet exist in vault, create it and re-read the secret
+    if $_secret == {} {
       exec { "create_service_account_${db}":
         command => "/usr/local/bin/dh-create-service-account --type postgresql --product ${db}",
         notify  => Exec["alter_user_${db}"],
       }
       $secret = vault("postgresql:${db}")
+    } else {
+      $secret = $_secret
     }
     $dbusername = $secret['username']
 
