@@ -21,8 +21,10 @@ class whereami($current_event) {
   $secret_db_whereami    = vault('postgresql:whereami', {})
 
   ensure_packages([
-    'python3-psycopg2',
     'gcc',
+    'libsnmp-dev',
+    'python3-dev',
+    'python3-psycopg2',
     'python3-flask'])
 
   package { 'python3-netsnmp':
@@ -120,6 +122,8 @@ class whereami($current_event) {
       Package['python3-psycopg2'],
       Package['python3-flask'],
       Package['gcc'],
+      Package['python3-dev'],
+      Package['libsnmp-dev'],
     ],
   }
 
