@@ -24,6 +24,7 @@ class whereami($current_event) {
     'gcc',
     'libsnmp-dev',
     'python3-dev',
+    'libsnmp40',
     'python3-psycopg2',
     'python3-flask'])
 
@@ -124,6 +125,7 @@ class whereami($current_event) {
       Package['gcc'],
       Package['python3-dev'],
       Package['libsnmp-dev'],
+      Package['libsnmp40'],
     ],
   }
 
