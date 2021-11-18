@@ -1,0 +1,12 @@
+[Unit]
+Description=Whereami3
+After=network.target apache.service
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=2
+ExecStart=/opt/whereami/whereami3.py
+
+[Install]
+WantedBy=multi-user.target

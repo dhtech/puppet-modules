@@ -54,6 +54,19 @@ class whereami($current_event) {
     notify  => Supervisor::Restart['whereami'],
   }
 
+  file { '/etc/systemd/system/whereami.service':
+    content => template('whereami/service.erb'),
+    mode    => '0640',
+    owner   => 'root',
+    group   => 'root',
+  }
+  
+  -> exec { 'whereami-systemd-reload':
+       command     => 'systemctl daemon-reload',
+       path        => [ '/usr/bin', '/bin', '/usr/sbin' ],
+       refreshonly => true,
+  }
+
   file { '/opt/whereami/static':
     ensure  => 'directory',
     source  => 'puppet:///scripts/whereami3/static/',
@@ -107,10 +120,10 @@ class whereami($current_event) {
     require => File['/opt/whereami'],
   }
 
-  supervisor::register { 'whereami':
-    command     => '/opt/whereami/whereami3.py',
-    directory   => '/opt/whereami',
-    stopasgroup => true,
+  service { 'whereami':
+    ensure      => running,
+    enable      => true,
+    provider    => provider,
     require     => [
       File['/opt/whereami/templates'],
       File['/opt/whereami/check_ipv6_api.py'],
@@ -128,5 +141,4 @@ class whereami($current_event) {
       Package['libsnmp40'],
     ],
   }
-
 }
