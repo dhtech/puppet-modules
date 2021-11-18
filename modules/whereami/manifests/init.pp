@@ -22,6 +22,7 @@ class whereami($current_event) {
 
   ensure_packages([
     'python3-psycopg2',
+    'gcc',
     'python3-flask'])
 
   package { 'python3-netsnmp':
@@ -118,6 +119,7 @@ class whereami($current_event) {
       Package['python3-netsnmp'],
       Package['python3-psycopg2'],
       Package['python3-flask'],
+      Package['gcc'],
     ],
   }
 
