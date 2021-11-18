@@ -21,7 +21,6 @@ class whereami($current_event) {
   $secret_db_whereami    = vault('postgresql:whereami', {})
 
   ensure_packages([
-    'python-netsnmp',
     'python-psycopg2',
     'python-flask'])
 
