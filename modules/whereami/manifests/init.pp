@@ -35,7 +35,6 @@ class whereami($current_event) {
   apache::proxy { 'whereami-backend':
     url     => '/',
     backend => 'http://localhost:80/',
-    require => Supervisor::Register['whereami'],
   }
 
   file { '/opt/whereami':
@@ -51,7 +50,7 @@ class whereami($current_event) {
     owner   => 'root',
     group   => 'root',
     require => File['/opt/whereami'],
-    notify  => Supervisor::Restart['whereami'],
+    notify  => Service[whereami],
   }
 
   file { '/etc/systemd/system/whereami.service':
