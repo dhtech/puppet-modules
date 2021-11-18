@@ -60,11 +60,11 @@ class whereami($current_event) {
     owner   => 'root',
     group   => 'root',
   }
-  
+
   -> exec { 'whereami-systemd-reload':
-       command     => 'systemctl daemon-reload',
-       path        => [ '/usr/bin', '/bin', '/usr/sbin' ],
-       refreshonly => true,
+    command     => 'systemctl daemon-reload',
+    path        => [ '/usr/bin', '/bin', '/usr/sbin' ],
+    refreshonly => true,
   }
 
   file { '/opt/whereami/static':
@@ -121,10 +121,10 @@ class whereami($current_event) {
   }
 
   service { 'whereami':
-    ensure      => running,
-    enable      => true,
-    provider    => provider,
-    require     => [
+    ensure   => running,
+    enable   => true,
+    provider => provider,
+    require  => [
       File['/opt/whereami/templates'],
       File['/opt/whereami/check_ipv6_api.py'],
       File['/opt/whereami/init_db.py'],
