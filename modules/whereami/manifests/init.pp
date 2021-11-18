@@ -120,10 +120,9 @@ class whereami($current_event) {
   }
 
   service { 'whereami':
-    ensure   => running,
-    enable   => true,
-    provider => provider,
-    require  => [
+    ensure  => running,
+    enable  => true,
+    require => [
       File['/opt/whereami/templates'],
       File['/opt/whereami/check_ipv6_api.py'],
       File['/opt/whereami/init_db.py'],
