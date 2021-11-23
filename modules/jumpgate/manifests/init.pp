@@ -16,8 +16,8 @@ class jumpgate {
 
   ensure_packages([
       'mtr-tiny', 'rancid', 'snmp', 'dnsutils', 'nmap', 'bash-completion',
-      'ndisc6', 'python-paramiko', 'python-requests', 'netcat', 'ipmitool',
-      'prometheus-blackbox-exporter', 'python-redis', 'python-yaml'])
+      'ndisc6', 'python3-paramiko', 'python3-requests', 'netcat', 'ipmitool',
+      'prometheus-blackbox-exporter', 'python3-redis', 'python3-yaml'])
 
   service { 'prometheus-blackbox-exporter':
     ensure  => 'running',
@@ -30,7 +30,7 @@ class jumpgate {
       ensure  => file,
       mode    => '0755',
       source  => 'puppet:///scripts/access_ssh_checker/access_ssh_checker.py',
-      require => [Package['python-paramiko'], Package['python-paramiko']],
+      require => [Package['python3-paramiko'], Package['python3-paramiko']],
   }
 
   file { 'dhssh':
