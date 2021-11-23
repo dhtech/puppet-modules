@@ -40,7 +40,7 @@ class vault {
       ensure => file,
       path   => '/usr/local/bin/vault-input',
       mode   => '0755',
-      source => 'puppet:///scripts/vault/vault-input',
+      source => 'puppet:///scripts/vault/vault-input.py3',
     }
   }
   else {
@@ -48,7 +48,7 @@ class vault {
       ensure => file,
       path   => '/usr/local/bin/vault-input',
       mode   => '0755',
-      source => 'puppet:///scripts/vault/vault-input.py3',
+      source => 'puppet:///scripts/vault/vault-input',
     }
   }
 
