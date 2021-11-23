@@ -195,7 +195,7 @@ class dhcpd ($current_event, $active = 0, $active_node = '', $scopes = '', $loca
       # dhcp_populate_scopes when the scopes file is modified, which might not occur
       # after the point where db.event.dreamhack.se is available.
       exec { 'dhcp_populate_scopes_first_time':
-        command => '/usr/local/sbin/dhcp_populate_scopes /etc/dhcp/dhcpd.conf.scopes
+        command => '/usr/local/sbin/dhcp_populate_scopes /etc/dhcp/dhcpd.conf.scopes \
                     && /usr/bin/touch /root/.puppet_dhcp_populate_scopes_first_time',
         require => [
           File['dhcpd.conf.scopes'],
