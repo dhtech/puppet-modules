@@ -1,0 +1,18 @@
+# Managed by Puppet
+#
+## !! Any changes to this file will be overwritten !!
+
+[Unit]
+Description=Thanos Sidecar
+After=syslog.target network.target prometheus.target
+
+[Service]
+EnvironmentFile=/etc/default/thanos
+User=prometheus
+WorkingDirectory=/opt/thanos
+ExecStart=/opt/thanos/thanos sidecar $SIDECAR_ARGS
+ExecReload=kill -HUP $MAINPID
+
+[Install]
+WantedBy=multi-user.target
+

@@ -12,10 +12,12 @@
 # [*scrape_configs*]
 #   Map of the same structure as Prometheus' scrape_configs.
 #
+# [*current_event*]
+#   Used for setting the name of the thanos bucket database.
 #
 
 
-class prometheus ($scrape_configs) {
+class prometheus ($scrape_configs, $current_event) {
   #Create user/group for Prometheus
   group { 'prometheus':
     ensure => 'present',
@@ -125,22 +127,53 @@ class prometheus ($scrape_configs) {
     require => [ File['prometheus-presence-exporter'] ],
   }
 
-  #Thanos
-  file { '/opt/thanos/':
-    ensure => directory,
-    owner  => prometheus,
-    group  => prometheus,
-    mode   => '0700'
+  #
+  # Thanos sidecar (upload prometheus data to S3 bucket on colo)
+  #
+  #Create directories for thanos
+  -> file { '/opt/thanos':
+    ensure => 'directory',
+    owner  => 'prometheus',
+    group  => 'prometheus',
+    mode   => '0700',
   }
-  file { '/opt/thanos/bucket.yaml':
-    ensure  => file,
-    content => template('prometheus/bucket.yaml.erb')
-  }
-  file { '/opt/thanos/docker-compose.yml':
+
+  #Copy prometheus tar bundle to the server
+  file { '/tmp/thanos.tar.gz':
     ensure => file,
-    path   => '/opt/thanos/docker-compose.yml',
-    source => 'puppet:///modules/prometheus/thanos-docker-compose.yaml',
-    mode   => '0755',
+    source => 'puppet:///data/thanos-0.23.1.linux-amd64.tar.gz',
+    notify => Exec[ 'untar-thanos' ],
+  }
+  #Unpackage thanos
+  exec { 'untar-thanos':
+    command     => '/bin/tar -zxf /tmp/thanos.tar.gz -C /opt/thanos--strip-components=1',
+    refreshonly => true,
+    user        => 'prometheus',
+  }
+
+  file { '/opt/thanos/bucket.yml':
+    ensure  => file,
+    content => template('prometheus/bucket.yaml.erb'),
+    notify  => Service['thanos-sidecar'],
+  }
+  -> file { '/etc/systemd/system/thanos-sidecar.service':
+    ensure  => file,
+    content => template('prometheus/thanos-sidecar.service.erb'),
+    notify  => Exec['prometheus-systemctl-daemon-reload'],
+  }
+  -> file { '/etc/default/thanos':
+    ensure  => file,
+    content => template('prometheus/thanos.default.erb'),
+    notify  => [ Service['thanos-sidecar'] ],
+  }
+
+  service { 'thanos-sidecar':
+    ensure  => running,
+    require => File['/etc/systemd/system/thanos-sidecar.service']
+  }
+  -> exec { 'systemctl-enable-thanos-sidecar':
+    command     => '/bin/systemctl enable thanos-sidecar',
+    refreshonly => true,
   }
 
 }
