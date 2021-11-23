@@ -22,10 +22,11 @@ class docker {
   ])
 
   # Add source and install docker
+  $codename = $facts['os']['distro']['codename']
   file { 'docker-source-add':
     ensure  => file,
     path    => '/etc/apt/sources.list.d/docker.list',
-    content => 'deb [arch=amd64] https://download.docker.com/linux/debian buster stable',
+    content => "deb [arch=amd64] https://download.docker.com/linux/debian ${codename} stable",
     notify  => Exec['docker-source-key'],
   }
   -> exec { 'docker-source-key':
