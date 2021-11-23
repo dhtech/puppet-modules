@@ -35,11 +35,21 @@ class vault {
     }
   }
 
-  file { 'vault-input':
-    ensure => file,
-    path   => '/usr/local/bin/vault-input',
-    mode   => '0755',
-    source => 'puppet:///scripts/vault/vault-input',
+  if $::operatingsystem == 'Debian' and $::operatingsystemmajrelease == '11' {
+    file { 'vault-input':
+      ensure => file,
+      path   => '/usr/local/bin/vault-input',
+      mode   => '0755',
+      source => 'puppet:///scripts/vault/vault-input',
+    }
+  }
+  else {
+    file { 'vault-input':
+      ensure => file,
+      path   => '/usr/local/bin/vault-input',
+      mode   => '0755',
+      source => 'puppet:///scripts/vault/vault-input.py3',
+    }
   }
 
   file { 'vault-login':
