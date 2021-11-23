@@ -28,11 +28,11 @@ RESPONSE=$(curl -ks \
 
 # Extract token
 echo "Logging in to vault server $VAULT_ADDR"
-TOKEN=$(echo $RESPONSE | python -c "
+TOKEN=$(echo $RESPONSE | python3 -c "
 import sys
 import json
 
-print json.loads(sys.stdin.read())['auth']['client_token']")
+print(json.loads(sys.stdin.read())['auth']['client_token'])")
 
 MASTER=$1
 CA='/etc/ssl/ldap-ca.crt'
@@ -44,7 +44,7 @@ export LDAPTLS_CACERT="$CA"
 # Install certificates
 if [ "$(hostname -d)" == "tech.dreamhack.se" ]; then
   # Calculate the TTL to 2028-04-28 which is when the LDAP IM cert expires
-  TTL="$(python -c 'import time; print int((1840492800 - time.time())/3600)')h"
+  TTL="$(python3 -c 'import time; print(int((1840492800 - time.time())/3600))')h"
 else
   TTL="2160h" # 90d
 fi
@@ -56,12 +56,12 @@ if [ ! -f ${CERTFILE} ]; then
   echo "-H \"X-Vault-Token: $TOKEN\"" |
     curl --data @<(echo "{\"ttl\": \"${TTL}\", \"common_name\": \"$(hostname -f)\"}") \
       --cacert /etc/ssl/certs/ca-certificates.crt \
-      -s -X POST -K - ${VAULT_ADDR}v1/ldap-pki/issue/replication | python -c "
+      -s -X POST -K - ${VAULT_ADDR}v1/ldap-pki/issue/replication | python3 -c "
 import sys
 import json
 
 response = sys.stdin.read()
-print response
+print(response)
 result = json.loads(response)['data']
 open('${CERTFILE}', 'w').write(result['certificate'])
 open('${KEYFILE}', 'w').write(result['private_key'])
@@ -73,12 +73,12 @@ fi
 echo "Getting LDAP login info"
 $(echo "-H \"X-Vault-Token: $TOKEN\"" | \
   curl --cacert /etc/ssl/certs/ca-certificates.crt -s -K - \
-  ${VAULT_ADDR}v1/ldap/replication | python -c "
+  ${VAULT_ADDR}v1/ldap/replication | python3 -c "
 import sys
 import json
 
 result = json.loads(sys.stdin.read())['data']
-print 'export ROOTPW=' + result['rootpw']
+print('export ROOTPW=' + result['rootpw'])
 ")
 
 groupadd ssl-cert || true
