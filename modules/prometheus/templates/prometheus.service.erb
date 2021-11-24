@@ -11,6 +11,7 @@ EnvironmentFile=/etc/default/prometheus
 User=prometheus
 WorkingDirectory=/opt/prometheus
 ExecStart=/opt/prometheus/prometheus $ARGS
+ExecReload=kill -HUP $MAINPID
 LimitNOFILE=65536
 
 [Install]
