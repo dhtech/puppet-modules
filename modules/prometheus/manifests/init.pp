@@ -57,7 +57,7 @@ class prometheus ($scrape_configs, $current_event) {
   file { '/opt/prometheus/prometheus.yml':
     ensure  => file,
     content => template('prometheus/prometheus.yaml.erb'),
-    notify  => Exec['prometheus-hup'],
+    notify  => Service['prometheus'],
   }
   -> file { '/etc/systemd/system/prometheus.service':
     ensure  => file,
@@ -78,7 +78,7 @@ class prometheus ($scrape_configs, $current_event) {
     group   => 'prometheus',
     purge   => true,
     source  => 'puppet:///svn/allevents/prometheus/rules/',
-    notify  => Exec['prometheus-hup'],
+    notify  => Service['prometheus'],
   }
   file { 'puppet':
     ensure  => directory,
@@ -88,20 +88,12 @@ class prometheus ($scrape_configs, $current_event) {
     group   => 'prometheus',
     purge   => true,
     source  => 'puppet:///svn/allevents/prometheus/external/',
-    notify  => Exec['prometheus-hup'],
+    notify  => Service['prometheus'],
   }
   -> service { 'prometheus':
     ensure  => running,
+    enable  => true,
     require => File['/etc/systemd/system/prometheus.service']
-  }
-  -> exec { 'systemctl-enable':
-    command     => '/bin/systemctl enable prometheus',
-    refreshonly => true,
-  }
-
-  exec { 'prometheus-hup':
-    command     => '/usr/bin/pkill -SIGHUP prometheus',
-    refreshonly => true,
   }
 
   exec { 'prometheus-systemctl-daemon-reload':
@@ -171,11 +163,7 @@ class prometheus ($scrape_configs, $current_event) {
 
   service { 'thanos-sidecar':
     ensure  => running,
+    enable  => true,
     require => File['/etc/systemd/system/thanos-sidecar.service']
   }
-  -> exec { 'systemctl-enable-thanos-sidecar':
-    command     => '/bin/systemctl enable thanos-sidecar',
-    refreshonly => true,
-  }
-
 }
