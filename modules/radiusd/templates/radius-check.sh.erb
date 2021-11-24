@@ -8,6 +8,7 @@ cat << _EOF_ | radclient -x localhost auth test &> /dev/null
 User-Name = "<%= @radtest_secret['username'] %>"
 User-Password = "<%= @radtest_secret['password'] %>"
 NAS-Port = 1
+NAS-IP-Address = 127.0.0.1
 Message-Authenticator = 0x00
 _EOF_
 
