@@ -146,11 +146,13 @@ class prometheus ($scrape_configs, $current_event) {
   }
   #Unpackage thanos
   exec { 'untar-thanos':
-    command     => '/bin/tar -zxf /tmp/thanos.tar.gz -C /opt/thanos--strip-components=1',
+    command     => '/bin/tar -zxf /tmp/thanos.tar.gz -C /opt/thanos --strip-components=1',
     refreshonly => true,
     user        => 'prometheus',
   }
 
+
+  $thanos_s3 = vault('thanos:bucket', {})
   file { '/opt/thanos/bucket.yml':
     ensure  => file,
     content => template('prometheus/bucket.yaml.erb'),
