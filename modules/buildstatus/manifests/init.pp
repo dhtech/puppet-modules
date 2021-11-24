@@ -12,8 +12,8 @@
 
 class buildstatus {
   exec { 'download-buildstatus':
-    command     => '/usr/bin/git clone https://github.com/dhtech/buildstatus /var/www/html/buildstatus',
-    refreshonly =>  true,
+    command => '/usr/bin/git clone https://github.com/dhtech/buildstatus /var/www/html/buildstatus',
+    creates => '/var/www/html/buildstatus',
   }
 
   cron { 'update-buildstatus':
