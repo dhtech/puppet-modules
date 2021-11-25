@@ -50,25 +50,31 @@ receivers:
   webhook_configs:
   - url: 'https://ticket.tech.dreamhack.se/tech/prometheus.php'
   - url: 'http://alertringer.tech.event.dreamhack.se/api/v1/alerts?team=core'
+  - url: 'http://home.ssdd.se:5555/api/v1/alerts?team=core'
 - name: 'wifi'
   webhook_configs:
   - url: 'https://ticket.tech.dreamhack.se/tech/prometheus.php'
   - url: 'http://alertringer.tech.event.dreamhack.se/api/v1/alerts?team=wifi'
+  - url: 'http://home.ssdd.se:5555/api/v1/alerts?team=wifi'
 - name: 'access'
   webhook_configs:
   - url: 'https://ticket.tech.dreamhack.se/tech/prometheus.php'
   - url: 'http://alertringer.tech.event.dreamhack.se/api/v1/alerts?team=access'
+  - url: 'http://home.ssdd.se:5555/api/v1/alerts?team=access'
 - name: 'services'
   webhook_configs:
   - url: 'https://ticket.tech.dreamhack.se/tech/prometheus.php'
   - url: 'http://alertringer.tech.event.dreamhack.se/api/v1/alerts?team=services'
+  - url: 'http://home.ssdd.se:5555/api/v1/alerts?team=services'
 - name: 'powerpatrol'
   webhook_configs:
   - url: 'https://ticket.tech.dreamhack.se/tech/prometheus.php'
   - url: 'http://alertringer.tech.event.dreamhack.se/api/v1/alerts?team=powerpatrol'
+  - url: 'http://home.ssdd.se:5555/api/v1/alerts?team=powerpatrol'
 - name: 'heartbeat'
   webhook_configs:
   - url: 'http://alertringer.tech.event.dreamhack.se/api/v1/alerts?team=heartbeat'
+  - url: 'http://home.ssdd.se:5555/api/v1/alerts?team=hearbeat'
 
 inhibit_rules:
     # If you cannot ping, you most likely cannot SSH
