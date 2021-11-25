@@ -6,7 +6,7 @@
 # Setup LDAP replication
 
 class ldap::setup ($master) {
-  ensure_packages(['python'])
+  ensure_packages(['python3'])
 
   file { 'dh-ldap-replication':
     ensure  => file,
