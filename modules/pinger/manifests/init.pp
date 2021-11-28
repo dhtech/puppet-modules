@@ -15,7 +15,7 @@ class pinger {
     provider => 'pip',
   }
 
-  ensure_packages(['build-essential', 'python2.7-dev'])
+  ensure_packages(['build-essential', 'python3-dev'])
 
   file { '/opt/pinger.src':
     ensure  => directory,

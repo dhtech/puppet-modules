@@ -4,4 +4,5 @@
 ARGS="--config.file=/opt/alertmanager/alertmanager.yml \
   --web.listen-address=:9093 \
   --web.external-url=https://<%= @fqdn %> \
-  --storage.path=/srv/alertmanager/ "
+  --storage.path=/srv/alertmanager/ \
+  --cluster.listen-address=''"

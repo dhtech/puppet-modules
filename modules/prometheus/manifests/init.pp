@@ -12,10 +12,12 @@
 # [*scrape_configs*]
 #   Map of the same structure as Prometheus' scrape_configs.
 #
+# [*current_event*]
+#   Used for setting the name of the thanos bucket database.
 #
 
 
-class prometheus ($scrape_configs) {
+class prometheus ($scrape_configs, $current_event) {
   #Create user/group for Prometheus
   group { 'prometheus':
     ensure => 'present',
@@ -42,7 +44,7 @@ class prometheus ($scrape_configs) {
   #Copy prometheus tar bundle to the server
   file { '/tmp/prometheus.tar.gz':
     ensure => file,
-    source => 'puppet:///data/prometheus-2.10.0.linux-amd64.tar.gz',
+    source => 'puppet:///data/prometheus-2.31.1.linux-amd64.tar.gz',
     notify => Exec[ 'untar-prometheus' ],
   }
   #Unpackage prometheus
@@ -55,7 +57,7 @@ class prometheus ($scrape_configs) {
   file { '/opt/prometheus/prometheus.yml':
     ensure  => file,
     content => template('prometheus/prometheus.yaml.erb'),
-    notify  => Exec['prometheus-hup'],
+    notify  => Service['prometheus'],
   }
   -> file { '/etc/systemd/system/prometheus.service':
     ensure  => file,
@@ -76,7 +78,7 @@ class prometheus ($scrape_configs) {
     group   => 'prometheus',
     purge   => true,
     source  => 'puppet:///svn/allevents/prometheus/rules/',
-    notify  => Exec['prometheus-hup'],
+    notify  => Service['prometheus'],
   }
   file { 'puppet':
     ensure  => directory,
@@ -86,20 +88,12 @@ class prometheus ($scrape_configs) {
     group   => 'prometheus',
     purge   => true,
     source  => 'puppet:///svn/allevents/prometheus/external/',
-    notify  => Exec['prometheus-hup'],
+    notify  => Service['prometheus'],
   }
   -> service { 'prometheus':
     ensure  => running,
+    enable  => true,
     require => File['/etc/systemd/system/prometheus.service']
-  }
-  -> exec { 'systemctl-enable':
-    command     => '/bin/systemctl enable prometheus',
-    refreshonly => true,
-  }
-
-  exec { 'prometheus-hup':
-    command     => '/usr/bin/pkill -SIGHUP prometheus',
-    refreshonly => true,
   }
 
   exec { 'prometheus-systemctl-daemon-reload':
@@ -125,22 +119,51 @@ class prometheus ($scrape_configs) {
     require => [ File['prometheus-presence-exporter'] ],
   }
 
-  #Thanos
-  file { '/opt/thanos/':
-    ensure => directory,
-    owner  => prometheus,
-    group  => prometheus,
-    mode   => '0700'
-  }
-  file { '/opt/thanos/bucket.yaml':
-    ensure  => file,
-    content => template('prometheus/bucket.yaml.erb')
-  }
-  file { '/opt/thanos/docker-compose.yml':
-    ensure => file,
-    path   => '/opt/thanos/docker-compose.yml',
-    source => 'puppet:///modules/prometheus/thanos-docker-compose.yaml',
-    mode   => '0755',
+  #
+  # Thanos sidecar (upload prometheus data to S3 bucket on colo)
+  #
+  #Create directories for thanos
+  -> file { '/opt/thanos':
+    ensure => 'directory',
+    owner  => 'prometheus',
+    group  => 'prometheus',
+    mode   => '0700',
   }
 
+  #Copy prometheus tar bundle to the server
+  file { '/tmp/thanos.tar.gz':
+    ensure => file,
+    source => 'puppet:///data/thanos-0.23.1.linux-amd64.tar.gz',
+    notify => Exec[ 'untar-thanos' ],
+  }
+  #Unpackage thanos
+  exec { 'untar-thanos':
+    command     => '/bin/tar -zxf /tmp/thanos.tar.gz -C /opt/thanos --strip-components=1',
+    refreshonly => true,
+    user        => 'prometheus',
+  }
+
+
+  $thanos_s3 = vault('thanos:bucket', {})
+  file { '/opt/thanos/bucket.yml':
+    ensure  => file,
+    content => template('prometheus/bucket.yaml.erb'),
+    notify  => Service['thanos-sidecar'],
+  }
+  -> file { '/etc/systemd/system/thanos-sidecar.service':
+    ensure  => file,
+    content => template('prometheus/thanos-sidecar.service.erb'),
+    notify  => Exec['prometheus-systemctl-daemon-reload'],
+  }
+  -> file { '/etc/default/thanos':
+    ensure  => file,
+    content => template('prometheus/thanos.default.erb'),
+    notify  => [ Service['thanos-sidecar'] ],
+  }
+
+  service { 'thanos-sidecar':
+    ensure  => running,
+    enable  => true,
+    require => File['/etc/systemd/system/thanos-sidecar.service']
+  }
 }

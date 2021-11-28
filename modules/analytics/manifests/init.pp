@@ -11,7 +11,7 @@
 #
 
 class analytics {
-  ensure_packages(['python-flask'])
+  ensure_packages(['python3-flask'])
 
   package { 'futures':
     provider => 'pip',
@@ -24,7 +24,7 @@ class analytics {
   }
 
   supervisor::register { 'analytics':
-    command   => '/usr/bin/python2 /analytics/analytics.py'
+    command   => '/usr/bin/python3 /analytics/analytics.py'
   }
 
   apache::proxy { 'analytics':

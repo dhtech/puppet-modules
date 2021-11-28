@@ -18,8 +18,8 @@ class dnsstatd($current_event) {
   $secret_db_dnsstatd   = vault('postgresql:dnsstatd', {})
 
   ensure_packages([
-    'python-netifaces',
-    'python-psycopg2'])
+    'python3-netifaces',
+    'python3-psycopg2'])
 
   package { 'dnslib':
     ensure   => installed,

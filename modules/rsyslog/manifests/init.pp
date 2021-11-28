@@ -8,7 +8,7 @@
 # This package manages our rsyslog servers.
 #
 
-class rsyslog($ircbot) {
+class rsyslog($ircbot = []) {
 
   service { 'rsyslog':
     ensure => 'running',
