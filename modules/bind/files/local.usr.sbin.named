@@ -1,0 +1,4 @@
+# This file is managed by puppet
+/var/log/bind/ rw,
+/var/log/bind/** rw,
+/etc/bind/slave/ rw,
