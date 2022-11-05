@@ -215,13 +215,13 @@ class bind($role='resolver', $networks = [], $zones = [], $private_zones = [],
   }
 
   if $::lsbdistcodename != 'buster' {
-    file { '/etc/apparmor.d/usr.sbin.named':
+    file { '/etc/apparmor.d/local/usr.sbin.named':
     ensure => 'file',
     notify => Service['apparmor'],
     owner  => 'root',
     group  => 'root',
     mode   => '0644',
-    source => 'puppet:///modules/bind/usr.sbin.named',
+    source => 'puppet:///modules/bind/local.usr.sbin.named',
   }
 
   service { 'apparmor':
