@@ -60,7 +60,7 @@ class bind($role='resolver', $networks = [], $zones = [], $private_zones = [],
     $needs_slave_dir = 1
     $standard_zone_dir = '/etc/bind'
     $standard_zone_cfg = '/etc/bind'
-    $slave_zone_dir = '/etc/bind/slave'scripts
+    $slave_zone_dir = '/etc/bind/slave'
     $slave_zone_cfg = '/etc/bind/slave'
     $master_zone_dir = '/etc/bind/master'
     $master_zone_cfg = '/etc/bind/master'
