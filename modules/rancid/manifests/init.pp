@@ -24,8 +24,14 @@ class rancid($current_event = '', $router_db_lines = []) {
   $password = $readonly['password']
 
   $rancid_secret = vault('login:backup')
-  $rancid_user = $rancid_secret['username']
-  $rancid_password = $rancid_secret['password']
+  $rancid_user = $rancid_secret['username'] ? {
+    undef   => 'invalid-rancid-username',
+    default => $rancid_secret['username']
+  }
+  $rancid_password = $rancid_secret['password'] ? {
+    undef   => 'invalid-rancid-password',
+    default => $rancid_secret['password']
+  }
 
   ensure_packages(['rancid', 'subversion', 'prometheus-blackbox-exporter'])
 
