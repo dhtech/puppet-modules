@@ -49,7 +49,7 @@ class grafana($current_event) {
       Exec['grafana-source-update'],
     ],
   }
-  
+
   # Installing plugins
   [
     'grafana-piechart-panel',
