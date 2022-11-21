@@ -60,7 +60,7 @@ class bind($role='resolver', $networks = [], $zones = [], $private_zones = [],
     $needs_slave_dir = 1
     $standard_zone_dir = '/etc/bind'
     $standard_zone_cfg = '/etc/bind'
-    $slave_zone_dir = '/etc/bind/slave'
+    $slave_zone_dir = '/etc/bind/slave'scripts
     $slave_zone_cfg = '/etc/bind/slave'
     $master_zone_dir = '/etc/bind/master'
     $master_zone_cfg = '/etc/bind/master'
@@ -142,6 +142,14 @@ class bind($role='resolver', $networks = [], $zones = [], $private_zones = [],
     require => Package[$package_name],
   }
 
+  file { 'bind_exporter_binary':
+    ensure => file,
+    path   => '/usr/sbin/bind_exporter',
+    source => 'puppet:///data/bind_exporter',
+    links  => follow,
+    notify => [ Service['bind_exporter'] ],
+  }
+
   file { 'bind_exporter.service':
     ensure  => file,
     path    => '/etc/systemd/system/bind_exporter.service',
@@ -149,11 +157,13 @@ class bind($role='resolver', $networks = [], $zones = [], $private_zones = [],
   }
   ~> exec { '/bin/systemctl daemon-reload':
     refreshonly => true,
+    notify      => [ Service['bind_exporter'] ],
   }
-  ~> exec { '/bin/systemctl restart bind_exporter':
-    logoutput   => 'on_failure',
-    try_sleep   => 1,
-    refreshonly => true,
+
+  service { 'bind_exporter':
+    ensure  => 'running',
+    enable  => true,
+    require => File['bind_exporter_binary'],
   }
 
   file { 'named.conf.slave':
