@@ -145,6 +145,7 @@ class bind($role='resolver', $networks = [], $zones = [], $private_zones = [],
   file { 'bind_exporter_binary':
     ensure => file,
     path   => '/usr/sbin/bind_exporter',
+    mode   => '0755',
     source => 'puppet:///data/bind_exporter',
     links  => follow,
     notify => [ Service['bind_exporter'] ],
