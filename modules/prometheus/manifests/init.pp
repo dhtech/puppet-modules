@@ -44,6 +44,7 @@ class prometheus ($scrape_configs, $current_event) {
   #Copy prometheus tar bundle to the server
   file { '/tmp/prometheus.tar.gz':
     ensure => file,
+    links  => follow,
     source => 'puppet:///data/prometheus.linux-amd64.tar.gz',
     notify => Exec[ 'untar-prometheus' ],
   }
