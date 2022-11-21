@@ -37,6 +37,7 @@ class alertmanager {
   #Copy alertmanager-bundle to the server
   -> file { '/tmp/alertmanager.tar.gz':
     ensure => file,
+    links  => follow,
     source => 'puppet:///data/alertmanager.linux-amd64.tar.gz',
     notify => Exec[ 'untar-alertmanager' ],
   }
