@@ -50,6 +50,16 @@ class grafana($current_event) {
     ],
   }
 
+  # Installing plugins
+  [
+    'grafana-piechart-panel',
+  ].each |$plugin| {
+    exec { "plugin-${plugin}":
+      command => "/usr/sbin/grafana-cli plugins install ${plugin}",
+      creates => "/var/lib/grafana/plugins/${plugin}",
+    }
+  }
+
   # LDAP integration config file
   file { 'ldap.toml':
     path    => '/etc/grafana/ldap.toml',
