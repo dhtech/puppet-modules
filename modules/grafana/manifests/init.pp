@@ -23,7 +23,7 @@ class grafana($current_event) {
   file { 'grafana-source-add':
     ensure  => file,
     path    => '/etc/apt/sources.list.d/grafana.list',
-    content => 'deb https://packages.grafana.com/oss/deb beta main',
+    content => 'deb https://packages.grafana.com/oss/deb stable main',
     notify  => Exec['grafana-source-key'],
   }
   exec { 'grafana-source-key':
