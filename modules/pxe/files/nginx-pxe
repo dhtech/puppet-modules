@@ -1,4 +1,11 @@
 server {
-  root /srv/www;
-  server_name pxe;
+	root /srv/www;
+	server_name pxe;
+
+	location /junos/ {
+		autoindex on;
+	}
+	location /ios/ {
+		autoindex on;
+	}
 }
