@@ -2,3 +2,4 @@
 /var/log/bind/ rw,
 /var/log/bind/** rw,
 /etc/bind/slave/ rw,
+/etc/bind/slave/** rw,
