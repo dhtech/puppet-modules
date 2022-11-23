@@ -35,6 +35,12 @@ def _generate_server(my_os):
              '-6 ::1',
              '77.80.128.0 mask 255.255.128.0 limited '
              'kod nomodify notrap nopeer',
+             '10.0.0.0 mask 255.0.0.0 limited '
+             'kod nomodify notrap nopeer',
+             '172.16.0.0 mask 255.240.0.0 limited '
+             'kod nomodify notrap nopeer',
+             '192.168.0.0 mask 255.255.0.0 limited '
+             'kod nomodify notrap nopeer',
              '2001:67c:24d8:: mask ffff:ffff:ffff:: limited '
              'kod nomodify notrap nopeer',
         ]
