@@ -93,23 +93,15 @@ class grafana($current_event) {
     # password does not exist in vault, create it and then reset grafana admin password
     exec { 'create_service_account_grafana_login':
       command => '/usr/local/bin/dh-create-service-account --type grafana --product login --username admin',
+      notify  => Exec['read_password_and_reset_grafana_password'],
     }
 
-    $secret = vault('grafana:login')
-    $secret_file = '/dev/shm/grafana-admin-password'
-
-    file { 'grafana-secret-file':
-      path    => $secret_file,
-      content => $secret,
-      mode    => '0600',
-      owner   => 'root',
-      group   => 'root',
-      require => Exec['create_service_account_grafana_login'],
-      notify  => Exec['reset-admin-password'],
-    }
-
-    exec { 'reset-admin-password':
-      command     => "cat '${secret_file}' | grafana-cli admin reset-admin-password --password-from-stdin; rm -f '${secret_file}'",
+    exec { 'read_password_and_reset_grafana_password':
+      command     => [
+        '/usr/local/bin/dh-create-service-account --type grafana',
+        "--product login --format '{password}'",
+        '| grafana-cli admin reset-admin-password --password-from-stdin',
+      ].join(' '),
       refreshonly => true,
     }
   }
