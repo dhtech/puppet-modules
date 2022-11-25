@@ -53,6 +53,7 @@ class grafana($current_event) {
   # Installing plugins
   [
     'grafana-piechart-panel',
+    'gapit-htmlgraphics-panel',
   ].each |$plugin| {
     exec { "plugin-${plugin}":
       command => "/usr/sbin/grafana-cli plugins install ${plugin}",
