@@ -26,7 +26,7 @@ class observer($nameservers, $icmp_target, $dns_target) {
   file { '/opt/observer/observer.gz':
     ensure => file,
     links  => follow,
-    source => "puppet:///data/observer.linux-${::facts['os']['architecture']}.gz",
+    source => "puppet:///data/observer.linux.${::facts['os']['architecture']}.gz",
     notify => Exec['extract-observer'],
   }
   exec { 'extract-observer':
