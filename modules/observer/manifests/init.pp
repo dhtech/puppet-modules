@@ -25,7 +25,8 @@ class observer($nameservers, $icmp_target, $dns_target) {
   # Copy observer-bundle to the server and extract
   file { '/opt/observer/observer.gz':
     ensure => file,
-    source => "puppet:///data/observer-d01b469.linux-${::facts['os']['architecture']}.gz",
+    links  => follow,
+    source => "puppet:///data/observer.linux-${::facts['os']['architecture']}.gz",
     notify => Exec['extract-observer'],
   }
   exec { 'extract-observer':
