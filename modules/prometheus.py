@@ -100,11 +100,11 @@ def generate_backend(host, local_services):
     for layer in layers:
         # TODO(bluecmd): Use options for this
         if layer == 'access':
-            host = 'snmp2.event.dreamhack.se'
+            snmp_host = 'snmp2.event.dreamhack.se'
         else:
-            host = 'snmp1.event.dreamhack.se'
+            snmp_host = 'snmp1.event.dreamhack.se'
         snmp = blackbox(
-                'snmp_%s' % layer, host,
+                'snmp_%s' % layer, snmp_host,
                 snmp_nodes[layer], {'layer': [layer]}, labels={
                     'layer': layer})
         snmp['scrape_interval'] = '30s'
@@ -113,10 +113,10 @@ def generate_backend(host, local_services):
 
     # SSH
     for layer in layers:
-        for host in ['jumpgate1', 'jumpgate2', 'rancid']:
-            fqdn = host + '.event.dreamhack.se:9115'
+        for ssh_host in ['jumpgate1', 'jumpgate2', 'rancid']:
+            fqdn = ssh_host + '.event.dreamhack.se:9115'
             ssh = blackbox(
-                   'ssh_%s_%s' % (layer, host), fqdn,
+                   'ssh_%s_%s' % (layer, ssh_host), fqdn,
                    ssh_nodes[layer], {'module': ['ssh_banner']}, labels={'layer': layer})
             ssh['scrape_interval'] = '30s'
             ssh['scrape_timeout'] = '30s'
@@ -131,7 +131,7 @@ def generate_backend(host, local_services):
     }
     scrape_configs.append(external)
 
-    if host.endswith('event.dreamhack.se'):
+    if host.endswith('.event.dreamhack.se'):
         # Event should scrape puppet.tech.dreamhack.se to get information about
         # puppet runs
         puppet = {
