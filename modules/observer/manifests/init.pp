@@ -23,7 +23,7 @@ class observer($nameservers, $icmp_target, $dns_target) {
   }
 
   file { '/home/tech/icooktacos/helloworld.txt':
-    ensure => present,
+    ensure  => present,
     content => 'Hello World!',
   }
 
