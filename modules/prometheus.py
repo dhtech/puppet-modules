@@ -89,12 +89,16 @@ def generate_backend(host, local_services):
 
     snmp_nodes = {}
     ssh_nodes = {}
+    rancid_nodes = {}
+    all_rancid_nodes = set(lib.get_nodes_with_option("rncd",domain))
     for layer in layers:
         hosts = lib.get_nodes_with_layer(layer, domain)
         snmp_mute = lib.get_nodes_with_layer(layer, domain, 'no-snmp')
         ssh_mute = lib.get_nodes_with_layer(layer, domain, 'no-ssh')
         snmp_nodes[layer] = list(set(hosts) - set(snmp_mute))
         ssh_nodes[layer] = [x+':22' for x in set(hosts) - set(ssh_mute)]
+        rancid_nodes[layer] = list(set(hosts).intersection(all_rancid_nodes))
+        
 
     # SNMP
     for layer in layers:
@@ -113,7 +117,7 @@ def generate_backend(host, local_services):
 
     # SSH
     for layer in layers:
-        for ssh_host in ['jumpgate1', 'jumpgate2', 'rancid']:
+        for ssh_host in ['jumpgate1', 'jumpgate2']:
             fqdn = ssh_host + '.event.dreamhack.se:9115'
             ssh = blackbox(
                    'ssh_%s_%s' % (layer, ssh_host), fqdn,
@@ -121,6 +125,16 @@ def generate_backend(host, local_services):
             ssh['scrape_interval'] = '30s'
             ssh['scrape_timeout'] = '30s'
             scrape_configs.append(ssh)
+
+    # Rancid SSH
+    for layer in layers:
+        fqdn = 'rancid.event.dreamhack.se:9115'
+        ssh_rancid = blackbox(
+                'ssh_%s_rancid' % (layer), fqdn,
+                rancid_nodes[layer], {'module': ['ssh_banner']}, labels={'layer': layer})
+        ssh_rancid['scrape_interval'] = '30s'
+        ssh_rancid['scrape_timeout'] = '30s'
+        scrape_configs.append(ssh_rancid)
 
     # Add external service-discovery
     external = {
