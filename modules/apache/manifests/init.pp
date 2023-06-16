@@ -110,26 +110,26 @@ class apache($ldap = '') {
   }
 
   # Needed for 'ssl-cert' group
-  ensure_packages(['ssl-cert'])
+  #ensure_packages(['ssl-cert'])
 
-  file { '/etc/ssl/certs/server-fullchain.crt':
-    ensure => file,
-    owner  => 'root',
-    group  => 'ssl-cert',
-    mode   => '0644',
-    source => 'puppet:///letsencrypt/fullchain.pem',
-    links  => 'follow',
-    notify => Service['apache2'],
-  }
+  #file { '/etc/ssl/certs/server-fullchain.crt':
+    #ensure => file,
+    #owner  => 'root',
+    #group  => 'ssl-cert',
+    #mode   => '0644',
+    #source => 'puppet:///letsencrypt/fullchain.pem',
+    #links  => 'follow',
+    #notify => Service['apache2'],
+  #}
 
-  file { '/etc/ssl/private/server.key':
-    ensure => file,
-    owner  => 'root',
-    group  => 'ssl-cert',
-    mode   => '0640',
-    source => 'puppet:///letsencrypt/privkey.pem',
-    links  => 'follow',
-    notify => Service['apache2'],
-  }
+  #file { '/etc/ssl/private/server.key':
+    #ensure => file,
+    #owner  => 'root',
+    #group  => 'ssl-cert',
+    #mode   => '0640',
+    #source => 'puppet:///letsencrypt/privkey.pem',
+    #links  => 'follow',
+    #notify => Service['apache2'],
+  #}
 
 }

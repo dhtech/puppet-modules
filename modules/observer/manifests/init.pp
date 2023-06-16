@@ -22,41 +22,9 @@ class observer($nameservers, $icmp_target, $dns_target) {
     mode   => '0700',
   }
 
-  # Copy observer-bundle to the server and extract
-  file { '/opt/observer/observer.gz':
-    ensure => file,
-    links  => follow,
-    source => "puppet:///data/observer.linux.${::facts['os']['architecture']}.gz",
-    notify => Exec['extract-observer'],
-  }
-  exec { 'extract-observer':
-    command     => 'rm -f /opt/observer/observer; gunzip -kn /opt/observer/observer.gz && chmod +x /opt/observer/observer',
-    refreshonly => true,
-    user        => 'root',
-    path        => ['/bin', '/usr/bin',],
-    notify      => Service['observer'],
-  }
-
-  # Observer default file
-  file { '/etc/default/observer':
-    ensure  => file,
-    content => template('observer/observer.default.erb'),
-    notify  => Service['observer'],
-  }
-
-  file { '/etc/systemd/system/observer.service':
-    ensure  => file,
-    content => template('observer/observer.service.erb'),
-    notify  => Exec['observer-systemctl-daemon-reload'],
-  }
-  exec { 'observer-systemctl-daemon-reload':
-    command     => '/bin/systemctl daemon-reload',
-    refreshonly => true,
-  }
-
-  service { 'observer':
-    ensure => running,
-    enable => true,
+  file { '/home/tech/icooktacos/helloworld.txt':
+    ensure => present,
+    content => 'Hello World!',
   }
 
 }
