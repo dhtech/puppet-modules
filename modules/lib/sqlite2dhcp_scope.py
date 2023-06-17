@@ -135,7 +135,24 @@ class App:
 
         c.execute("""SELECT name, value FROM option
             WHERE node_id=? AND name LIKE 'dhcp-%'""", (subnet_id,))
-        options = dict(map(lambda x: (x[0][5:], x[1]), c.fetchall()))
+
+        # Add all values for the same options to the same row for dhcp options
+        dhcp_options = c.fetchall()
+        duplicates = [key for key, count in collections.Counter(item[0] for item in dhcp_options).items() if count > 1]
+        dhcp_values = []
+        dhcp_options_temp = dhcp_options[:]
+        for duplicate in duplicates:
+            dhcp_values = []
+            for dhcp_option in dhcp_options:
+                if(dhcp_option[0]==duplicate):
+                    dhcp_values.append(dhcp_option[1])
+                    try:
+                        dhcp_options_temp.remove(dhcp_option)
+                    except Exception as e:
+                        print(e)
+            dhcp_options_temp.append((duplicate,', '.join(dhcp_values)))
+
+        options = dict(map(lambda x: (x[0][5:], x[1]), dhcp_options_temp))
 
         self._print_indented('#@ NET {} {} - VLAN {}'
                              .format(name, ip_cidr, vlan), indent)
