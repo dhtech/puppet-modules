@@ -11,7 +11,7 @@
 #
 
 class pinger {
-  package { 'prometheus_client':
+  package { 'prometheus-client':
     provider => 'pip',
   }
 
