@@ -172,6 +172,9 @@ class App:
             self._print_indented('next-server {};'.format(ipv4), indent+1)
             del options['tftp']
 
+        if 'domain-name-servers' in options:
+            options['option domain-name-servers'] = options.pop("domain-name-servers")
+
         for option in options.iteritems():
             self._print_indented('{} {};'.format(*option), 1)
 
