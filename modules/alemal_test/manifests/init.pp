@@ -11,7 +11,7 @@
 # === Parameters
 #
 
-class alemal-test  {
+class alemal_test  {
 
   $nginx_dir = '/etc/nginx'
   $sites_dir = "${nginx_dir}/sites-enabled"
