@@ -1,0 +1,14 @@
+{
+  "name": "dhtech-alemal-test",
+  "version": "0.0.1",
+  "author": "dhtech",
+  "summary": "Its just me testing a thing",
+  "license": "Apache 2.0",
+  "source": "",
+  "project_page": "",
+  "issues_url": null,
+  "dependencies": [
+    {"name":"puppetlabs/stdlib","version_requirement":">= 1.0.0"}
+  ]
+}
+
