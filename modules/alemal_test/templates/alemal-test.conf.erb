@@ -1,0 +1,18 @@
+server {
+        listen 80;
+        listen [::]:80;
+
+        root /var/www/html/alemal-test;
+
+        # Add index.php to the list if you are using PHP
+        index index.html;
+
+        server_name <%= @hostname %>.event.dreamhack.se;
+
+        location / {
+                # First attempt to serve request as file, then
+                # as directory, then fall back to displaying a 404.
+                try_files $uri $uri/ =404;
+        }
+
+}
