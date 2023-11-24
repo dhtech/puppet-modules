@@ -1,0 +1,75 @@
+#! /usr/bin/env python3
+
+import os
+import datetime
+import ipaddress
+import sqlite3
+
+LOGFILENAME='/var/log/freeradius/radius.log'
+DBFILENAME = '/etc/ipplan.db'
+OUTPUTFILENAME = '/var/tmp/export/security-auth-check.prom'
+
+def open_db(db_file):
+  if os.path.isfile(db_file):
+    try:
+      conn = sqlite3.connect(db_file)
+      db = conn.cursor()
+    except sqlite3.Error as e:
+      print >>sys-stderr, "An error accurd:", e.args[0]
+      sys.exit(1)
+  else:
+    print >>sys-stderr, "No database file found: %s" % db_file
+    sys.exit(2)
+  return db
+
+def get_log_ips(log_filename):
+    now = datetime.datetime.now()
+    with open(log_filename, 'r') as logfile:
+        logrows = [logdata.rstrip() for logdata in logfile]
+        ip_list = []
+        for row in logrows:
+            if "Auth:" in row:
+                timestr = row.split(' : ')[0].strip()
+                time = datetime.datetime.strptime(timestr, "%a %b %d %H:%M:%S %Y")
+                delta = (now - time).seconds
+                if delta > 60:
+                    continue
+
+                try:
+                    ip = row.split(' ')[-1].replace(')','')
+                    ipaddress.ip_address(ip)
+                    if  ip not in ip_list:
+                        ip_list.append(ip)
+                except ValueError:
+                    # Invalid IP, probably console connection
+                    pass
+
+
+    return ip_list
+
+def get_mgmt_nets(db):
+    # sql = "select ipv4_txt from network n left join option o on n.node_id=o.node_id where o.name='vrf' and o.value='mgmt'"
+    # FIXME: Ugly hack to include jumpgates
+    sql = 'select ipv4_txt from network n left join option o on n.node_id=o.node_id where o.name="vrf" and o.value="mgmt" union select ipv4_addr_txt || "/32" from host where name like "jumpgate%.event.dreamhack.se"'
+    mgmt_net = db.execute(sql)
+    return [net[0] for net in mgmt_net.fetchall()]
+
+def validate_ip(ip, mgmt_nets):
+    for mgmt_net in mgmt_nets:
+        if ipaddress.ip_address(ip) in ipaddress.ip_network(mgmt_net):
+            return True
+    return False
+
+db = open_db(DBFILENAME)
+mgmt_nets = get_mgmt_nets(db)
+log_ips = get_log_ips(LOGFILENAME)
+
+violation_count=0
+for ip in log_ips:
+    if not validate_ip(ip, mgmt_nets):
+        print("VIOLATION {}".format(ip))
+        violation_count += 1
+
+with open(OUTPUTFILENAME, 'w') as outfile:
+      outfile.write("radius_violation_count {}\n".format(violation_count))
+
