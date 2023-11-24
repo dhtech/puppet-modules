@@ -6,9 +6,8 @@ import ipaddress
 import sqlite3
 
 LOGFILENAME='/var/log/freeradius/radius.log'
-#LOGFILENAME='/tmp/radius.log'
 DBFILENAME = '/etc/ipplan.db'
-OUTPUTFILENAME = '/var/tmp/export/ip-check.prom'
+OUTPUTFILENAME = '/var/tmp/export/security-auth-check.prom'
 
 def open_db(db_file):
   if os.path.isfile(db_file):
@@ -73,3 +72,4 @@ for ip in log_ips:
 
 with open(OUTPUTFILENAME, 'w') as outfile:
       outfile.write("radius_violation_count {}\n".format(violation_count))
+
