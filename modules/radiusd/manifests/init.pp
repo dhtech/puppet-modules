@@ -107,7 +107,7 @@ class radiusd ($access_ips = [], $dist_ips = [], $core_ips = [], $firewall_ips =
 
   file { '/etc/freeradius/security-auth-check.py':
     ensure    => file,
-    source   =>  template('radiusd/security-auth-check.py.erb'),
+    source    =>  template('radiusd/security-auth-check.py.erb'),
     mode      => '0700',
     show_diff => no,
   }
