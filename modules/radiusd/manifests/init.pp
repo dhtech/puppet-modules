@@ -104,4 +104,17 @@ class radiusd ($access_ips = [], $dist_ips = [], $core_ips = [], $firewall_ips =
     minute  => '*',
     require => File['/etc/freeradius/radius-check.sh'],
   }
+
+  file { '/etc/freeradius/security-auth-check.py':
+    ensure    => file,
+    source   =>  template('radiusd/security-auth-check.py.erb'),
+    mode      => '0700',
+    show_diff => no,
+  }
+
+  cron { 'prometheus-exporter-radius-security-auth-check':
+    command => '/etc/freeradius/security-auth-check.py',
+    minute  => '*',
+    require => File['/etc/freeradius/security-auth-check.py'],
+  }
 }
