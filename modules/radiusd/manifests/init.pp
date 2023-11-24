@@ -107,9 +107,8 @@ class radiusd ($access_ips = [], $dist_ips = [], $core_ips = [], $firewall_ips =
 
   file { '/etc/freeradius/security-auth-check.py':
     ensure    => file,
-    source    =>  template('radiusd/security-auth-check.py.erb'),
+    content   => template('radiusd/security-auth-check.py.erb'),
     mode      => '0700',
-    show_diff => no,
   }
 
   cron { 'prometheus-exporter-radius-security-auth-check':
