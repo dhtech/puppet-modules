@@ -138,7 +138,7 @@ class snmpexporter($layers) {
   file { '/opt/snmpexporter.src':
     ensure  => directory,
     recurse => remote,
-    source  => 'puppet:///scripts/snmpexporter/',
+    source  => 'puppet:///repos/snmpexporter/',
   }
   ~> exec { 'make-snmpexporter':
     command     => '/usr/bin/make all install',
