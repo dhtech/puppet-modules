@@ -69,7 +69,7 @@ class swbootd($current_event) {
     ensure  => file,
     content => template('swbootd/config.py.erb'),
     mode    => '0700',
-    notify  => Supervisor::Restart['swtftpd'],
+    notify  => Supervisor::Restart['swtftpd','swhttpd'],
   }
 
   file { '/etc/network/interfaces.d/swboot':
@@ -95,7 +95,7 @@ class swbootd($current_event) {
     ensure  => directory,
     recurse => remote,
     source  => "puppet:///svn/${current_event}/access/switchconfig",
-    notify  => Supervisor::Restart['swtftpd'],
+    notify  => Supervisor::Restart['swtftpd','swhttpd'],
   }
 
   file { '/srv/tftp':
