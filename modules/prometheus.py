@@ -155,13 +155,6 @@ def generate_backend(host, local_services):
                     'targets': ['provision.event.dreamhack.se:9272'],
                 }],
             }
-        else:
-            vcenter = {
-                'job_name': 'vmware_vcenter',
-                'metrics_path': '/metrics',
-                'scrape_interval': '60s',
-                'scrape_timeout': '55s',
-            }
     scrape_configs.append(vcenter)
 
     # Make sure that all metrics have a host label.

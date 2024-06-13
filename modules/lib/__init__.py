@@ -463,10 +463,8 @@ def check_node_active(host):
     c.execute("SELECT name FROM host where name =?", (host,))
     result = c.fetchall()
     conn.close()
-    try:
-      print(result[0])
-      return "true"
-    except:
-        return "false"
+    if len(result) != 0:
+        return True
+    return False
 
 # vim: ts=4: sts=4: sw=4: expandtab
