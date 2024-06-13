@@ -458,4 +458,15 @@ def read_secret(path):
     data = vault().read(path)
     return data.get('data', None) if data else None
 
+def check_node_active(host):
+    conn, c = _connect()
+    c.execute("SELECT name FROM host where name =?", (host,))
+    result = c.fetchall()
+    conn.close()
+    try:
+      print(result[0])
+      return "true"
+    except:
+        return "false"
+
 # vim: ts=4: sts=4: sw=4: expandtab
