@@ -145,16 +145,17 @@ def generate_backend(host, local_services):
         }
         scrape_configs.append(puppet)
 
-    vcenter = {
-      'job_name': 'vmware_vcenter',
-      'metrics_path': '/metrics',
-      'scrape_interval': '60s',
-      'scrape_timeout': '55s',
-      'static_configs': [{
-          'targets': ['provision.event.dreamhack.se:9272'],
-      }],
-    }
-    scrape_configs.append(vcenter)
+        if lib.check_node_active("provision.event.dreamhack.se"):
+            vcenter = {
+                'job_name': 'vmware_vcenter',
+                'metrics_path': '/metrics',
+                'scrape_interval': '60s',
+                'scrape_timeout': '55s',
+                'static_configs': [{
+                    'targets': ['provision.event.dreamhack.se:9272'],
+                }],
+            }
+            scrape_configs.append(vcenter)
 
     # Make sure that all metrics have a host label.
     # This rule uses the existing host label if there is one,
