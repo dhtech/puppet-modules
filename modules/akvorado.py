@@ -43,7 +43,7 @@ def get_prefixes(ipversion):
     res = db.fetchall()
     if not res:
         raise NetworkNotFoundError('network not found')
-        
+
     column_names = [description[0] for description in db.description]
     conn.close()
     rows_dict = [dict(zip(column_names, row)) for row in res]
@@ -59,4 +59,3 @@ def generate(host, *args):
     info['ipv4_prefixes'] = get_prefixes('4')
     print(info)
     return {'akverado': info}
-
