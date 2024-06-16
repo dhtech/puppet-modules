@@ -164,7 +164,7 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes) {
     match  => 'clientPortAddress=',
   }
   exec { 'clickhouse-source-key':
-    command     => '/usr/bin/wget -fsSLhttps://packages.clickhouse.com/rpm/lts/repodata/repomd.xml.key -O /usr/share/keyrings/clickhouse-keyring.gpg',
+    command     => '/usr/bin/wget -fsSL https://packages.clickhouse.com/rpm/lts/repodata/repomd.xml.key -O /usr/share/keyrings/clickhouse-keyring.gpg',
     logoutput   => 'on_failure',
     try_sleep   => 1,
     refreshonly => true,
