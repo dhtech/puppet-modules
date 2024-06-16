@@ -75,10 +75,10 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes) {
   -> service { 'akvorado-orch':
     ensure  => running,
   }
--> service { 'akvorado-inlet':
+  -> service { 'akvorado-inlet':
     ensure  => running,
   }
--> service { 'akvorado-console':
+  -> service { 'akvorado-console':
     ensure  => running,
   }
 
@@ -140,6 +140,9 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes) {
     refreshonly => true,
     user        => 'kafka',
   }
+  -> service { 'kafka':
+    ensure  => running,
+  }
 
   ##Zookeeper installation
   ensure_packages([
@@ -186,5 +189,8 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes) {
     owner  => 'root',
     group  => 'root',
     notify => [Exec['systemctl-daemon-reload'],Service['clickhouse']],
+  }
+  -> service { 'kafka':
+    ensure  => running,
   }
 }
