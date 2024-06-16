@@ -154,7 +154,7 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes) {
     notify => Service['zookeeper'],
   }
   exec { 'untar-kafka':
-    command     => '/bin/tar -xvf kafka.tgz -C /var/lib/kafka --strip 1',
+    command     => '/bin/tar -xvf /tmp/kafka.tgz -C /var/lib/kafka --strip 1',
     refreshonly => true,
     user        => 'kafka',
   }
@@ -200,15 +200,7 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes) {
   -> package { 'clickhouse-client':
     ensure  => installed,
   }
-  -> file { '/etc/systemd/system/clickhouse.service':
-    ensure => present,
-    source => 'puppet:///modules/akvorado/clickhouse.service',
-    mode   => '0644',
-    owner  => 'root',
-    group  => 'root',
-    notify => [Exec['systemctl-daemon-reload'],Service['clickhouse']],
-  }
-  -> service { 'clickhouse':
+  -> service { 'clickhouse-server':
     ensure  => running,
   }
 }
