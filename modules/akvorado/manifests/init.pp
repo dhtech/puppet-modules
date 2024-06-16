@@ -95,7 +95,7 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes) {
     ensure     => 'present',
     system     => true,
     home       => '/var/lib/kafka',
-    managegome => true,
+    managehome => true,
   }
   -> file { '/tmp/kafka.tgz':
     ensure => file,
