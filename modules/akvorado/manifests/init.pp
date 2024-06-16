@@ -190,7 +190,7 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes) {
     group  => 'root',
     notify => [Exec['systemctl-daemon-reload'],Service['clickhouse']],
   }
-  -> service { 'kafka':
+  -> service { 'clickhouse':
     ensure  => running,
   }
 }
