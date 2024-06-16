@@ -92,10 +92,10 @@ class akvorado {
     ensure => 'present',
   }
   -> user { 'kafka':
-    ensure => 'present',
-    system => true,
-    home => '/var/lib/kafka',
-    managegome => true,
+    ensure      => 'present',
+    system      => true,
+    home        => '/var/lib/kafka',
+    managegome  => true,
   }
   -> file { '/tmp/kafka.tgz':
     ensure => file,
@@ -124,16 +124,16 @@ class akvorado {
     line => 'delete.topic.enable'
   }
   -> file_line { 'kafka-listenlocalhost'
-    ensure => 'present',
-    path => '/var/lib/kafka/config/server.properties',
-    line => 'listeners=PLAINTEXT://localhost:9092'
-    match => '#listeners=PLAINTEXT'
+    ensure  => 'present',
+    path    => '/var/lib/kafka/config/server.properties',
+    line    => 'listeners=PLAINTEXT://localhost:9092'
+    match   => '#listeners=PLAINTEXT'
   }
   -> file_line { 'kafka-logdir'
-    ensure => 'present',
-    path => '/var/lib/kafka/config/server.properties',
-    line => 'log.dirs=/var/log/kafka'
-    match => 'log.dirs='
+    ensure  => 'present',
+    path    => '/var/lib/kafka/config/server.properties',
+    line    => 'log.dirs=/var/log/kafka'
+    match   => 'log.dirs='
   }
   exec { 'untar-kafka':
     command     => '/bin/tar -zxf /tmp/kafka.tgz -C /var/lib/kafka --strip=1',
@@ -143,22 +143,22 @@ class akvorado {
 
   ##Zookeeper installation
   ensure_packages([
-     'apt-transport-https',
-     'ca-certificates',
-     'curl',
-     'gnupg',
+    'apt-transport-https',
+    'ca-certificates',
+    'curl',
+    'gnupg',
   ])
   file { 'clickhouse-source-add':
     ensure  => file,
     path    => '/etc/apt/sources.list.d/clickhouse.list',
-    content => "deb [signed-by=/usr/share/keyrings/clickhouse-keyring.gpg] https://packages.clickhouse.com/deb stable main",
+    content => 'deb [signed-by=/usr/share/keyrings/clickhouse-keyring.gpg] https://packages.clickhouse.com/deb stable main',
     notify  => Exec['clickhouse-source-key'],
   }
   file_line { 'clickhouse-listen'
-    ensure => 'present',
-    path => '/var/lib/kafka/config/server.properties',
-    line => 'clientPortAddress=127.0.0.1',
-    match => 'clientPortAddress=',
+    ensure  => 'present',
+    path    => '/var/lib/kafka/config/server.properties',
+    line    => 'clientPortAddress=127.0.0.1',
+    match   => 'clientPortAddress=',
   }
   exec { 'clickhouse-source-key':
     command     => '/usr/bin/wget -fsSLhttps://packages.clickhouse.com/rpm/lts/repodata/repomd.xml.key -O /usr/share/keyrings/clickhouse-keyring.gpg',
@@ -174,7 +174,7 @@ class akvorado {
     refreshonly => true,
     require     => Package['apt-transport-https'],
   }
-  
+
   package { 'clickhouse':
     ensure  => installed,
     require => [File['clickhouse-source-add'], Exec['clickhouse-source-key'], Exec['apt-update'], File_Line['clickhouse-listen']],
