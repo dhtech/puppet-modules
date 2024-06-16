@@ -117,19 +117,19 @@ class akvorado {
     group  => 'root',
     notify => [Exec['systemctl-daemon-reload'],Service['kafka']],
   }
-  -> file_line { 'kafka-enabledeletetopics'
+  -> file_line { 'kafka-enabledeletetopics':
     ensure => 'present',
     path => '/var/lib/kafka/config/server.properties',
     line => 'delete.topic.enable = true'
     line => 'delete.topic.enable'
   }
-  -> file_line { 'kafka-listenlocalhost'
+  -> file_line { 'kafka-listenlocalhost':
     ensure  => 'present',
     path    => '/var/lib/kafka/config/server.properties',
     line    => 'listeners=PLAINTEXT://localhost:9092'
     match   => '#listeners=PLAINTEXT'
   }
-  -> file_line { 'kafka-logdir'
+  -> file_line { 'kafka-logdir':
     ensure  => 'present',
     path    => '/var/lib/kafka/config/server.properties',
     line    => 'log.dirs=/var/log/kafka'
@@ -154,7 +154,7 @@ class akvorado {
     content => 'deb [signed-by=/usr/share/keyrings/clickhouse-keyring.gpg] https://packages.clickhouse.com/deb stable main',
     notify  => Exec['clickhouse-source-key'],
   }
-  file_line { 'clickhouse-listen'
+  file_line { 'clickhouse-listen':
     ensure  => 'present',
     path    => '/var/lib/kafka/config/server.properties',
     line    => 'clientPortAddress=127.0.0.1',
