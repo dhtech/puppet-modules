@@ -193,9 +193,12 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes) {
     require     => Package['apt-transport-https'],
   }
 
-  package { 'clickhouse':
+  package { 'clickhouse-server':
     ensure  => installed,
     require => [File['clickhouse-source-add'], Exec['clickhouse-source-key'], Exec['apt-update']],
+  }
+  -> package { 'clickhouse-client':
+    ensure  => installed,
   }
   -> file { '/etc/systemd/system/clickhouse.service':
     ensure => present,
