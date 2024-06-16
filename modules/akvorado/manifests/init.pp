@@ -10,7 +10,7 @@
 # === Parameters
 #
 
-class akvorado {
+class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes) {
 
   #Create user/group for Akvorodo
   group { 'akvorado':
