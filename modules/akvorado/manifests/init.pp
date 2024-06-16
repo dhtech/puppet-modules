@@ -120,20 +120,20 @@ class akvorado {
   -> file_line { 'kafka-enabledeletetopics':
     ensure => 'present',
     path => '/var/lib/kafka/config/server.properties',
-    line => 'delete.topic.enable = true'
-    line => 'delete.topic.enable'
+    line => 'delete.topic.enable = true',
+    match => 'delete.topic.enable',
   }
   -> file_line { 'kafka-listenlocalhost':
     ensure  => 'present',
     path    => '/var/lib/kafka/config/server.properties',
-    line    => 'listeners=PLAINTEXT://localhost:9092'
-    match   => '#listeners=PLAINTEXT'
+    line    => 'listeners=PLAINTEXT://localhost:9092',
+    match   => '#listeners=PLAINTEXT',
   }
   -> file_line { 'kafka-logdir':
     ensure  => 'present',
     path    => '/var/lib/kafka/config/server.properties',
-    line    => 'log.dirs=/var/log/kafka'
-    match   => 'log.dirs='
+    line    => 'log.dirs=/var/log/kafka',
+    match   => 'log.dirs=',
   }
   exec { 'untar-kafka':
     command     => '/bin/tar -zxf /tmp/kafka.tgz -C /var/lib/kafka --strip=1',
