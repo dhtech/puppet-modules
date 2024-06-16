@@ -168,7 +168,7 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes) {
     logoutput   => 'on_failure',
     try_sleep   => 1,
     refreshonly => true,
-    notify      => Exec['docker-source-update'],
+    notify      => Exec['apt-update'],
   }
   exec { 'apt-update':
     command     => '/usr/bin/apt-get update',
