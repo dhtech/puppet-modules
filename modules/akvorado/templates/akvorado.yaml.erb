@@ -1,0 +1,303 @@
+---
+reporting:
+    logging: {}
+    metrics: {}
+http:
+    listen: :8080
+    profiler: true
+    cache:
+        type: memory
+clickhouse:
+    servers:
+        - localhost:9000
+    cluster: ""
+    database: default
+    username: default
+    password: "dhtech"
+    maxopenconns: 10
+    dialtimeout: 5s
+    tls:
+        enable: false
+        verify: true
+        cafile: ""
+        certfile: ""
+        keyfile: ""
+    skipmigrations: false
+    kafka:
+        topic: flows
+        brokers:
+            - localhost:9092
+        version: 3.3.1
+        tls:
+            enable: false
+            verify: true
+            cafile: ""
+            certfile: ""
+            keyfile: ""
+            saslusername: ""
+            saslpassword: ""
+            saslmechanism: none
+        consumers: 4
+        groupname: clickhouse
+        enginesettings: []
+    resolutions:
+        - interval: 0s
+          ttl: 360h0m0s
+        - interval: 1m0s
+          ttl: 168h0m0s
+        - interval: 5m0s
+          ttl: 2160h0m0s
+        - interval: 1h0m0s
+          ttl: 8640h0m0s
+    maxpartitions: 50
+    systemlogttl: 720h0m0s
+    prometheusendpoint: /metrics
+    asns:
+        25037: Dreamhack ACME Corporation
+    networks:
+    #    2a01:db8:cafe:1::/64:
+    #        name: ipv6-customers
+    #        role: customers
+    #        site: ""
+    #        region: ""
+    #        city: ""
+    #        state: ""
+    #        country: ""
+    #        tenant: ""
+    #        asn: 0
+    
+    <% @ipv4_prefixes.each do |ipv4| -%>
+         "<%= ipv4['ipv4_txt'] %>"
+             name: "<%= ipv4['short_name'] %>"
+             role: "<%= ipv4['location'] %>"
+    <% end -%>
+    <% @ipv6_prefixes.each do |ipv6| -%>
+         "<%= ipv6['ipv6_txt'] %>"
+             name: "<%= ipv6['short_name'] %>"
+             role: "<%= ipv6['location'] %>"
+    <% end -%>
+    
+    networksources: {}
+    networksourcestimeout: 10s
+    orchestratorurl: http://localhost:8080
+kafka:
+    topic: flows
+    brokers:
+        - localhost:9092
+    version: 3.3.1
+    tls:
+        enable: false
+        verify: true
+        cafile: ""
+        certfile: ""
+        keyfile: ""
+        saslusername: ""
+        saslpassword: ""
+        saslmechanism: none
+    topicconfiguration:
+        numpartitions: 8
+        replicationfactor: 1
+        configentries:
+            cleanup.policy: delete
+            compression.type: producer
+            retention.ms: "86400000"
+            segment.bytes: "1073741824"
+        configentriesstrictsync: true
+geoip:
+    asndatabase:
+        - /usr/share/GeoIP/asn.mmdb
+    geodatabase:
+        - /usr/share/GeoIP/country.mmdb
+    optional: true
+schema:
+    disabled: []
+    enabled: []
+    maintableonly: []
+    notmaintableonly: []
+    materialize: []
+    customdictionaries: {}
+inlet:
+    - reporting:
+        logging: {}
+        metrics: {}
+      http:
+        listen: :8081
+        profiler: true
+        cache:
+            type: memory
+      flow:
+        inputs:
+            - decoder: netflow
+              listen: :2055
+              queuesize: 100000
+              receivebuffer: 10485760
+              timestampsource: udp
+              type: udp
+              usesrcaddrforexporteraddr: false
+              workers: 6
+            - decoder: sflow
+              listen: :6343
+              queuesize: 100000
+              receivebuffer: 10485760
+              timestampsource: udp
+              type: udp
+              usesrcaddrforexporteraddr: false
+              workers: 6
+        ratelimit: 0
+      metadata:
+        cacheduration: 30m0s
+        cacherefresh: 1h0m0s
+        cachecheckinterval: 2m0s
+        cachepersistfile: ""
+        providers:
+            - agents: {}
+              communities:
+                ::/0:
+                    - public
+              pollerretries: 1
+              pollertimeout: 1s
+              ports:
+                ::/0: 161
+              securityparameters: {}
+              type: snmp
+        workers: 10
+        maxbatchrequests: 10
+      routing:
+        provider:
+            collectasns: true
+            collectaspaths: true
+            collectcommunities: true
+            keep: 5m0s
+            listen: :10179
+            rds: []
+            ribpeerremovalbatchroutes: 5000
+            ribpeerremovalmaxqueue: 10000
+            ribpeerremovalmaxtime: 100ms
+            ribpeerremovalsleepinterval: 500ms
+            type: bmp
+      kafka:
+        topic: flows
+        brokers:
+            - localhost:9092
+        version: 3.3.1
+        tls:
+            enable: false
+            verify: true
+            cafile: ""
+            certfile: ""
+            keyfile: ""
+            saslusername: ""
+            saslpassword: ""
+            saslmechanism: none
+        flushinterval: 10s
+        flushbytes: 104857599
+        maxmessagebytes: 1000000
+        compressioncodec: zstd
+        queuesize: 32
+      core:
+        workers: 6
+        exporterclassifiers:
+            - ClassifySiteRegex(Exporter.Name, "^([^-]+)-", "$1")
+            - ClassifyRegion("europe")
+            - ClassifyTenant("acme")
+            - ClassifyRole("edge")
+        interfaceclassifiers:
+            - |
+              ClassifyConnectivityRegex(Interface.Description, "^(?i)(transit|pni|ppni|ix):? ", "$1") &&
+              ClassifyProviderRegex(Interface.Description, "^\\S+?\\s(\\S+)", "$1") &&
+              ClassifyExternal()
+            - ClassifyInternal()
+        classifiercacheduration: 5m0s
+        defaultsamplingrate: {}
+        overridesamplingrate: {}
+        asnproviders:
+            - flow
+            - routing
+        netproviders:
+            - flow
+            - routing
+      schema:
+        disabled: []
+        enabled: []
+        maintableonly: []
+        notmaintableonly: []
+        materialize: []
+        customdictionaries: {}
+console:
+    - reporting:
+        logging: {}
+        metrics: {}
+      http:
+        listen: :8082
+        profiler: true
+        cache:
+            db: 0
+            password: ""
+            protocol: tcp
+            server: localhost:6379
+            type: redis
+            username: ""
+      defaultvisualizeoptions:
+        graphtype: stacked
+        start: 6 hours ago
+        end: now
+        filter: InIfBoundary = external
+        dimensions:
+            - SrcAS
+        limit: 10
+      homepagetopwidgets:
+        - src-as
+        - src-port
+        - protocol
+        - src-country
+        - etype
+      homepagegraphfilter: InIfBoundary = 'external'
+      dimensionslimit: 50
+      cachettl: 3h0m0s
+      clickhouse:
+        servers:
+            - localhost:9000
+        cluster: ""
+        database: default
+        username: default
+        password: ""
+        maxopenconns: 10
+        dialtimeout: 5s
+        tls:
+            enable: false
+            verify: true
+            cafile: ""
+            certfile: ""
+            keyfile: ""
+      auth:
+        headers:
+            login: Remote-User
+            name: Remote-Name
+            email: Remote-Email
+            logouturl: X-Logout-URL
+        defaultuser:
+            login: __default
+            name: Default User
+            email: ""
+            logouturl: ""
+      database:
+        driver: sqlite
+        dsn: file::memory:?cache=shared
+        savedfilters:
+            - description: From Netflix
+              content: InIfBoundary = external AND SrcAS = AS2906
+            - description: From GAFAM
+              content: InIfBoundary = external AND SrcAS IN (AS15169, AS16509, AS32934, AS6185, AS8075)
+            - description: From Swedish Armed Forces
+              content: InIfBoundary = external AND SrcAS = AS9201
+            - description: Valve Corporation
+              content: InIfBoundary = external AND SrcAS = AS32590
+              
+              
+      schema:
+        disabled: []
+        enabled: []
+        maintableonly: []
+        notmaintableonly: []
+        materialize: []
+        customdictionaries: {}
