@@ -115,25 +115,25 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes) {
     mode   => '0644',
     owner  => 'root',
     group  => 'root',
-    notify => [Exec['systemctl-daemon-reload'],Service['kafka']],
+    notify => [ Exec['systemctl-daemon-reload'], Service['kafka'] ],
   }
   -> file_line { 'kafka-enabledeletetopics':
     ensure => 'present',
-    path => '/var/lib/kafka/config/server.properties',
-    line => 'delete.topic.enable = true',
-    match => 'delete.topic.enable',
+    path   => '/var/lib/kafka/config/server.properties',
+    line   => 'delete.topic.enable = true',
+    match  => 'delete.topic.enable',
   }
   -> file_line { 'kafka-listenlocalhost':
-    ensure  => 'present',
-    path    => '/var/lib/kafka/config/server.properties',
-    line    => 'listeners=PLAINTEXT://localhost:9092',
-    match   => '#listeners=PLAINTEXT',
+    ensure => 'present',
+    path   => '/var/lib/kafka/config/server.properties',
+    line   => 'listeners=PLAINTEXT://localhost:9092',
+    match  => '#listeners=PLAINTEXT',
   }
   -> file_line { 'kafka-logdir':
-    ensure  => 'present',
-    path    => '/var/lib/kafka/config/server.properties',
-    line    => 'log.dirs=/var/log/kafka',
-    match   => 'log.dirs=',
+    ensure => 'present',
+    path   => '/var/lib/kafka/config/server.properties',
+    line   => 'log.dirs=/var/log/kafka',
+    match  => 'log.dirs=',
   }
   exec { 'untar-kafka':
     command     => '/bin/tar -zxf /tmp/kafka.tgz -C /var/lib/kafka --strip=1',
@@ -155,10 +155,10 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes) {
     notify  => Exec['clickhouse-source-key'],
   }
   file_line { 'clickhouse-listen':
-    ensure  => 'present',
-    path    => '/var/lib/kafka/config/server.properties',
-    line    => 'clientPortAddress=127.0.0.1',
-    match   => 'clientPortAddress=',
+    ensure => 'present',
+    path   => '/var/lib/kafka/config/server.properties',
+    line   => 'clientPortAddress=127.0.0.1',
+    match  => 'clientPortAddress=',
   }
   exec { 'clickhouse-source-key':
     command     => '/usr/bin/wget -fsSLhttps://packages.clickhouse.com/rpm/lts/repodata/repomd.xml.key -O /usr/share/keyrings/clickhouse-keyring.gpg',
