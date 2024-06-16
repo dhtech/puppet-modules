@@ -92,10 +92,10 @@ class akvorado {
     ensure => 'present',
   }
   -> user { 'kafka':
-    ensure      => 'present',
-    system      => true,
-    home        => '/var/lib/kafka',
-    managegome  => true,
+    ensure     => 'present',
+    system     => true,
+    home       => '/var/lib/kafka',
+    managegome => true,
   }
   -> file { '/tmp/kafka.tgz':
     ensure => file,
