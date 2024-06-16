@@ -1,0 +1,13 @@
+[Unit]
+Description=Akvorado Orchestrator
+After=network.target
+[Service]
+Type=simple
+Restart=on-failure
+RestartSec=15
+User=akvorado
+ExecStart=/usr/local/bin/akvorado orchestrator /etc/akvorado/akvorado.yaml
+
+[Install]
+WantedBy=multi-user.target
+
