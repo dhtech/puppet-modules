@@ -24,26 +24,31 @@ def get_prefixes(ipversion):
 
     if ipversion == "4":
         db.execute(
-            'SELECT SUBSTR(name,1, INSTR(name, "@")-1), name, short_name, ipv4_txt'
+            'SELECT SUBSTR(name,1, INSTR(name, "@")-1) AS location, name, short_name, ipv4_txt'
             ' FROM network'
-            ' WHERE node_id NOT IN (SELECT option.node_id from option where name = "NO-AKV") and name like "%@%" and ipv4_txt is not NULL'
+            ' WHERE node_id NOT IN (SELECT option.node_id FROM option WHERE name = "no-akv")'
+            ' AND name LIKE "%@%" AND ipv4_txt IS NOT NULL'
             )
 
     elif ipversion == "6":
         db.execute(
-            'SELECT SUBSTR(name,1, INSTR(name, "@")-1), name, short_name, ipv6_txt'
+            'SELECT SUBSTR(name,1, INSTR(name, "@")-1) AS location, name, short_name, ipv6_txt'
             ' FROM network'
-            ' WHERE node_id NOT IN (SELECT option.node_id from option where name = "NO-AKV") and name like "%@%" and ipv6_txt is not NULL'
+            ' WHERE node_id NOT IN (SELECT option.node_id FROM option WHERE name = "no-akv")'
+            ' AND name LIKE "%@%" AND ipv6_txt IS NOT NULL'
             )
     else:
         raise NetworkTypeNotFoundError('network type must be 4 or 6')
 
     res = db.fetchall()
-    conn.close()
     if not res:
         raise NetworkNotFoundError('network not found')
+        
+    column_names = [description[0] for description in db.description]
+    conn.close()
+    rows_dict = [dict(zip(column_names, row)) for row in res]
 
-    return res
+    return rows_dict
 
 
 def generate(host, *args):
