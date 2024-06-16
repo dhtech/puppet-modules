@@ -16,11 +16,11 @@ def get_prefixes(ipversion):
             conn = sqlite3.connect(DB_FILE)
             db = conn.cursor()
         except sqlite3.Error as e:
-            print "An error occurred:", e.args[0]
-            sys.exit(2)
+            print("An error occurred: {}".format(e.args[0]))
+            exit(2)
     else:
-        print "No database file found: %s" % DB_FILE
-        sys.exit(3)
+        print("No database file found: {}".format(DB_FILE))
+        exit(3)
 
     if ipversion == "4":
         db.execute(
