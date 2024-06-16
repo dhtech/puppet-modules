@@ -117,34 +117,55 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes) {
     group  => 'root',
     notify => [ Exec['systemctl-daemon-reload'], Service['kafka'] ],
   }
+  -> file { '/etc/systemd/system/zookeeper.service':
+    ensure => present,
+    source => 'puppet:///modules/akvorado/zookeeper.service',
+    mode   => '0644',
+    owner  => 'root',
+    group  => 'root',
+    notify => [ Exec['systemctl-daemon-reload'], Service['zookeeper'] ],
+  }
   -> file_line { 'kafka-enabledeletetopics':
     ensure => 'present',
     path   => '/var/lib/kafka/config/server.properties',
     line   => 'delete.topic.enable = true',
     match  => 'delete.topic.enable',
+    notify => Service['kafka'],
   }
   -> file_line { 'kafka-listenlocalhost':
     ensure => 'present',
     path   => '/var/lib/kafka/config/server.properties',
     line   => 'listeners=PLAINTEXT://localhost:9092',
     match  => '#listeners=PLAINTEXT',
+    notify => Service['kafka'],
   }
   -> file_line { 'kafka-logdir':
     ensure => 'present',
     path   => '/var/lib/kafka/config/server.properties',
     line   => 'log.dirs=/var/log/kafka',
     match  => 'log.dirs=',
+    notify => Service['kafka'],
+  }
+  -> file_line { 'zookeeper-listen':
+    ensure => 'present',
+    path   => '/var/lib/kafka/config/zookeeper.properties',
+    line   => 'clientPortAddress=127.0.0.1',
+    match  => 'clientPortAddress=',
+    notify => Service['zookeeper'],
   }
   exec { 'untar-kafka':
-    command     => '/bin/tar -zxf /tmp/kafka.tgz -C /var/lib/kafka --strip=1',
+    command     => '/bin/tar -xvf kafka.tgz -C /var/lib/kafka --strip 1',
     refreshonly => true,
     user        => 'kafka',
   }
   -> service { 'kafka':
     ensure  => running,
   }
+  -> service { 'zookeeper':
+    ensure  => running,
+  }
 
-  ##Zookeeper installation
+  ##Clickhouse installation
   ensure_packages([
     'apt-transport-https',
     'ca-certificates',
@@ -156,12 +177,6 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes) {
     path    => '/etc/apt/sources.list.d/clickhouse.list',
     content => 'deb [signed-by=/usr/share/keyrings/clickhouse-keyring.gpg] https://packages.clickhouse.com/deb stable main',
     notify  => Exec['clickhouse-source-key'],
-  }
-  file_line { 'clickhouse-listen':
-    ensure => 'present',
-    path   => '/var/lib/kafka/config/server.properties',
-    line   => 'clientPortAddress=127.0.0.1',
-    match  => 'clientPortAddress=',
   }
   exec { 'clickhouse-source-key':
     command     => '/usr/bin/wget -fsSL https://packages.clickhouse.com/rpm/lts/repodata/repomd.xml.key -O /usr/share/keyrings/clickhouse-keyring.gpg',
