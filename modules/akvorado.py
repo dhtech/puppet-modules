@@ -10,6 +10,7 @@ import yaml
 
 DB_FILE = '/etc/ipplan.db'
 
+
 def get_prefixes(ipversion):
     if os.path.isfile(DB_FILE):
         try:
