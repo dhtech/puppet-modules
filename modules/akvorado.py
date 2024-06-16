@@ -52,6 +52,10 @@ def get_prefixes(ipversion):
     return rows_dict
 
 
+def requires(host, *args):
+    return ['apache(ldap)']
+
+
 def generate(host, *args):
 
     info = {}
