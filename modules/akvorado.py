@@ -58,5 +58,4 @@ def generate(host, *args):
     info['current_event'] = lib.get_current_event()
     info['ipv6_prefixes'] = get_prefixes('6')
     info['ipv4_prefixes'] = get_prefixes('4')
-    print(info)
     return {'akverado': info}
