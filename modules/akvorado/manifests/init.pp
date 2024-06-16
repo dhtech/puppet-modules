@@ -195,7 +195,7 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes) {
 
   package { 'clickhouse':
     ensure  => installed,
-    require => [File['clickhouse-source-add'], Exec['clickhouse-source-key'], Exec['apt-update'], File_Line['clickhouse-listen']],
+    require => [File['clickhouse-source-add'], Exec['clickhouse-source-key'], Exec['apt-update']],
   }
   -> file { '/etc/systemd/system/clickhouse.service':
     ensure => present,
