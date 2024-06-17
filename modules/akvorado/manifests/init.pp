@@ -101,9 +101,8 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes) {
     ensure => file,
     links  => follow,
     source => 'puppet:///data/kafka-latest.tgz',
-    notify => Exec[ 'untar-kafka' ],
   }
-  file { '/var/log/kafka':
+  -> file { '/var/log/kafka':
     ensure => 'directory',
     owner  => 'kafka',
     group  => 'kafka',
@@ -126,32 +125,36 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes) {
     notify => [ Exec['systemctl-daemon-reload'], Service['zookeeper'] ],
   }
   -> file_line { 'kafka-enabledeletetopics':
-    ensure => 'present',
-    path   => '/var/lib/kafka/config/server.properties',
-    line   => 'delete.topic.enable = true',
-    match  => 'delete.topic.enable',
-    notify => Service['kafka'],
+    ensure  => 'present',
+    path    => '/var/lib/kafka/config/server.properties',
+    line    => 'delete.topic.enable = true',
+    match   => 'delete.topic.enable',
+    notify  => Service['kafka'],
+    require => Exec['untar-kafka'],
   }
   -> file_line { 'kafka-listenlocalhost':
-    ensure => 'present',
-    path   => '/var/lib/kafka/config/server.properties',
-    line   => 'listeners=PLAINTEXT://localhost:9092',
-    match  => '#listeners=PLAINTEXT',
-    notify => Service['kafka'],
+    ensure  => 'present',
+    path    => '/var/lib/kafka/config/server.properties',
+    line    => 'listeners=PLAINTEXT://localhost:9092',
+    match   => '#listeners=PLAINTEXT',
+    notify  => Service['kafka'],
+    require => Exec['untar-kafka'],
   }
   -> file_line { 'kafka-logdir':
-    ensure => 'present',
-    path   => '/var/lib/kafka/config/server.properties',
-    line   => 'log.dirs=/var/log/kafka',
-    match  => 'log.dirs=',
-    notify => Service['kafka'],
+    ensure  => 'present',
+    path    => '/var/lib/kafka/config/server.properties',
+    line    => 'log.dirs=/var/log/kafka',
+    match   => 'log.dirs=',
+    notify  => Service['kafka'],
+    require => Exec['untar-kafka'],
   }
   -> file_line { 'zookeeper-listen':
-    ensure => 'present',
-    path   => '/var/lib/kafka/config/zookeeper.properties',
-    line   => 'clientPortAddress=127.0.0.1',
-    match  => 'clientPortAddress=',
-    notify => Service['zookeeper'],
+    ensure  => 'present',
+    path    => '/var/lib/kafka/config/zookeeper.properties',
+    line    => 'clientPortAddress=127.0.0.1',
+    match   => 'clientPortAddress=',
+    notify  => Service['zookeeper'],
+    require => Exec['untar-kafka'],
   }
   exec { 'untar-kafka':
     command     => '/bin/tar -xvf /tmp/kafka.tgz -C /var/lib/kafka --strip 1',
