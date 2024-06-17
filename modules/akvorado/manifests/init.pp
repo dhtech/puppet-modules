@@ -103,7 +103,7 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes) {
     source => 'puppet:///data/kafka-latest.tgz',
     notify => Exec[ 'untar-kafka' ],
   }
-  -> file { '/var/log/kafka':
+  file { '/var/log/kafka':
     ensure => 'directory',
     owner  => 'kafka',
     group  => 'kafka',

@@ -37,6 +37,7 @@ def get_prefixes(ipversion):
             ' FROM network'
             ' WHERE node_id NOT IN (SELECT option.node_id FROM option WHERE name = "no-akv")'
             ' AND name LIKE "%@%" AND ipv6_txt IS NOT NULL'
+            ' AND NOT (name = "BOGAL@DREAMHACK" AND ipv6_txt = "2a05:2240:5000::/48")'
             )
     else:
         raise NetworkTypeNotFoundError('network type must be 4 or 6')
