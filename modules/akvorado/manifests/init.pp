@@ -27,10 +27,10 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes, $snmpv3_provider
     managehome => true,
   }
   -> file { '/var/lib/kafka/kafka.tgz':
-    ensure  => file,
-    links   => follow,
-    source  => 'puppet:///data/kafka-latest.tgz',
-    notify  => Exec['untar-kafka']
+    ensure => file,
+    links  => follow,
+    source => 'puppet:///data/kafka-latest.tgz',
+    notify => Exec['untar-kafka']
   }
   -> file { '/var/log/kafka':
     ensure => 'directory',
@@ -66,45 +66,45 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes, $snmpv3_provider
     notify => [ Exec['systemctl-daemon-reload'], Service['zookeeper'] ],
   }
   -> file_line { 'kafka-enabledeletetopics':
-    ensure  => 'present',
-    path    => '/var/lib/kafka/config/server.properties',
-    line    => 'delete.topic.enable = true',
-    notify  => Service['kafka'],
+    ensure => 'present',
+    path   => '/var/lib/kafka/config/server.properties',
+    line   => 'delete.topic.enable = true',
+    notify => Service['kafka'],
   }
   -> file_line { 'kafka-listenlocalhost':
-    ensure  => 'present',
-    path    => '/var/lib/kafka/config/server.properties',
-    line    => 'listeners=PLAINTEXT://localhost:9092',
-    match   => '#listeners=PLAINTEXT',
-    notify  => Service['kafka'],
+    ensure => 'present',
+    path   => '/var/lib/kafka/config/server.properties',
+    line   => 'listeners=PLAINTEXT://localhost:9092',
+    match  => '#listeners=PLAINTEXT',
+    notify => Service['kafka'],
   }
   -> file_line { 'kafka-logdir':
-    ensure  => 'present',
-    path    => '/var/lib/kafka/config/server.properties',
-    line    => 'log.dirs=/var/log/kafka',
-    match   => 'log.dirs=/tmp/kafka-logs',
-    notify  => Service['kafka'],
+    ensure => 'present',
+    path   => '/var/lib/kafka/config/server.properties',
+    line   => 'log.dirs=/var/log/kafka',
+    match  => 'log.dirs=/tmp/kafka-logs',
+    notify => Service['kafka'],
   }
   -> file_line { 'zookeeper-datadir':
-    ensure  => 'present',
-    path    => '/var/lib/kafka/config/zookeeper.properties',
-    line    => 'dataDir=/var/lib/zookeeper-data',
-    match   => 'dataDir=/tmp/zookeeper',
-    notify  => Service['zookeeper'],
+    ensure => 'present',
+    path   => '/var/lib/kafka/config/zookeeper.properties',
+    line   => 'dataDir=/var/lib/zookeeper-data',
+    match  => 'dataDir=/tmp/zookeeper',
+    notify => Service['zookeeper'],
   }
   -> file_line { 'zookeeper-listen':
-    ensure  => 'present',
-    path    => '/var/lib/kafka/config/zookeeper.properties',
-    line    => 'clientPortAddress=127.0.0.1',
-    notify  => Service['zookeeper'],
+    ensure => 'present',
+    path   => '/var/lib/kafka/config/zookeeper.properties',
+    line   => 'clientPortAddress=127.0.0.1',
+    notify => Service['zookeeper'],
   }
   service { 'kafka':
-    ensure  => running,
-    enable  => true,
+    ensure => running,
+    enable => true,
   }
   service { 'zookeeper':
-    ensure  => running,
-    enable  => true,
+    ensure => running,
+    enable => true,
   }
 
   ##Clickhouse installation
@@ -140,11 +140,11 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes, $snmpv3_provider
     require => [File['clickhouse-source-add'], Exec['clickhouse-source-key'], Exec['apt-update']],
   }
   -> package { 'clickhouse-client':
-    ensure  => installed,
+    ensure => installed,
   }
   -> service { 'clickhouse-server':
-    ensure  => running,
-    enable  => true,
+    ensure => running,
+    enable => true,
   }
 
   #Create user/group for Akvorodo
@@ -155,8 +155,8 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes, $snmpv3_provider
     ensure => 'present',
       }
   -> user { 'akvorado':
-    ensure => 'present',
-    system => true,
+    ensure     => 'present',
+    system     => true,
     home       => '/var/lib/akvorado',
     managehome => true,
   }
@@ -232,20 +232,20 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes, $snmpv3_provider
     backend => 'http://localhost:8082/',
   }
   -> service { 'akvorado-orch':
-    ensure  => running,
-    enable  => true,
+    ensure => running,
+    enable => true,
   }
   -> service { 'akvorado-inlet':
-    ensure  => running,
-    enable  => true,
+    ensure => running,
+    enable => true,
   }
   -> service { 'akvorado-console':
-    ensure  => running,
-    enable  => true,
+    ensure => running,
+    enable => true,
   }
   -> service { 'redis':
-    ensure  => running,
-    enable  => true,
+    ensure => running,
+    enable => true,
   }
   exec { 'systemctl-daemon-reload':
     command     => '/bin/systemctl daemon-reload',
