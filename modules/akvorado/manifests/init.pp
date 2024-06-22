@@ -46,7 +46,7 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes, $snmpv3_provider
   }
   exec { 'untar-kafka':
     command     => '/bin/tar -xvf /var/lib/kafka/kafka.tgz -C /var/lib/kafka --strip 1',
-    refreshonly => 'true',
+    refreshonly => true,
     user        => 'kafka',
   }
   file { '/etc/systemd/system/kafka.service':
