@@ -27,7 +27,7 @@ def get_sflow_clients():
             "INNER JOIN option o1 ON h.node_id = o1.node_id "
             "INNER JOIN option o2 ON h.node_id = o2.node_id "
             "WHERE o1.name='pkg' AND o1.value='sflowclient' "
-            "AND o2.name='layer'"
+            "AND o2.name='layer';"
             )
     res = db.fetchall()
     if not res:
