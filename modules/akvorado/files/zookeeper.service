@@ -1,0 +1,13 @@
+[Unit]
+Requires=network.target remote-fs.target
+After=network.target remote-fs.target
+
+[Service]
+Type=simple
+User=kafka
+ExecStart=/var/lib/kafka/bin/zookeeper-server-start.sh /var/lib/kafka/config/zookeeper.properties
+ExecStop=/var/lib/kafka/bin/zookeeper-server-stop.sh
+Restart=on-abnormal
+
+[Install]
+WantedBy=multi-user.target

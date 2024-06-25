@@ -1,0 +1,15 @@
+[Unit]
+Description=Akvorado Console
+After=akvorado-orch.service
+Requires=akvorado-orch.service
+
+[Service]
+Type=simple
+Restart=on-failure
+RestartSec=15
+User=akvorado
+ExecStart=/usr/local/bin/akvorado console http://127.0.0.1:8080
+
+[Install]
+WantedBy=multi-user.target
+
