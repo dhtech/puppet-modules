@@ -150,13 +150,16 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes, $snmpv3_provider
   #Create user/group for Akvorodo
   ensure_packages([
     'redis',
-  ])
+  ],{
+    ensure => 'present',
+    notify => Service['redis'],
+  })
   group { 'akvorado':
     ensure => 'present',
       }
   -> user { 'akvorado':
-    ensure     => 'present',
-    system     => true,
+    ensure => 'present',
+    system => true,
     home       => '/var/lib/akvorado',
     managehome => true,
   }
@@ -227,23 +230,43 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes, $snmpv3_provider
     owner  => 'root',
     group  => 'root',
   }
-  apache::proxy { 'akvorado':
+  apache::proxy { '1_akvorado-orch-api':
+    url     => '/api/v0/orchestrator/',
+    backend => 'http://localhost:8080/api/v0/orchestrator/',
+  }
+  apache::proxy { '2_akvorado-inlet-api':
+    url     => '/api/v0/inlet/',
+    backend => 'http://localhost:8081/api/v0/inlet/',
+  }
+  apache::proxy { '3_akvorado-console':
     url     => '/',
     backend => 'http://localhost:8082/',
   }
-  -> service { 'akvorado-orch':
+  # By default apache answers with status code 404 when an URL contains an encoded slash (%2F) 
+  # The following allows apache to simply forward the request to the prox backend.
+  file { '/etc/apache2/conf-available/allow-slashes.conf':
+    content => 'AllowEncodedSlashes On',
+    ensure  => present,
+    mode    => '0644',
+  }
+  -> file { '/etc/apache2/conf-enabled/allow-slashes.conf':
+    ensure => link,
+    mode   => '0644',
+    target => '/etc/apache2/conf-available/allow-slashes.conf',
+  }
+  service { 'akvorado-orch':
     ensure => running,
     enable => true,
   }
-  -> service { 'akvorado-inlet':
+  service { 'akvorado-inlet':
     ensure => running,
     enable => true,
   }
-  -> service { 'akvorado-console':
+  service { 'akvorado-console':
     ensure => running,
     enable => true,
   }
-  -> service { 'redis':
+  service { 'redis':
     ensure => running,
     enable => true,
   }
