@@ -30,12 +30,8 @@
 		SSLCompression off
 		SSLOptions +StrictRequire
 
-
-                SSLCertificateFile      /etc/dehydrated/certs/<%= @fqdn %>/cert.pem
-                SSLCertificateKeyFile /etc/dehydrated/certs/<%= @fqdn %>/privkey.pem
-                SSLCertificateChainFile /etc/dehydrated/certs/<%= @fqdn %>/fullchain.pem
-		#SSLCertificateFile /var/lib/puppet/ssl/certs/<%= @fqdn %>.pem
-		#SSLCertificateKeyFile /var/lib/puppet/ssl/private_keys/<%= @fqdn %>.pem
+		SSLCertificateFile /etc/ssl/certs/server-fullchain.crt
+		SSLCertificateKeyFile /etc/ssl/private/server.key
 
 
                 <FilesMatch "\.(cgi|shtml|phtml|php)$">
