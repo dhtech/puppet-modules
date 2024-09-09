@@ -24,7 +24,7 @@ class request {
 
   ensure_packages([
     'apache2', 'php', 'php-cli', 'libapache2-mod-php', 'php-gd', 'php-xml',
-    'php-mbstring', 'php-pgsql'
+    'php-mbstring', 'php-pgsql', 'php-curl'
   ])
 
   user { 'deployer':
