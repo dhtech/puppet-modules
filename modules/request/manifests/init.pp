@@ -64,7 +64,15 @@ class request {
     ],
   }
 
-  exec { 'a2enmod':
+  exec { 'a2enmod php8.2':
+    path    => [ '/bin', '/usr/bin', '/usr/sbin' ],
+    command => 'a2enmod php8.2',
+    creates => '/etc/apache2/mods-enabled/php8.2.conf',
+    notify  => Service['apache2'],
+    require => Package['apache2'],
+  }
+
+  exec { 'a2enmod ssl':
     path    => [ '/bin', '/usr/bin', '/usr/sbin' ],
     command => 'a2enmod ssl',
     creates => '/etc/apache2/mods-enabled/ssl.conf',
