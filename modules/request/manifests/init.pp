@@ -15,8 +15,9 @@
 #   Explanation of what this parameter affects and what it defaults to.
 #   e.g. "Specify one or more upstream ntp servers as an array."
 #
-
 class request {
+  include stdlib
+
   $dhid    = vault("app:${::fqdn}", {})
   $dbname  = $::fqdn
   $db      = vault("postgresql:${dbname}", {})
@@ -24,7 +25,7 @@ class request {
 
   ensure_packages([
     'apache2', 'php', 'php-cli', 'libapache2-mod-php', 'php-gd', 'php-xml',
-    'php-mbstring', 'php-pgsql', 'php-curl'
+    'php-mbstring', 'php-pgsql', 'php-curl', 'php8.2-imagick', 'ghostscript'
   ])
 
   user { 'deployer':
@@ -106,8 +107,8 @@ class request {
 
   file { "${webroot}/storage":
     ensure  => directory,
-    mode    => '0755',
-    owner   => 'www-data',
+    mode    => '0775',
+    owner   => 'deployer',
     group   => 'www-data',
     require => File[$webroot],
   }
@@ -122,8 +123,8 @@ class request {
 
   file { "${webroot}/storage/debugbar":
     ensure  => directory,
-    mode    => '0755',
-    owner   => 'www-data',
+    mode    => '0775',
+    owner   => 'deployer',
     group   => 'www-data',
     require => File["${webroot}/storage"],
   }
@@ -138,24 +139,24 @@ class request {
 
   file { "${webroot}/storage/framework/cache":
     ensure  => directory,
-    mode    => '0755',
-    owner   => 'www-data',
+    mode    => '0775',
+    owner   => 'deployer',
     group   => 'www-data',
     require => File["${webroot}/storage/framework"],
   }
 
   file { "${webroot}/storage/framework/sessions":
     ensure  => directory,
-    mode    => '0755',
-    owner   => 'www-data',
+    mode    => '0775',
+    owner   => 'deployer',
     group   => 'www-data',
     require => File["${webroot}/storage/framework"],
   }
 
   file { "${webroot}/storage/framework/views":
     ensure  => directory,
-    mode    => '0755',
-    owner   => 'www-data',
+    mode    => '0775',
+    owner   => 'deployer',
     group   => 'www-data',
     require => File["${webroot}/storage/framework"],
   }
@@ -170,8 +171,8 @@ class request {
 
   file { "${webroot}/cache":
     ensure  => directory,
-    mode    => '0755',
-    owner   => 'www-data',
+    mode    => '0775',
+    owner   => 'deployer',
     group   => 'www-data',
     require => File[$webroot],
   }
@@ -214,6 +215,12 @@ class request {
     source => 'puppet:///letsencrypt/privkey.pem',
     links  => 'follow',
     notify => Service['apache2'],
+  }
+
+  file_line { 'allow ImageMagick to work on pdf':
+    path  => '/etc/ImageMagick-6/policy.xml',
+    line  => '<!-- <policy domain="coder" rights="none" pattern="PDF" /> -->',
+    match => '<policy domain="coder" rights="none" pattern="PDF" />',
   }
 
 }
