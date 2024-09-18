@@ -223,4 +223,21 @@ class request {
     match => '<policy domain="coder" rights="none" pattern="PDF" />',
   }
 
+  file { "${webroot}/cron.sh":
+    ensure  => 'file',
+    path    => "${webroot}/cron.sh",
+    owner   => 'deployer',
+    group   => 'www-data',
+    mode    => '0755',
+    content => template('request/cron.erb'),
+    require => File[$webroot],
+  }
+
+  cron { 'run request system scheduler':
+    ensure  => present,
+    command => "${webroot}/cron.sh",
+    user    => 'root',
+    minute  => '*',
+    require => File["${webroot}/cron.sh"],
+  }
 }
