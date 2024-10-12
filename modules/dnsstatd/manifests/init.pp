@@ -15,7 +15,7 @@
 
 class dnsstatd($current_event) {
 
-  $secret_db_dnsstatd   = vault('postgresql:dnsstatd', {})
+  $secret_db_dnsstatd = vault('postgresql:dnsstatd', {})
 
   ensure_packages([
     'python3-netifaces',
@@ -36,8 +36,23 @@ class dnsstatd($current_event) {
     provider => 'pip',
   }
 
+  file { '/opt/dnsstatd':
+    ensure => directory,
+    mode   => '0750',
+    owner  => 'root',
+    group  => 'root',
+  }
+
+  file { '/opt/dnsstatd/dnsstatd.py':
+      ensure => present,
+      source => 'puppet:///repos/dnsstatd/dnsstatd.py',
+      mode   => '0750',
+      owner  => 'root',
+      group  => 'root',
+  }
+
   if $secret_db_dnsstatd != {} {
-    file { '/scripts/dnsstatd/config':
+    file { '/opt/dnsstatd/config':
       ensure  => file,
       content => template('dnsstatd/config.erb'),
       mode    => '0600',
@@ -46,7 +61,6 @@ class dnsstatd($current_event) {
   }
 
   supervisor::register { 'dnsstatd':
-    command => '/scripts/dnsstatd/dnsstatd.py',
+    command => '/opt/dnsstatd/dnsstatd.py',
   }
-
 }
