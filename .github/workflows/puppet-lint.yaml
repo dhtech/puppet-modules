@@ -1,0 +1,27 @@
+name: CI
+on:
+  pull_request:
+    branches:
+      - master
+      - main
+    paths-ignore:
+      - "**.md"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # This uses an Ubuntu runner to execute Docker
+
+    container:
+      image: quay.io/dhtech/puppet-ci:latest  # Use the specified Docker image from Quay.io
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Puppet lint
+        run: |
+          /root/.rbenv/shims/puppet-lint --no-puppet_url_without_modules-check --fail-on-warnings .
+
+      - name: ERB lint
+        run: |
+          /root/.rbenv/shims/rails-erb-lint check
