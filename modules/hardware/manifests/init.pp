@@ -18,13 +18,13 @@ class hardware {
 
   if defined('$::productname') and $::productname =~ /VMware/ {
     # OpenBSD does not use open-vm-tools, see the vmt(4) driver.
-    if $::operatingsystem != 'OpenBSD' {
+    if $facts['operatingsystem'] != 'OpenBSD' {
       package { 'open-vm-tools':
         ensure => installed
       }
     }
   } else {
-    if $::manufacturer == 'HP' {
+    if $facts['manufacturer'] == 'HP' {
       package { 'gnupg':
         ensure => installed
       }
@@ -63,8 +63,8 @@ class hardware {
         ensure => installed
       }
 
-    } elsif $::productname == 'Wedge-DC-F 20-001331' {
-      if $::kernelrelease =~ /OpenNetworkLinux/ {
+    } elsif $facts['productname'] == 'Wedge-DC-F 20-001331' {
+      if $facts['kernelrelease'] =~ /OpenNetworkLinux/ {
         service { 'onlpd':
           ensure => 'stopped',
           enable => false,

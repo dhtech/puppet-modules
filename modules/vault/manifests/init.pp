@@ -20,7 +20,7 @@ class vault {
     provider => 'pip',
   }
 
-  if $::kernel == 'Linux' {
+  if $facts['kernel'] == 'Linux' {
     file { 'vault':
       ensure => file,
       path   => '/usr/local/bin/vault',
@@ -35,7 +35,7 @@ class vault {
     }
   }
 
-  if $::operatingsystem == 'Debian' and $::operatingsystemmajrelease == '11' {
+  if $facts['operatingsystem'] == 'Debian' and $facts['operatingsystemmajrelease'] == '11' {
     file { 'vault-input':
       ensure => file,
       path   => '/usr/local/bin/vault-input',
@@ -65,7 +65,7 @@ class vault {
     path   => '/usr/local/bin/vault-auth',
   }
 
-  if $::operatingsystem == 'Debian' and $::operatingsystemmajrelease == '11' {
+  if $facts['operatingsystem'] == 'Debian' and $facts['operatingsystemmajrelease'] == '11' {
     file { 'vault-machine':
       ensure => file,
       path   => '/usr/local/bin/vault-machine',
@@ -82,7 +82,7 @@ class vault {
     }
   }
 
-  if $::operatingsystem == 'Debian' and $::operatingsystemmajrelease == '11' {
+  if $facts['operatingsystem'] == 'Debian' and $facts['operatingsystemmajrelease'] == '11' {
     file { 'dh-create-service-account':
       ensure => file,
       path   => '/usr/local/bin/dh-create-service-account',
