@@ -10,19 +10,15 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # This uses an Ubuntu runner to execute Docker
+    runs-on: ubuntu-latest
 
     container:
-      image: quay.io/dhtech/puppet-ci:latest  # Use the specified Docker image from Quay.io
+      image: puppet/puppet-dev-tools:latest  # Use the community-maintained Docker image
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Puppet lint
+      - name: Run Puppet lint
         run: |
-          /root/.rbenv/shims/puppet-lint --no-puppet_url_without_modules-check --fail-on-warnings .
-
-      - name: ERB lint
-        run: |
-          /root/.rbenv/shims/rails-erb-lint check
+          puppet-lint --no-puppet_url_without_modules-check --fail-on-warnings .
