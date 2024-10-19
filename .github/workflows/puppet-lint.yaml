@@ -1,9 +1,10 @@
-name: CI
+name: puppet linting
 on:
   pull_request:
     branches:
       - master
       - main
+      - production
     paths-ignore:
       - "**.md"
 
