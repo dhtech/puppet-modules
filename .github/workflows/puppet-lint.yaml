@@ -10,7 +10,6 @@ on:
 
 jobs:
   puppet-lint:
-
     runs-on: ubuntu-latest
 
     steps:
