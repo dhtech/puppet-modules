@@ -20,7 +20,7 @@ class vault {
     provider => 'pip',
   }
 
-  if $::kernel == 'Linux' {
+  if $facts['kernel'] == 'Linux' {
     file { 'vault':
       ensure => file,
       path   => '/usr/local/bin/vault',
