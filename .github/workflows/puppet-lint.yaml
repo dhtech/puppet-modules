@@ -9,16 +9,16 @@ on:
       - "**.md"
 
 jobs:
-  build:
+  puppet-lint:
+
     runs-on: ubuntu-latest
 
-    container:
-      image: puppet/puppet-dev-tools:latest  # Use the community-maintained Docker image
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout
+      uses: actions/checkout@v5
 
-      - name: Run Puppet lint
-        run: |
-          puppet-lint --no-puppet_url_without_modules-check --fail-on-warnings .
+    - name: puppet-lint
+      uses: scottbrenner/puppet-lint-action@v1.0.4
+      with:
+        args: ./
+        
