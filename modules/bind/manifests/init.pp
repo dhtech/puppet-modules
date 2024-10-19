@@ -34,6 +34,7 @@ class bind($role='resolver', $networks = [], $zones = [], $private_zones = [],
   if $::operatingsystem == 'OpenBSD' {
     $named_user = '_bind'
     $conf_dir = '/var/named/etc'
+    $log_dir = '/var/log/named'
     $conf_cfg = 'etc'
     $package_name = 'isc-bind'
     $rc_name = 'isc_named'
@@ -53,6 +54,7 @@ class bind($role='resolver', $networks = [], $zones = [], $private_zones = [],
   else {
     $named_user = 'bind'
     $conf_dir = '/etc/bind'
+    $log_dir = '/var/log/bind'
     $conf_cfg = '/etc/bind'
     $package_name = 'bind9'
     $rc_name = 'bind9'
@@ -121,6 +123,16 @@ class bind($role='resolver', $networks = [], $zones = [], $private_zones = [],
     group   => $named_user,
     mode    => '0770',
     path    => $dump_dir,
+    require => Package[$package_name],
+  }
+
+# Make sure the log directory exists
+  file { 'logdir':
+    ensure  => 'directory',
+    owner   => $named_user,
+    group   => $named_user,
+    mode    => '0770',
+    path    => $log_dir,
     require => Package[$package_name],
   }
 
