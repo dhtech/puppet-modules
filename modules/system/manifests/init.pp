@@ -100,7 +100,7 @@ class system($ca) {
     creates => '/scripts/.git/modules',
   }
 
-  if $::kernelrelease =~ /OpenNetworkLinux/ {
+  if $facts['kernelrelease'] =~ /OpenNetworkLinux/ {
     package { 'snmpd':
       ensure => 'purged',
     }
