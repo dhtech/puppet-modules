@@ -24,10 +24,10 @@ def open_db():
       conn = sqlite3.connect(db_file)
       db = conn.cursor()
     except sqlite3.Error as e:
-      print >>sys-stderr, "An error accurd:", e.args[0]
+      print("An error accurd:", e.args[0], file=sys-stderr)
       sys.exit(1)
   else:
-    print >>sys-stderr, "No database file found: %s" % db_file
+    print("No database file found: %s" % db_file, file=sys-stderr)
     sys.exit(2)
   return db
 
@@ -87,7 +87,7 @@ access_switches = get_access_switches(db)
 try:
   output_file = open('%s/%s' % (export_dir, export_file), 'w')
 except:
-  print >>sys.stderr, "Unable to open export file for writing"
+  print("Unable to open export file for writing", file=sys.stderr)
   sys.exit(1)
   
 
@@ -107,8 +107,8 @@ for filename in rancid_conf_files:
   table_interfaces = cfg.find_objects_w_child(parentspec='^interface GigabitEthernet', childspec='^ description BORD;')
   for intf in table_interfaces:
     if get_circuit_id_access_switch(intf) != get_description_access_switch(intf):
-      print get_circuit_id_access_switch(intf)
-      print get_description_access_switch(intf)
+      print(get_circuit_id_access_switch(intf))
+      print(get_description_access_switch(intf))
   checks = {
       "IpDhcpSnooping": bool(cfg.find_objects('^ip dhcp snooping$') and cfg.find_objects('ip dhcp snooping vlan 601')),
 
@@ -130,5 +130,5 @@ for filename in rancid_conf_files:
       "SpanningTreeInstance": cfg.find_objects('^spanning-tree mst configuration$')[0].has_child_with('^ instance 1 vlan 2-4094$'),
   }
   
-  for k, v in checks.items():
+  for k, v in list(checks.items()):
     output_file.write('dist_check{{device="{}",check="{}"}} {} {}\n'.format(filename, k, int(v), int(time.time()*1000)))
