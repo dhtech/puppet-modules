@@ -2,6 +2,5 @@
 --relative
 --no-class_inherits_from_params_class-check
 --no-documentation-check
---no-single_quote_string_with_variables-check
 --no-puppet_url_without_modules-check
 --no-legacy_facts
