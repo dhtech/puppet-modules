@@ -41,8 +41,8 @@ class wireguard {
     unless  => '/usr/bin/ip addr show wg0 | grep 77.80.229.133/25'
   }
 
-  file { '/tmp/wireguard/wireguard-clients.yaml':
-    ensure  => directory,
+  file { '/etc/wireguard/wireguard-clients.yaml':
+    ensure  => file,
     recurse => remote,
     source  => 'puppet:///svn/$::{current_event}/services/wireguard-clients.yaml',
 }
