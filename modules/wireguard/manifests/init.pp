@@ -33,7 +33,7 @@ class wireguard($current_event) {
   exec { 'add-key':
     command => '/usr/bin/wg set wg0 listen-port 51820 private-key /etc/wireguard/privkey',
     require => Exec['create-pubkey'],
-  
+  }
 
 
 # Set wireguard interface IP
@@ -44,7 +44,7 @@ class wireguard($current_event) {
   }
 
   file { '/etc/wireguard/yaml':
-  require => Exec['set-IP'],
+  require   => Exec['set-IP'],
     ensure  => directory,
     recurse => remote,
     source  => 'puppet:///svn/$::{current_event}/services/wireguard',
@@ -63,7 +63,6 @@ class wireguard($current_event) {
 # Sync changes towards the wg0 interface
   exec { 'syncConf':
     require => file['setConf'],
-    require => Package['wireguard'],
     command => '/usr/bin/wg syncconf wg0 /etc/wireguard/wg0.conf',
   }
 }
