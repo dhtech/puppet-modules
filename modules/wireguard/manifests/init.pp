@@ -25,7 +25,7 @@ class wireguard($current_event) {
 
   exec { 'create-pubkey':
     command => '/usr/bin/wg genkey > /etc/wireguard/privkey',
-    unless  => '/usr/bin/ls /etc/wireguard/privkey'
+    unless  => '/usr/bin/ls /etc/wireguard/privkey',
     require => Exec['create-privkey'],
   }
 
