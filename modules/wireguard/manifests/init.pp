@@ -35,7 +35,7 @@ class wireguard {
 # Build the wg0 config file will all clients from previous step
   file { 'setConf':
     ensure  => file,
-    path    => "/etc/wireguard/wg0.conf",
+    path    => '/etc/wireguard/wg0.conf',
     notify  => Exec[syncConf],
     content => template('wireguard/templates/wg0.conf.erb'),
   }
