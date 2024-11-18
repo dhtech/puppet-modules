@@ -7,14 +7,14 @@ class wireguard {
   # Install wireguard package
   package { 'wireguard':
     require => Exec['apt-update'],        # require 'apt-update' before installing
-    ensure => installed,
+    ensure  => installed,
   }
 
   # Create wireguard interface
   exec { 'create':
     require => Package['wireguard'],
     command => '/usr/bin/ip link add dev wg0 type wireguard',
-   unless => '/usr/bin/ip link show wg0'
+    unless  => '/usr/bin/ip link show wg0'
   }
 
 
@@ -22,7 +22,7 @@ class wireguard {
   exec { 'set wg interface IP':
     require => Package['wireguard'],
     command => '/usr/bin/ip address add dev wg0 77.80.200.129/25',
-    unless => '/usr/bin/ip addr show wg0 | grep 77.80.200.129/25'
+    unless  => '/usr/bin/ip addr show wg0 | grep 77.80.200.129/25'
   }
 
 # Specify all clients usable IPs 77.80.200.130 - 77.80.200.254
