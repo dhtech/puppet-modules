@@ -1,5 +1,5 @@
 <% require 'yaml' %>
-<% clients = YAML.load_file('/tmp/wireguard/wireguard-clients.yaml')['clients'] %>
+<% clients = YAML.load_file('/etc/wireguard/wireguard-clients.yaml')['clients'] %>
 
 <% clients.each do |nick, client| -%>
 # <%= nick %>
