@@ -1,4 +1,4 @@
-class wireguard {
+class wireguard($current_event) {
   # Execute 'apt-get update'
   exec { 'apt-update':                    # exec resource named 'apt-update'
     command => '/usr/bin/apt-get update'  # command this resource will run
@@ -20,28 +20,31 @@ class wireguard {
   exec { 'create-privkey':
     command => '/usr/bin/wg pubkey < /etc/wireguard/privkey > /etc/wireguard/pubkey',
     unless  => '/usr/bin/ls /etc/wireguard/privkey'
+    require => Exec['create'],
   }
 
   exec { 'create-pubkey':
     command => '/usr/bin/wg genkey > /etc/wireguard/privkey',
     unless  => '/usr/bin/ls /etc/wireguard/privkey'
+    require => Exec['create-privkey'],
   }
 
 
   exec { 'add-key':
     command => '/usr/bin/wg set wg0 listen-port 51820 private-key /etc/wireguard/privkey',
-    require => Exec['create-key'],        # require 'apt-update' before installing
-  }
+    require => Exec['create-pubkey'],
+  
 
 
 # Set wireguard interface IP
-  exec { 'set wg interface IP':
-    require => Package['wireguard'],
+  exec { 'set-IP':
+    require => Exec['add-key'],
     command => '/usr/bin/ip address add dev wg0 77.80.229.133/25',
     unless  => '/usr/bin/ip addr show wg0 | grep 77.80.229.133/25'
   }
 
   file { '/etc/wireguard/yaml':
+  require => Exec['set-IP'],
     ensure  => directory,
     recurse => remote,
     source  => 'puppet:///svn/$::{current_event}/services/wireguard',
@@ -59,6 +62,7 @@ class wireguard {
 
 # Sync changes towards the wg0 interface
   exec { 'syncConf':
+    require => file['setConf'],
     require => Package['wireguard'],
     command => '/usr/bin/wg syncconf wg0 /etc/wireguard/wg0.conf',
   }
