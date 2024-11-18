@@ -1,13 +1,10 @@
-[Interface]
-#Just placeholder privkey will be pulled from vault
-PrivateKey = UJywHJtV58X11nF6zmouBCmfKfKbH4iggugRA/Th/k8=
-ListenPort = 51820
+<% require 'yaml' %>
+<% clients = YAML.load_file('/tmp/wireguard/wireguard-clients.yaml')['clients'] %>
 
-
-<% @clients.each do |client| -%>
-#<%= client['nick'] %>
+<% clients.each do |nick, client| -%>
+# <%= nick %>
 [Peer]
-PublicKey = <%= client['key'] %>
+PublicKey = <%= client['publickey'] %>
 AllowedIPs = <%= client['ip'] %>
 
 <% end -%>

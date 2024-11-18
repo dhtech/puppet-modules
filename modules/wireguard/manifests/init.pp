@@ -17,19 +17,35 @@ class wireguard {
     unless  => '/usr/bin/ip link show wg0'
   }
 
+  exec { 'create-privkey':
+    command => '/usr/bin/wg pubkey < /etc/wireguard/privkey > /etc/wireguard/pubkey',
+    unless  => '/usr/bin/ls /etc/wireguard/privkey'
+  }
+
+  exec { 'create-pubkey':
+    command => '/usr/bin/wg genkey > /etc/wireguard/privkey',
+    unless  => '/usr/bin/ls /etc/wireguard/privkey'
+  }
+
+
+  exec { 'add-key':
+    command => '/usr/bin/wg set wg0 listen-port 51820 private-key /etc/wireguard/privkey',
+    require => Exec['create-key'],        # require 'apt-update' before installing
+  }
+
 
 # Set wireguard interface IP
   exec { 'set wg interface IP':
     require => Package['wireguard'],
-    command => '/usr/bin/ip address add dev wg0 77.80.200.129/25',
-    unless  => '/usr/bin/ip addr show wg0 | grep 77.80.200.129/25'
+    command => '/usr/bin/ip address add dev wg0 77.80.229.133/25',
+    unless  => '/usr/bin/ip addr show wg0 | grep 77.80.229.133/25'
   }
 
-# Specify all clients usable IPs 77.80.200.130 - 77.80.200.254
-  $clients = [
-    { nick => 'felix', ip => '77.80.200.130', key => '5Dk2crqm8A51OQ1blVK701YMZj33U+GONpmLrr0LWkM=' },
-    { nick => 'washington', ip => '77.80.200.131', key => 'Z8aCXv4ydIhUEtvH+NJv39mAMGiS8uF8oNgCoIByAFI=' },
-  ]
+  file { '/tmp/wireguard/wireguard-clients.yaml':
+    ensure  => directory,
+    recurse => remote,
+    source  => 'puppet:///svn/$::{current_event}/services/wireguard-clients.yaml',
+}
 
 
 # Build the wg0 config file will all clients from previous step
