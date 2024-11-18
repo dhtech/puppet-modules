@@ -44,7 +44,7 @@ class wireguard {
   file { '/tmp/wireguard/wireguard-clients.yaml':
     ensure  => directory,
     recurse => remote,
-    source  => "puppet:///svn/${current_event}/services/wireguard-clients.yaml",
+    source  => "puppet:///svn/$::{current_event}/services/wireguard-clients.yaml",
 }
 
 
