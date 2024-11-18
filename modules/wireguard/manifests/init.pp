@@ -19,7 +19,7 @@ class wireguard($current_event) {
 
   exec { 'create-privkey':
     command => '/usr/bin/wg pubkey < /etc/wireguard/privkey > /etc/wireguard/pubkey',
-    unless  => '/usr/bin/ls /etc/wireguard/privkey',
+    unless  => '/usr/bin/ls /etc/wireguard/privkey'
     require => Exec['create'],
   }
 
