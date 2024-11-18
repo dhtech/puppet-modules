@@ -28,7 +28,7 @@ class wireguard {
   }
 
 
- exec { 'add-key':
+  exec { 'add-key':
     command => '/usr/bin/wg set wg0 listen-port 51820 private-key /etc/wireguard/privkey',
     require => Exec['create-key'],        # require 'apt-update' before installing
   }
