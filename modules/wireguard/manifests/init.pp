@@ -37,8 +37,8 @@ class wireguard {
 # Set wireguard interface IP
   exec { 'set wg interface IP':
     require => Package['wireguard'],
-    command => '/usr/bin/ip address add dev wg0 77.80.200.129/25',
-    unless  => '/usr/bin/ip addr show wg0 | grep 77.80.200.129/25'
+    command => '/usr/bin/ip address add dev wg0 77.80.229.133/25',
+    unless  => '/usr/bin/ip addr show wg0 | grep 77.80.229.133/25'
   }
 
   file { '/tmp/wireguard/wireguard-clients.yaml':
