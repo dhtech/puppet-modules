@@ -88,9 +88,15 @@ options {
 <% if @role == 'resolver' -%>
 
 logging {
-    category lame-servers {null;};
-    category client {null;};
 
+    // Set up a channel for logging DNS queries to a file
+    channel query_log {
+        file "/var/log/bind/query.log" versions 3 size 10m;
+        severity info;
+        print-time yes;
+    };
+    
+    // Configure syslog for general logging
     channel syslog {
         syslog daemon;
         print-time yes;
@@ -98,7 +104,15 @@ logging {
         print-severity yes;
         severity warning;
     };
-category default { syslog; };
+
+
+	// Disable logging for specific categories to reduce log clutter
+    category lame-servers { null; };
+    category client { null; };
+    // Log DNS queries to the query_log channel
+    category queries { query_log; };
+    // Use syslog for default logging category
+    category default { syslog; };
 };
 
 # root hints provided by dns-root-data package
