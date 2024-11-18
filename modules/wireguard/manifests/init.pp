@@ -54,6 +54,7 @@ class wireguard {
     path    => '/etc/wireguard/wg0.conf',
     notify  => Exec[syncConf],
     content => template('wireguard/wg0.conf.erb'),
+    require => file['/etc/wireguard/yaml'],        # require that yaml file exists before trying to use it....
   }
 
 # Sync changes towards the wg0 interface
