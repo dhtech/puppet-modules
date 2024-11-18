@@ -44,8 +44,8 @@ class wireguard($current_event) {
   }
 
   file { '/etc/wireguard/yaml':
-    require   => Exec['set-IP'],
     ensure  => directory,
+    require => Exec['set-IP'],
     recurse => remote,
     source  => 'puppet:///svn/$::{current_event}/services/wireguard',
 }
