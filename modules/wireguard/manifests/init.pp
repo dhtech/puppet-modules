@@ -53,7 +53,7 @@ class wireguard {
     ensure  => file,
     path    => '/etc/wireguard/wg0.conf',
     notify  => Exec[syncConf],
-    content => template('wireguard/templates/wg0.conf.erb'),
+    content => template('wireguard/wg0.conf.erb'),
   }
 
 # Sync changes towards the wg0 interface
