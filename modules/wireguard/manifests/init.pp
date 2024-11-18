@@ -6,8 +6,8 @@ class wireguard {
 
   # Install wireguard package
   package { 'wireguard':
-    require => Exec['apt-update'],        # require 'apt-update' before installing
     ensure  => installed,
+    require => Exec['apt-update'],        # require 'apt-update' before installing
   }
 
   # Create wireguard interface
