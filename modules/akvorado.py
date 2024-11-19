@@ -48,6 +48,10 @@ def get_snmpv2_providers():
     for client in clients:
         key = current_event+'-mgmt/snmpv2:'+client['layer']
         secrets = lib.read_secret(key)
+        if not secrets:
+            return
+        if not isinstance(secrets, Iterable):
+            return
         if "community" in secrets:
             provider = {
                     "ipv4": client["ipv4_addr"],
@@ -65,6 +69,10 @@ def get_snmpv3_providers():
     for client in clients:
         key = current_event+'-mgmt/snmpv3:'+client['layer']
         secrets = lib.read_secret(key)
+        if not secrets:
+            return
+        if not isinstance(secrets, Iterable):
+            return
         if "user" in secrets:
             provider = {
                     "ipv4": client["ipv4_addr"],
