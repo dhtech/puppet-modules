@@ -58,5 +58,12 @@ class wireguard($current_event) {
     recurse => remote,
     source  => "puppet:///svn/${current_event}/services/wireguard",
   }
+
+  file { 'setConf':
+    ensure  => file,
+    require => File['/etc/wireguard/yaml'],
+    path    => '/etc/wireguard/wg0.conf',
+    content => template('wireguard/wg0.conf.erb'),
+  }
 }
 
