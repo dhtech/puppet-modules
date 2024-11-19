@@ -17,10 +17,16 @@ class wireguard($current_event) {
     unless  => '/usr/bin/ip link show wg0'
   }
 
+  file{"/etc/wireguard":
+    ensure  =>  directory,
+    mode    =>  0600,
+  }
+
   # Create wireguard privkey
   exec { 'create-privkey':
     command => '/usr/bin/wg pubkey < /etc/wireguard/privkey > /etc/wireguard/pubkey',
     unless  => '/usr/bin/ls /etc/wireguard/privkey',
     require => Exec['create'],
+    require => File["/etc/wireguard"],
   }
 }
