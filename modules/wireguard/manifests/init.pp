@@ -54,7 +54,7 @@ class wireguard($current_event) {
 # Build the wg0 config file will all clients from previous step
   file { 'setConf':
     ensure  => file,
-    require => file['/etc/wireguard/yaml'],        # require that yaml file exists before trying to use it....
+    require => File['/etc/wireguard/yaml'],        # require that yaml file exists before trying to use it....
     path    => '/etc/wireguard/wg0.conf',
     notify  => Exec[syncConf],
     content => template('wireguard/wg0.conf.erb'),
