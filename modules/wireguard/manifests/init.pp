@@ -57,18 +57,11 @@ class wireguard($current_event) {
   }
 
   #Pull down clients
-  #file { '/etc/wireguard/yaml':
-  #  ensure  => directory,
-  #  require => Exec['set-IP'],
-  #  recurse => remote,
-  #  source  => "puppet:///svn/${current_event}/services/wireguard",
-  #}
-
-  file { 'setConf':
+  file { '/etc/wireguard/wg0.conf':
     ensure  => file,
-    require => File['/etc/wireguard/yaml'],
-    path    => '/etc/wireguard/wg0.conf',
-    content => template('wireguard/wg0.conf.erb', $yaml_data),
+    require => Exec['set-IP'],
+    recurse => remote,
+    source  => "puppet:///svn/${current_event}/services/wireguard-clients.txt",
   }
 }
 
