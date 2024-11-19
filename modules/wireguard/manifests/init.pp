@@ -3,7 +3,7 @@ class wireguard($current_event) {
   exec { 'apt-update':                    # exec resource named 'apt-update'
     command => '/usr/bin/apt-get update',  # command this resource will run
   }
-  notify {"Running with \$mysql_server_id ${::mysql_server_id} ID defined":}
+  notify {"step1":}
 
   # Install wireguard package
   package { 'wireguard':
@@ -51,7 +51,7 @@ class wireguard($current_event) {
     source  => 'puppet:///svn/$::{current_event}/services/wireguard',
 }
 
-
+  notify {"step10":}
 # Build the wg0 config file will all clients from previous step
   file { 'setConf':
     ensure  => file,
