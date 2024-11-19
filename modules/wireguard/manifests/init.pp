@@ -1,4 +1,4 @@
-class wireguard($current_event, $tunnelIP) {
+class wireguard($current_event, $tunnelip) {
 
   # Open FW
   exec { 'Allow FORWARD':                    # exec resource named 'apt-update'
@@ -61,8 +61,8 @@ class wireguard($current_event, $tunnelIP) {
   #Set tunnel IP
   exec { 'set-IP':
     require => Exec['link-up'],
-    command => '/usr/bin/ip address add dev wg0 ${tunnelIP}',
-    unless  => '/usr/bin/ip addr show wg0 | grep ${tunnelIP}'
+    command => "/usr/bin/ip address add dev wg0 ${tunnelip}",
+    unless  => "/usr/bin/ip addr show wg0 | grep ${tunnelip}"
   }
 
   #Set port and privkey
