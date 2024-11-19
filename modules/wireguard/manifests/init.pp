@@ -18,16 +18,24 @@ class wireguard($current_event) {
 
   # Create wireguard privkey
   exec { 'create-privkey':
-    command => '/usr/bin/wg pubkey < /etc/wireguard/privkey > /etc/wireguard/pubkey',
+    command => '/usr/bin/wg genkey > /etc/wireguard/privkey',
     unless  => '/usr/bin/ls /etc/wireguard/privkey',
     require => File['/etc/wireguard'],
   }
 
+  # Create wireguard pubkey
+  exec { 'create-pubkey':
+    command => '/usr/bin/wg pubkey < /etc/wireguard/privkey > /etc/wireguard/pubkey',
+    unless  => '/usr/bin/ls /etc/wireguard/pubkey',
+    require => Exec['create-privkey'],
+  }
+
   # Create wireguard interface
   exec { 'create-interface':
-    require => Exec['create-privkey'],
+    require => Exec['create-pubkey'],
     command => '/usr/bin/ip link add dev wg0 type wireguard',
     unless  => '/usr/bin/ip link show wg0'
   }
 
 }
+
