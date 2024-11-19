@@ -3,6 +3,7 @@ class wireguard($current_event) {
   exec { 'apt-update':                    # exec resource named 'apt-update'
     command => '/usr/bin/apt-get update',  # command this resource will run
   }
+  notify {"Running with \$mysql_server_id ${::mysql_server_id} ID defined":}
 
   # Install wireguard package
   package { 'wireguard':
@@ -47,7 +48,7 @@ class wireguard($current_event) {
     ensure  => directory,
     require => Exec['set-IP'],
     recurse => remote,
-    source  => 'puppet:///svn/${current_event}/services/wireguard',
+    source  => 'puppet:///svn/$::{current_event}/services/wireguard',
 }
 
 
