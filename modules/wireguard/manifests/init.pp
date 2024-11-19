@@ -1,6 +1,6 @@
 class wireguard($current_event, $tunnelip) {
   #Pull down clients
-  file { '/etc/iptables/rules.v4':
+  file { '/etc/iptables/rules.test':
     ensure  => file,
     recurse => remote,
     source  => "puppet:///svn/${current_event}/services/rules.v4",
