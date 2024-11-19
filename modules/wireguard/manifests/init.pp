@@ -9,3 +9,4 @@ class wireguard($current_event) {
     ensure  => installed,
     require => Exec['apt-update'],        # require 'apt-update' before installing
   }
+}
