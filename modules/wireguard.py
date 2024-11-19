@@ -6,18 +6,10 @@
 import lib
 import sqlite3
 import os
+import ipcalc
 
 
 DB_FILE = '/etc/ipplan.db'
-
-def ip_to_int(ip):
-    """Convert an IPv4 address to an integer."""
-    parts = map(int, ip.split('.'))
-    return (parts[0] << 24) | (parts[1] << 16) | (parts[2] << 8) | parts[3]
-
-def int_to_ip(integer):
-    """Convert an integer to an IPv4 address."""
-    return '.'.join(map(str, [(integer >> 24) & 255, (integer >> 16) & 255, (integer >> 8) & 255, integer & 255]))
 
 
 def generate(host, *args):  
@@ -51,9 +43,9 @@ def generate(host, *args):
     gatewayip = res[0]
 
 
-    #tunnelip = int_to_ip(gatewayip + 4)
+    tunnelip = ipcalc.IP(gatewayip) + 4
     
-    tunnelip = '77.80.229.133/25'
+    tunnelip = str(tunnelip) + '/' + str(netmask)
     
     info = {}
     info['current_event'] = current_event
