@@ -70,7 +70,7 @@ class wireguard($current_event) {
   #Sync config file to tunnel config
   exec { 'syncConf':
     require => File['/etc/wireguard/wg0.conf'],
-    command => '/usr/bin/wg syncconf wg0 /etc/wireguard/wg0.conf',
+    command => '/usr/bin/wg addconf wg0 /etc/wireguard/wg0.conf',
   }
 }
 
