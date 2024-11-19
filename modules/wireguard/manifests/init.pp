@@ -56,7 +56,7 @@ class wireguard($current_event) {
     ensure  => directory,
     require => Exec['set-IP'],
     recurse => remote,
-    source  => "puppet:///svn/dhw24/services/wireguard",
+    source  => "puppet:///svn/${current_event}/services/wireguard",
   }
 }
 
