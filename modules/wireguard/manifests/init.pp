@@ -20,6 +20,7 @@ class wireguard($current_event) {
   file{"/etc/wireguard":
     ensure  =>  directory,
     mode    =>  0600,
+    require => File["/etc/wireguard"],
   }
 
   # Create wireguard privkey
@@ -27,6 +28,5 @@ class wireguard($current_event) {
     command => '/usr/bin/wg pubkey < /etc/wireguard/privkey > /etc/wireguard/pubkey',
     unless  => '/usr/bin/ls /etc/wireguard/privkey',
     require => Exec['create'],
-    require => File["/etc/wireguard"],
   }
 }
