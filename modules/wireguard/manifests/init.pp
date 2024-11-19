@@ -55,7 +55,6 @@ class wireguard($current_event) {
     ensure  => file,
     require => File['/etc/wireguard/yaml'],        # require that yaml file exists before trying to use it....
     path    => '/etc/wireguard/wg0.conf',
-    notify  => Exec[syncConf],
     content => template('wireguard/wg0.conf.erb'),
   }
 
