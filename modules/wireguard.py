@@ -3,13 +3,22 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file
 
-#!/usr/bin/python3
 import lib
 import sqlite3
 import os
 
 
 DB_FILE = '/etc/ipplan.db'
+
+def ip_to_int(ip):
+    """Convert an IPv4 address to an integer."""
+    parts = map(int, ip.split('.'))
+    return (parts[0] << 24) | (parts[1] << 16) | (parts[2] << 8) | parts[3]
+
+def int_to_ip(integer):
+    """Convert an integer to an IPv4 address."""
+    return '.'.join(map(str, [(integer >> 24) & 255, (integer >> 16) & 255, (integer >> 8) & 255, integer & 255]))
+
 
 def generate(host, *args):
     # Get current event, used to get up-to-date switch conf
@@ -31,7 +40,7 @@ def generate(host, *args):
     if not res:
         raise NodeNotFoundError('Node %s not found' % host)
 
-    subnet = res[0]
+    netmask = res[0]
 
     db.execute('SELECT ipv4_gateway_txt FROM network WHERE short_name = "TECH-WIREGUARD-VPN";')
     res = db.fetchone()
@@ -39,14 +48,14 @@ def generate(host, *args):
     if not res:
         raise NodeNotFoundError('Node %s not found' % host)
     
-    gatewayIP = res[0]
-    tunnelIP = ipaddress.ip_address(gatewayIP) + 4
-    print(str(tunnelIP) + '/' + str(subnet))
+    gatewayip = res[0]
 
 
+    tunnelip = int_to_ip(gatewayip + 4)
     
     info = {}
     info['current_event'] = current_event
+    info['tunnelip'] = tunnelip
     return {'wireguard': info}
 
 # vim: ts=4: sts=4: sw=4: expandtab
