@@ -13,11 +13,11 @@ def generate(host, *args):
 
     current_event = lib.get_current_event()
 
-    tunnelIP = '77.80.229.133/25'
+    tunnelip = '77.80.229.133/25'
     
     info = {}
     info['current_event'] = current_event
-    info['tunnelIP'] = tunnelIP
+    info['tunnelip'] = tunnelip
     return {'wireguard': info}
 
 # vim: ts=4: sts=4: sw=4: expandtab
