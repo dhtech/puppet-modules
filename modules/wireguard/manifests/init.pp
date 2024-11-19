@@ -50,5 +50,13 @@ class wireguard($current_event) {
     command => '/usr/bin/ip address add dev wg0 77.80.229.133/25',
     unless  => '/usr/bin/ip addr show wg0 | grep 77.80.229.133/25'
   }
+
+  #Pull down clients
+  file { '/etc/wireguard/yaml':
+    ensure  => directory,
+    require => Exec['set-IP'],
+    recurse => remote,
+    source  => 'puppet:///svn/$::{current_event}/services/wireguard',
+  }
 }
 
