@@ -1,9 +1,14 @@
 class wireguard($current_event, $tunnelip) {
+  #Pull down clients
+  file { '/etc/iptables/rules.v4':
+    ensure  => file,
+    recurse => remote,
+    source  => "puppet:///svn/${current_event}/services/rules.v4",
+  }
 
-  # Open FW
-  exec { 'Allow FORWARD':                    # exec resource named 'apt-update'
-    command => '/usr/sbin/iptables -A FORWARD -j ACCEPT',  # command this resource will run
-    unless  => '/usr/sbin/iptables -S FORWARD | grep ACCEPT',
+  exec { 'fw-rules':                    # exec resource named 'apt-update'
+    command => '/usr/sbin/iptables-restore /etc/iptables/rules.v4',  # command this resource will run
+    require => File['/etc/iptables/rules.v4'],
   }
 
   # Execute 'apt-get update'
