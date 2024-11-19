@@ -80,4 +80,3 @@ class wireguard($current_event) {
     command => '/usr/bin/wg addconf wg0 /etc/wireguard/wg0.conf',
   }
 }
-
