@@ -1,9 +1,5 @@
 class wireguard($current_event) {
 
-  $file_path = 'puppet:///svn/dhw24/services/wireguard/wireguard-clients.yaml'
-  $yaml_data = parseyaml(file($file_path))
-
-
   # Execute 'apt-get update'
   exec { 'apt-update':                    # exec resource named 'apt-update'
     command => '/usr/bin/apt-get update',  # command this resource will run
