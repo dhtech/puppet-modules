@@ -10,9 +10,9 @@ class wireguard($current_event) {
     require => Exec['apt-update'],        # require 'apt-update' before installing
   }
 
-  file{"/etc/wireguard":
+  file{ '/etc/wireguard':
     ensure  =>  directory,
-    mode    =>  0600,
+    mode    =>  '0600',
     require => Package['wireguard'],
   }
 
