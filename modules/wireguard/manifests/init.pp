@@ -1,5 +1,11 @@
 class wireguard($current_event) {
 
+  # Open FW
+  exec { 'Allow FORWARD':                    # exec resource named 'apt-update'
+    command => '/usr/sbin/iptables -A FORWARD -j ACCEPT',  # command this resource will run
+    unless  => '/usr/sbin/iptables -S FORWARD | grep ACCEPT',
+  }
+
   # Execute 'apt-get update'
   exec { 'apt-update':                    # exec resource named 'apt-update'
     command => '/usr/bin/apt-get update',  # command this resource will run
