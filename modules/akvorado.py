@@ -42,6 +42,8 @@ def get_sflow_clients():
 def get_snmpv2_providers():
     providers = []
     clients = get_sflow_clients()
+    if not clients:
+        return providers
     current_event = lib.get_current_event()
     for client in clients:
         key = current_event+'-mgmt/snmp:'+client['layer']
@@ -57,6 +59,8 @@ def get_snmpv2_providers():
 def get_snmpv3_providers():
     providers = []
     clients = get_sflow_clients()
+    if not clients:
+        return providers
     current_event = lib.get_current_event()
     for client in clients:
         key = current_event+'-mgmt/snmp:'+client['layer']
