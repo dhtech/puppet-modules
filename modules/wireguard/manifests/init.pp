@@ -48,7 +48,7 @@ class wireguard($current_event) {
   #Set port and privkey
   exec { 'add-key':
     command => '/usr/bin/wg set wg0 listen-port 51820 private-key /etc/wireguard/privkey',
-    require => Exec['link-up'],
+    #require => Exec['link-up'],
     unless  => '/usr/bin/wg | grep 51820'
   }
 
