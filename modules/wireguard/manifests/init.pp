@@ -8,7 +8,7 @@ class wireguard($current_event, $tunnelip) {
 
   exec { 'fw-rules':                    # exec resource named 'apt-update'
     command => '/usr/sbin/iptables-restore /etc/iptables/rules.v4',  # command this resource will run
-    require => File['/etc/iptables/rules.v4'],
+    require => File['/etc/iptables/rules.test'],
   }
 
   # Execute 'apt-get update'
