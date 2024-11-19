@@ -1,7 +1,4 @@
-<% require 'yaml' %>
-<% clients = YAML.load_file('puppet:///svn/dhw24/services/wireguard/wireguard-clients.yaml')['clients'] %>
-
-<% clients.each do |nick, client| -%>
+<% yaml_data['clients'].each do |nick, client| -%>
 # <%= nick %>
 [Peer]
 PublicKey = <%= client['publickey'] %>

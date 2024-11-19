@@ -1,4 +1,9 @@
 class wireguard($current_event) {
+
+  $file_path = 'puppet:///svn/${current_event}/services/wireguard/wireguard-clients.yaml'
+  $yaml_data = parseyaml(file($file_path))
+
+
   # Execute 'apt-get update'
   exec { 'apt-update':                    # exec resource named 'apt-update'
     command => '/usr/bin/apt-get update',  # command this resource will run
@@ -52,18 +57,18 @@ class wireguard($current_event) {
   }
 
   #Pull down clients
-  file { '/etc/wireguard/yaml':
-    ensure  => directory,
-    require => Exec['set-IP'],
-    recurse => remote,
-    source  => "puppet:///svn/${current_event}/services/wireguard",
-  }
+  #file { '/etc/wireguard/yaml':
+  #  ensure  => directory,
+  #  require => Exec['set-IP'],
+  #  recurse => remote,
+  #  source  => "puppet:///svn/${current_event}/services/wireguard",
+  #}
 
   file { 'setConf':
     ensure  => file,
     require => File['/etc/wireguard/yaml'],
     path    => '/etc/wireguard/wg0.conf',
-    content => template('wireguard/wg0.conf.erb'),
+    content => template('wireguard/wg0.conf.erb', $yaml_data),
   }
 }
 
