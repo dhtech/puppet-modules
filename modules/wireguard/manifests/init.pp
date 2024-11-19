@@ -37,5 +37,18 @@ class wireguard($current_event) {
     unless  => '/usr/bin/ip link show wg0'
   }
 
+  #Set port and privkey
+  exec { 'add-key':
+    command => '/usr/bin/wg set wg0 listen-port 51820 private-key /etc/wireguard/privkey',
+    require => Exec['create-interface'],
+    unless  => '/usr/bin/wg | grep 51820'
+  }
+
+  #Set tunnel IP
+  exec { 'set-IP':
+    require => Exec['add-key'],
+    command => '/usr/bin/ip address add dev wg0 77.80.229.133/25',
+    unless  => '/usr/bin/ip addr show wg0 | grep 77.80.229.133/25'
+  }
 }
 
