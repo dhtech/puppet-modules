@@ -156,10 +156,10 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes, $snmpv3_provider
   })
   group { 'akvorado':
     ensure => 'present',
-      }
+  }
   -> user { 'akvorado':
-    ensure => 'present',
-    system => true,
+    ensure     => 'present',
+    system     => true,
     home       => '/var/lib/akvorado',
     managehome => true,
   }
