@@ -1,6 +1,6 @@
 class wireguard($current_event) {
 
-  $file_path = 'puppet:///svn/${current_event}/services/wireguard/wireguard-clients.yaml'
+  $file_path = 'puppet:///svn/dhw24/services/wireguard/wireguard-clients.yaml'
   $yaml_data = parseyaml(file($file_path))
 
 
