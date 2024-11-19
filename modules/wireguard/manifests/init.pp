@@ -59,5 +59,11 @@ class wireguard($current_event) {
     recurse => remote,
     source  => "puppet:///svn/${current_event}/services/wireguard-clients.txt",
   }
+
+  #Sync config file to tunnel config
+  exec { 'syncConf':
+    require => File['/etc/wireguard/wg0.conf'],
+    command => '/usr/bin/wg syncconf wg0 /etc/wireguard/wg0.conf',
+  }
 }
 
