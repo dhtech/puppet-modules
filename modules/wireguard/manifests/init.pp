@@ -49,7 +49,7 @@ class wireguard($current_event) {
   exec { 'add-key':
     command => '/usr/bin/wg set wg0 listen-port 51820 private-key /etc/wireguard/privkey',
     #require => Exec['link-up'],
-    unless  => '/usr/bin/wg | grep 51820'
+    #unless  => '/usr/bin/wg | grep 51820'
   }
 
   #Set tunnel IP
