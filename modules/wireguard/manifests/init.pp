@@ -17,11 +17,18 @@ class wireguard($current_event) {
     require => Package['wireguard'],
   }
 
+  # Enable IPv4 Forwardning
+  exec { 'enable-forward':
+    command => '/usr/sbin/sysctl -w net.ipv4.ip_forward=1',
+    unless  => '/usr/sbin/sysctl net.ipv4.ip_forward | grep 0',
+    require => File['/etc/wireguard'],
+  }
+
   # Create wireguard privkey
   exec { 'create-privkey':
     command => '/usr/bin/wg genkey > /etc/wireguard/privkey',
     unless  => '/usr/bin/ls /etc/wireguard/privkey',
-    require => File['/etc/wireguard'],
+    require => Exec['enable-forward'],
   }
 
   # Create wireguard pubkey
@@ -67,7 +74,7 @@ class wireguard($current_event) {
     source  => "puppet:///svn/${current_event}/services/wireguard-clients.txt",
   }
 
-  #Sync config file to tunnel config
+  #Append config file to tunnel config
   exec { 'syncConf':
     require => File['/etc/wireguard/wg0.conf'],
     command => '/usr/bin/wg addconf wg0 /etc/wireguard/wg0.conf',
