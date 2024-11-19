@@ -25,7 +25,7 @@ class wireguard($current_event) {
 
   # Create wireguard interface
   exec { 'create-interface':
-    require => exec['create-privkey'],
+    require => Exec['create-privkey'],
     command => '/usr/bin/ip link add dev wg0 type wireguard',
     unless  => '/usr/bin/ip link show wg0'
   }
