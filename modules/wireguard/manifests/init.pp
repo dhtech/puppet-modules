@@ -9,11 +9,18 @@ class wireguard($current_event) {
     ensure  => installed,
     require => Exec['apt-update'],        # require 'apt-update' before installing
   }
-  
+
   # Create wireguard interface
   exec { 'create':
     require => Package['wireguard'],
     command => '/usr/bin/ip link add dev wg0 type wireguard',
     unless  => '/usr/bin/ip link show wg0'
+  }
+
+  # Create wireguard privkey
+  exec { 'create-privkey':
+    command => '/usr/bin/wg pubkey < /etc/wireguard/privkey > /etc/wireguard/pubkey',
+    unless  => '/usr/bin/ls /etc/wireguard/privkey',
+    require => Exec['create'],
   }
 }
