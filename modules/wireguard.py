@@ -20,7 +20,7 @@ def int_to_ip(integer):
     return '.'.join(map(str, [(integer >> 24) & 255, (integer >> 16) & 255, (integer >> 8) & 255, integer & 255]))
 
 
-def generate(host, *args):
+def generate(host, *args):  
     # Get current event, used to get up-to-date switch conf
     current_event = lib.get_current_event()
 
@@ -51,7 +51,9 @@ def generate(host, *args):
     gatewayip = res[0]
 
 
-    tunnelip = int_to_ip(gatewayip + 4)
+    #tunnelip = int_to_ip(gatewayip + 4)
+    
+    tunnelip = '77.80.229.133/25'
     
     info = {}
     info['current_event'] = current_event
