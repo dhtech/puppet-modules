@@ -44,7 +44,7 @@ def get_snmpv2_providers():
     clients = get_sflow_clients()
     current_event = lib.get_current_event()
     for client in clients:
-        key = current_event+'-mgmt/snmp:'+client['layer']
+        key = current_event+'-mgmt/snmpv2:'+client['layer']
         secrets = lib.read_secret(key)
         if "community" in secrets:
             provider = {
@@ -59,7 +59,7 @@ def get_snmpv3_providers():
     clients = get_sflow_clients()
     current_event = lib.get_current_event()
     for client in clients:
-        key = current_event+'-mgmt/snmp:'+client['layer']
+        key = current_event+'-mgmt/snmpv3:'+client['layer']
         secrets = lib.read_secret(key)
         if "user" in secrets:
             provider = {
