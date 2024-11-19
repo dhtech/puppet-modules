@@ -1,7 +1,0 @@
-<% yaml_data['clients'].each do |nick, client| -%>
-# <%= nick %>
-[Peer]
-PublicKey = <%= client['publickey'] %>
-AllowedIPs = <%= client['ip'] %>
-
-<% end -%>
