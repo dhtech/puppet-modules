@@ -1,15 +1,12 @@
 class wireguard($current_event, $tunnelip) {
-
-  if !($current_event =~ String[1]) {
-      #Pull down FW rules from SVN
-      file { '/etc/iptables/rules.v4':
-        ensure  => file,
-        recurse => remote,
-        creates => '/etc/iptables/rules.v4',
-        source  => "puppet:///svn/${current_event}/services/rules.v4",
-      }
-    }
-
+  #Pull down FW rules from SVN
+  file { '/etc/iptables/rules.v4':
+    ensure  => file,
+    recurse => remote,
+    creates => '/etc/iptables/rules.v4',
+    source  => "puppet:///svn/${current_event}/services/rules.v4",
+  }
+  
   #Apply FW rules 
   exec { 'fw-rules':
     command => '/usr/sbin/iptables-restore /etc/iptables/rules.v4',
