@@ -2,8 +2,8 @@ class wireguard($current_event, $tunnelip) {
   #Pull down FW rules from SVN
   if ($current_event =~ String[1]) {
     file { '/etc/iptables/rules.v4':
-      ensure  => file,
-      source  => "puppet:///svn/${current_event}/services/rules.v4",
+      ensure => file,
+      source => "puppet:///svn/${current_event}/services/rules.v4",
     }
   }
 
