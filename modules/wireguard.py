@@ -10,9 +10,7 @@ import ipcalc
 
 DB_FILE = '/etc/ipplan.db'
 
-
 def generate(host, *args): 
-
     # Get current event
     current_event = lib.get_current_event()
 
@@ -37,9 +35,7 @@ def generate(host, *args):
     db.execute('SELECT ipv4_gateway_txt FROM network WHERE short_name = "TECH-WIREGUARD-VPN";')
     res = db.fetchone()
     conn.close()
-    if not res:
-        raise NodeNotFoundError('Node %s not found' % host)
-    
+
     gatewayip = res[0]
     tunnelip = ipcalc.IP(gatewayip) + 4
     tunnelip = str(tunnelip) + '/' + str(netmask)
