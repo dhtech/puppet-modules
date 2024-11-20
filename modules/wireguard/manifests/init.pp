@@ -3,7 +3,7 @@ class wireguard($current_event, $tunnelip) {
   if ($current_event =~ String[1]) {
     file { '/etc/iptables/rules.v4':
       ensure => file,
-      source => "puppet:///svn/${current_event}/services/rules.v4",
+      source => "puppet:///svn/${current_event}/services/wireguard/rules.v4",
     }
   }
 
@@ -87,7 +87,7 @@ class wireguard($current_event, $tunnelip) {
     ensure  => file,
     require => Exec['set-IP'],
     recurse => remote,
-    source  => "puppet:///svn/${current_event}/services/wireguard-clients.txt",
+    source  => "puppet:///svn/${current_event}/services/wireguard/clients.txt",
   }
 
   #Append config file to tunnel config
