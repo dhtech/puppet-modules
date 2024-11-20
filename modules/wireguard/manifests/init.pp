@@ -1,19 +1,13 @@
 class wireguard($current_event, $tunnelip) {
 
   if !($current_event =~ String[1]) {
-      fail('Invalid current_event')
+      #Pull down FW rules from SVN
+      file { '/etc/iptables/rules.v4':
+        ensure  => file,
+        recurse => remote,
+        source  => "puppet:///svn/${current_event}/services/rules.v4",
+      }
     }
-
-  if !($tunnelip =~ String[1]) {
-      fail('Invalid tunnelip')
-    }
-
-  #Pull down FW rules from SVN
-  file { '/etc/iptables/rules.v4':
-    ensure  => file,
-    recurse => remote,
-    source  => "puppet:///svn/${current_event}/services/rules.v4",
-  }
 
   #Apply FW rules 
   exec { 'fw-rules':
@@ -73,12 +67,14 @@ class wireguard($current_event, $tunnelip) {
     command => '/usr/bin/ip link set up dev wg0',
     unless  => '/usr/bin/ip link show wg0 | grep UP'
   }
-
-  #Set tunnel IP
-  exec { 'set-IP':
-    require => Exec['link-up'],
-    command => "/usr/bin/ip address add dev wg0 ${tunnelip}",
-    unless  => "/usr/bin/ip addr show wg0 | grep ${tunnelip}"
+  
+  if !($tunnelip =~ String[1]) {
+    #Set tunnel IP
+    exec { 'set-IP':
+      require => Exec['link-up'],
+      command => "/usr/bin/ip address add dev wg0 ${tunnelip}",
+      unless  => "/usr/bin/ip addr show wg0 | grep ${tunnelip}"
+    }
   }
 
   #Set port and privkey
