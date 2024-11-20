@@ -10,7 +10,10 @@ import sys
 
 DB_FILE = '/etc/ipplan.db'
 
-def generate(host, *args): 
+def generate(host, *args):
+    netmask, gatewayip = None, None
+    info = {}
+
     # Get current event
     current_event = lib.get_current_event()
 
@@ -18,12 +21,14 @@ def generate(host, *args):
         try:
             conn = sqlite3.connect(DB_FILE)
             db = conn.cursor()
-        except sqlite3.Error as e:
-            print("An error occurred:", e.args[0])
-            sys.exit(2)
+        except sqlite3.Error:
+            info['current_event'] = current_event
+            info['tunnelip'] = tunnelip
+            return {'wireguard': info}
     else:
-        print("No database file found: %s" % DB_FILE)
-        sys.exit(3)
+        info['current_event'] = current_event
+        info['tunnelip'] = tunnelip
+        return {'wireguard': info}
 
     db.execute('SELECT ipv4_netmask_dec, ipv4_gateway_txt FROM network WHERE short_name = "TECH-WIREGUARD-VPN";')
     res = db.fetchone()
@@ -35,7 +40,7 @@ def generate(host, *args):
         tunnelip = str(tunnelip) + '/' + str(netmask)
     else:
         netmask, gatewayip = None, None
-    
+
     info = {}
     info['current_event'] = current_event
     info['tunnelip'] = tunnelip
