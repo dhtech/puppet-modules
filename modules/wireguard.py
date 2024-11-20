@@ -27,14 +27,13 @@ def generate(host, *args):
 
     db.execute('SELECT ipv4_netmask_dec, ipv4_gateway_txt FROM network WHERE short_name = "TECH-WIREGUARD-VPN";')
     res = db.fetchone()
+    conn.close()
 
     if res:
         netmask, gatewayip = res
     else:
         netmask, gatewayip = None, None
-    conn.close()
 
-    gatewayip = res[0]
     tunnelip = ipcalc.IP(gatewayip) + 4
     tunnelip = str(tunnelip) + '/' + str(netmask)
     
