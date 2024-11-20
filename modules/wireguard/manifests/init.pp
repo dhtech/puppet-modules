@@ -49,14 +49,14 @@ class wireguard($current_event, $tunnelip) {
   # Create wireguard privkey
   exec { 'create-privkey':
     command => '/usr/bin/wg genkey > /etc/wireguard/privkey',
-    creates  => '/etc/wireguard/privkey',
+    creates => '/etc/wireguard/privkey',
     require => Exec['enable-forward'],
   }
 
   # Create wireguard pubkey
   exec { 'create-pubkey':
     command => '/usr/bin/wg pubkey < /etc/wireguard/privkey > /etc/wireguard/pubkey',
-    creates  => '/etc/wireguard/pubkey',
+    creates => '/etc/wireguard/pubkey',
     require => Exec['create-privkey'],
   }
 
