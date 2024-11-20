@@ -67,7 +67,7 @@ class wireguard($current_event, $tunnelip) {
     command => '/usr/bin/ip link set up dev wg0',
     unless  => '/usr/bin/ip link show wg0 | grep UP'
   }
-  
+
   if !($tunnelip =~ String[1]) {
     #Set tunnel IP
     exec { 'set-IP':
