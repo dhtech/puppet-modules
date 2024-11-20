@@ -6,7 +6,6 @@ import lib
 import sqlite3
 import os
 import ipcalc
-import sys
 
 DB_FILE = '/etc/ipplan.db'
 
