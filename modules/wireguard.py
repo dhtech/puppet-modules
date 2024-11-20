@@ -25,15 +25,13 @@ def generate(host, *args):
         print("No database file found: %s" % DB_FILE)
         sys.exit(3)
 
-    db.execute('SELECT ipv4_netmask_dec FROM network WHERE short_name = "TECH-WIREGUARD-VPN";')
+    db.execute('SELECT ipv4_netmask_dec, ipv4_gateway_txt FROM network WHERE short_name = "TECH-WIREGUARD-VPN";')
     res = db.fetchone()
-    if not res:
-        raise NodeNotFoundError('Node %s not found' % host)
 
-    netmask = res[0]
-
-    db.execute('SELECT ipv4_gateway_txt FROM network WHERE short_name = "TECH-WIREGUARD-VPN";')
-    res = db.fetchone()
+    if res:
+        netmask, gatewayip = res
+    else:
+        netmask, gatewayip = None, None
     conn.close()
 
     gatewayip = res[0]
