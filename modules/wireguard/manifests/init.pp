@@ -3,7 +3,6 @@ class wireguard($current_event, $tunnelip) {
   if ($current_event =~ String[1]) {
     file { '/etc/iptables/rules.v4':
       ensure  => file,
-      recurse => remote,
       source  => "puppet:///svn/${current_event}/services/rules.v4",
     }
   }
