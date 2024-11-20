@@ -1,27 +1,30 @@
 class wireguard($current_event, $tunnelip) {
-  #Pull down clients
+  
+  #Pull down FW rules from SVN
   file { '/etc/iptables/rules.v4':
     ensure  => file,
     recurse => remote,
     source  => "puppet:///svn/${current_event}/services/rules.v4",
   }
 
-  exec { 'fw-rules':                    # exec resource named 'apt-update'
-    command => '/usr/sbin/iptables-restore /etc/iptables/rules.v4',  # command this resource will run
+  #Apply FW rules 
+  exec { 'fw-rules':                    
+    command => '/usr/sbin/iptables-restore /etc/iptables/rules.v4',
     require => File['/etc/iptables/rules.v4'],
   }
 
   # Execute 'apt-get update'
-  exec { 'apt-update':                    # exec resource named 'apt-update'
-    command => '/usr/bin/apt-get update',  # command this resource will run
+  exec { 'apt-update':
+    command => '/usr/bin/apt-get update',
   }
 
   # Install wireguard package
   package { 'wireguard':
     ensure  => installed,
-    require => Exec['apt-update'],        # require 'apt-update' before installing
+    require => Exec['apt-update'],
   }
 
+  #Create wireguard dir
   file{ '/etc/wireguard':
     ensure  =>  directory,
     mode    =>  '0600',
