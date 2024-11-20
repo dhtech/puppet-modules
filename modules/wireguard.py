@@ -12,8 +12,9 @@ import ipcalc
 DB_FILE = '/etc/ipplan.db'
 
 
-def generate(host, *args):  
-    # Get current event, used to get up-to-date switch conf
+def generate(host, *args): 
+
+    # Get current event
     current_event = lib.get_current_event()
 
     if os.path.isfile(DB_FILE):
@@ -41,10 +42,7 @@ def generate(host, *args):
         raise NodeNotFoundError('Node %s not found' % host)
     
     gatewayip = res[0]
-
-
     tunnelip = ipcalc.IP(gatewayip) + 4
-    
     tunnelip = str(tunnelip) + '/' + str(netmask)
     
     info = {}
