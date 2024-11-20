@@ -6,7 +6,7 @@ class wireguard($current_event, $tunnelip) {
     creates => '/etc/iptables/rules.v4',
     source  => "puppet:///svn/${current_event}/services/rules.v4",
   }
-  
+
   #Apply FW rules 
   exec { 'fw-rules':
     command => '/usr/sbin/iptables-restore /etc/iptables/rules.v4',
@@ -66,7 +66,7 @@ class wireguard($current_event, $tunnelip) {
     unless  => '/usr/bin/ip link show wg0 | grep UP'
   }
 
-  if !($tunnelip =~ String[1]) {
+  if ($tunnelip =~ String[1]) {
     #Set tunnel IP
     exec { 'set-IP':
       require => Exec['link-up'],
