@@ -8,7 +8,7 @@ class wireguard($current_event, $tunnelip) {
   }
 
   #Apply FW rules 
-  exec { 'fw-rules':     
+  exec { 'fw-rules':
     command => '/usr/sbin/iptables-restore /etc/iptables/rules.v4',
     require => File['/etc/iptables/rules.v4'],
   }
