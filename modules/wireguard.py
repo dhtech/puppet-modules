@@ -6,7 +6,7 @@ import lib
 import sqlite3
 import os
 import ipcalc
-
+import sys
 
 DB_FILE = '/etc/ipplan.db'
 
@@ -31,11 +31,10 @@ def generate(host, *args):
 
     if res:
         netmask, gatewayip = res
+        tunnelip = ipcalc.IP(gatewayip) + 4
+        tunnelip = str(tunnelip) + '/' + str(netmask)
     else:
         netmask, gatewayip = None, None
-
-    tunnelip = ipcalc.IP(gatewayip) + 4
-    tunnelip = str(tunnelip) + '/' + str(netmask)
     
     info = {}
     info['current_event'] = current_event
