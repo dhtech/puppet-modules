@@ -1,68 +1,98 @@
-class wireguard($current_event) {
+class wireguard($current_event, $tunnelip) {
+  #Pull down FW rules from SVN
+  if ($current_event =~ String[1]) {
+    file { '/etc/iptables/rules.v4':
+      ensure => file,
+      source => "puppet:///svn/${current_event}/services/wireguard/rules.v4",
+    }
+  }
+
+  #Apply FW rules 
+  exec { 'fw-rules':
+    command => '/usr/sbin/iptables-restore /etc/iptables/rules.v4',
+    require => File['/etc/iptables/rules.v4'],
+  }
+
   # Execute 'apt-get update'
-  exec { 'apt-update':                    # exec resource named 'apt-update'
-    command => '/usr/bin/apt-get update'  # command this resource will run
+  exec { 'apt-update':
+    command => '/usr/bin/apt-get update',
   }
 
   # Install wireguard package
   package { 'wireguard':
     ensure  => installed,
-    require => Exec['apt-update'],        # require 'apt-update' before installing
+    require => Exec['apt-update'],
+  }
+
+  #Create wireguard dir
+  file{ '/etc/wireguard':
+    ensure  =>  directory,
+    mode    =>  '0600',
+    require => Package['wireguard'],
+  }
+
+  # Enable IPv4 Forwardning
+  exec { 'enable-forward':
+    command => '/usr/sbin/sysctl -w net.ipv4.ip_forward=1',
+    unless  => '/usr/sbin/sysctl net.ipv4.ip_forward | grep 0',
+    require => File['/etc/wireguard'],
+  }
+
+  # Create wireguard privkey
+  exec { 'create-privkey':
+    command => '/usr/bin/wg genkey > /etc/wireguard/privkey',
+    creates => '/etc/wireguard/privkey',
+    require => Exec['enable-forward'],
+  }
+
+  # Create wireguard pubkey
+  exec { 'create-pubkey':
+    command => '/usr/bin/wg pubkey < /etc/wireguard/privkey > /etc/wireguard/pubkey',
+    creates => '/etc/wireguard/pubkey',
+    require => Exec['create-privkey'],
   }
 
   # Create wireguard interface
-  exec { 'create':
-    require => Package['wireguard'],
+  exec { 'create-interface':
+    require => Exec['create-pubkey'],
     command => '/usr/bin/ip link add dev wg0 type wireguard',
     unless  => '/usr/bin/ip link show wg0'
   }
 
-  exec { 'create-privkey':
-    command => '/usr/bin/wg pubkey < /etc/wireguard/privkey > /etc/wireguard/pubkey',
-    unless  => '/usr/bin/ls /etc/wireguard/privkey'
-    require => Exec['create'],
+  #Pull the tunnel up
+  exec { 'link-up':
+    require => Exec['create-interface'],
+    command => '/usr/bin/ip link set up dev wg0',
+    unless  => '/usr/bin/ip link show wg0 | grep UP'
   }
 
-  exec { 'create-pubkey':
-    command => '/usr/bin/wg genkey > /etc/wireguard/privkey',
-    unless  => '/usr/bin/ls /etc/wireguard/privkey'
-    require => Exec['create-privkey'],
+  if ($tunnelip =~ String[1]) {
+    #Set tunnel IP
+    exec { 'set-IP':
+      require => Exec['link-up'],
+      command => "/usr/bin/ip address add dev wg0 ${tunnelip}",
+      unless  => "/usr/bin/ip addr show wg0 | grep ${tunnelip}"
+    }
   }
 
-
+  #Set port and privkey
   exec { 'add-key':
     command => '/usr/bin/wg set wg0 listen-port 51820 private-key /etc/wireguard/privkey',
-    require => Exec['create-pubkey'],
+    require => Exec['set-IP'],
+    unless  => '/usr/bin/wg | grep 51820'
   }
 
-
-# Set wireguard interface IP
-  exec { 'set-IP':
-    require => Exec['add-key'],
-    command => '/usr/bin/ip address add dev wg0 77.80.229.133/25',
-    unless  => '/usr/bin/ip addr show wg0 | grep 77.80.229.133/25'
-  }
-
-  file { '/etc/wireguard/yaml':
-    ensure  => directory,
+  #Pull down clients
+  file { '/etc/wireguard/wg0.conf':
+    ensure  => file,
     require => Exec['set-IP'],
     recurse => remote,
-    source  => 'puppet:///svn/$::{current_event}/services/wireguard',
-}
-
-
-# Build the wg0 config file will all clients from previous step
-  file { 'setConf':
-    ensure  => file,
-    path    => '/etc/wireguard/wg0.conf',
-    notify  => Exec[syncConf],
-    content => template('wireguard/wg0.conf.erb'),
-    require => file['/etc/wireguard/yaml'],        # require that yaml file exists before trying to use it....
+    source  => "puppet:///svn/${current_event}/services/wireguard/clients.txt",
   }
 
-# Sync changes towards the wg0 interface
+  #Append config file to tunnel config
   exec { 'syncConf':
-    require => file['setConf'],
-    command => '/usr/bin/wg syncconf wg0 /etc/wireguard/wg0.conf',
+    require => File['/etc/wireguard/wg0.conf'],
+    command => '/usr/bin/wg addconf wg0 /etc/wireguard/wg0.conf',
   }
 }
