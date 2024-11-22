@@ -3,7 +3,7 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file
 #
-define apache::proxy($url, $backend, $allowEncodedSlashes = false) {
+define apache::proxy($url, $backend, $allow_encoded_slashes = false) {
   exec { "apache_proxy_reload_${name}":
     command     => '/usr/sbin/apachectl graceful',
     refreshonly => true,

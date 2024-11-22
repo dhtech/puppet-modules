@@ -239,9 +239,9 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes, $snmpv3_provider
     backend => 'http://localhost:8081/api/v0/inlet/',
   }
   apache::proxy { '3_akvorado-console':
-    url                 => '/',
-    backend             => 'http://localhost:8082/',
-    allowEncodedSlashes => true,
+    url                   => '/',
+    backend               => 'http://localhost:8082/',
+    allow_encoded_slashes => true,
   }
   service { 'akvorado-orch':
     ensure => running,
