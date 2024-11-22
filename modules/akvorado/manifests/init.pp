@@ -243,18 +243,6 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes, $snmpv3_provider
     backend             => 'http://localhost:8082/',
     allowEncodedSlashes => true,
   }
-  # By default apache answers with status code 404 when an URL contains an encoded slash (%2F) 
-  # The following allows apache to simply forward the request to the prox backend.
-  file { '/etc/apache2/conf-available/allow-slashes.conf':
-    ensure  => present,
-    content => 'AllowEncodedSlashes On',
-    mode    => '0644',
-  }
-  -> file { '/etc/apache2/conf-enabled/allow-slashes.conf':
-    ensure => link,
-    mode   => '0644',
-    target => '/etc/apache2/conf-available/allow-slashes.conf',
-  }
   service { 'akvorado-orch':
     ensure => running,
     enable => true,
