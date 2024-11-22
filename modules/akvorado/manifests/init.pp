@@ -239,8 +239,9 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes, $snmpv3_provider
     backend => 'http://localhost:8081/api/v0/inlet/',
   }
   apache::proxy { '3_akvorado-console':
-    url     => '/',
-    backend => 'http://localhost:8082/',
+    url                 => '/',
+    backend             => 'http://localhost:8082/',
+    allowEncodedSlashes => true,
   }
   # By default apache answers with status code 404 when an URL contains an encoded slash (%2F) 
   # The following allows apache to simply forward the request to the prox backend.

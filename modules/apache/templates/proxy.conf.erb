@@ -4,3 +4,8 @@
 ProxyPass <%= @url %>  <%= @backend %>
 RequestHeader set X-Proxy-REMOTE-USER %{REMOTE_USER}s
 ProxyPreserveHost on
+
+<% if @allowEncodedSlashes == true -%>
+AllowEncodedSlashes On
+<% end -%>
+
