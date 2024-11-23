@@ -55,6 +55,7 @@ class grafana($current_event) {
     'grafana-piechart-panel',
     'gapit-htmlgraphics-panel',
     'knightss27-weathermap-panel',
+    'ovhcloudnetworkobservability-akvorado-datasource',
   ].each |$plugin| {
     exec { "plugin-${plugin}":
       command => "/usr/sbin/grafana-cli plugins install ${plugin}",
