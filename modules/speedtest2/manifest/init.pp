@@ -13,13 +13,33 @@
 
 class speedtest2 {
 
-  $nginx_dir = '/etc/nginx'
-  $sites_dir = "${nginx_dir}/sites-enabled"
-  $rc_name = 'nginx'
-  $www_root = '/var/www/html'
+  ensure_packages(['ssl-cert', 'nginx'])
 
-  package { 'nginx':
-    ensure => installed,
+  file { '/etc/ssl/certs/server-fullchain.crt':
+    ensure => file,
+    owner  => 'root',
+    group  => 'ssl-cert',
+    mode   => '0644',
+    source => 'puppet:///letsencrypt/fullchain.pem',
+    links  => 'follow',
+    notify => Service['nginx'],
+  }
+
+  file { '/etc/ssl/private/server.key':
+    ensure => file,
+    owner  => 'root',
+    group  => 'ssl-cert',
+    mode   => '0640',
+    source => 'puppet:///letsencrypt/privkey.pem',
+    links  => 'follow',
+    notify => Service['nginx'],
+  }
+
+  service { 'nginx':
+    ensure  => 'running',
+    name    => 'nginx',
+    enable  => true,
+    require => Package['nginx'],
   }
 
   file { '/etc/nginx/sites-enabled/default':
@@ -31,16 +51,10 @@ class speedtest2 {
 
   file { 'speedtest2-conf':
     ensure  => file,
-    path    => "${sites_dir}/speedtest",
+    path    => '/etc/nginx/sites-enabled/speedtest',
     content => template('speedtest2/speedtest.conf.erb'),
     notify  => Service['nginx'],
     require => Package['nginx'],
   }
 
-  service { 'nginx':
-    ensure  => 'running',
-    name    => $rc_name,
-    enable  => true,
-    require => Package['nginx'],
-  }
 }
