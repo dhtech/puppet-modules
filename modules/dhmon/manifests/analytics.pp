@@ -18,7 +18,7 @@ class dhmon::analytics {
   }
 
   supervisor::register { 'analytics':
-    command   => '/usr/bin/python2 /scripts/dhmon/src/analytics/analytics.py'
+    command => '/usr/bin/python2 /scripts/dhmon/src/analytics/analytics.py'
   }
   -> apache::proxy { 'analytics':
     url     => '/analytics',

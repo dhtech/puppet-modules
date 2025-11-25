@@ -21,6 +21,6 @@ class deploytftp {
     content => template('deploytftp/hooktftp.yml.erb'),
   }
   -> supervisor::register { 'hooktftp':
-    command  => '/usr/bin/hooktftp',
+    command => '/usr/bin/hooktftp',
   }
 }

@@ -17,10 +17,10 @@ class asterisk($current_event) {
   $iax_secret = vault('asterisk:iax2', {})
 
   package { 'asterisk':
-    ensure  => installed,
+    ensure => installed,
   }
   package { 'python-jinja2':
-    ensure  => installed,
+    ensure => installed,
   }
   service { 'asterisk':
     ensure  => running,
