@@ -168,17 +168,13 @@ def generate(host, *args):
     allow_transfer = [
         'localhost;',
         '77.80.255.5;   # ns1.net.dreamhack.se',
-        '77.80.231.201; # ddns1@dh',
-        '77.80.231.202; # ddns2@dh',
-        '77.80.231.213; # ddns3@dh',
-        '77.80.255.12;  # eest test obsd',
-        '77.80.255.54;  # eest test debian',
+        '77.80.228.24   # resolver1',
+        '77.80.228.74   # resolver2',
     ]
 
     ddns_hosts = [
-        '77.80.231.201;  # ddns1@dh',
-        '77.80.231.202;  # ddns2@dh',
-        '77.80.231.213;  # ddns3@dh',
+        '77.80.228.24;  # resolver1@dh',
+        '77.80.228.74;  # resolver2@dh',
     ]
 
     also_notify = []
