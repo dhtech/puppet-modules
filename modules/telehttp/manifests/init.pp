@@ -16,7 +16,7 @@ class telehttp() {
   ensure_packages(['apache2'])
 
   service { 'apache2':
-    ensure  => running,
+    ensure => running,
   }
   package { 'python3-pip':
     ensure => installed,
@@ -44,6 +44,6 @@ class telehttp() {
     command => '/usr/bin/pip3 install -r /scripts/telehttp/app/requirements.txt',
   }
   supervisor::register { 'tele':
-    command   => '/usr/bin/python3 /scripts/telehttp/app/app.py'
+    command => '/usr/bin/python3 /scripts/telehttp/app/app.py'
   }
 }

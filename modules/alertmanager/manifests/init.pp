@@ -69,7 +69,7 @@ class alertmanager {
     backend => 'http://localhost:9093/',
   }
   -> service { 'alertmanager':
-    ensure  => running,
+    ensure => running,
   }
 
   exec { 'alertmanager-hup':

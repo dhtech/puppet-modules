@@ -42,7 +42,7 @@ class snmpexporter($layers) {
 
   # Make sure directory /var/lib/mibs exists
   file { '/var/lib/mibs':
-    ensure  => 'directory',
+    ensure => 'directory',
   }
 
   # Install DH MIBs

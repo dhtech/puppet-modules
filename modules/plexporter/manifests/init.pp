@@ -62,6 +62,6 @@ class plexporter {
       notify => Supervisor::Restart['plexporter'],
   }
   -> supervisor::register { 'plexporter':
-      command   => '/opt/plexporter/env/bin/python /opt/plexporter/plexporter.py'
+      command => '/opt/plexporter/env/bin/python /opt/plexporter/plexporter.py'
   }
 }

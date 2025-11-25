@@ -24,7 +24,7 @@ class inspircd ($peers, $sid) {
   $rocketchatsecret = vault('ircd:rocketchat', {})
 
   package { 'inspircd':
-    ensure  => 'installed',
+    ensure => 'installed',
   }
 
   group { 'puppet':

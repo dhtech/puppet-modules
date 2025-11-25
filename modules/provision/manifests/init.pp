@@ -185,7 +185,7 @@ class provision ($vault_mount, $esxi = [], $c7000 = [], $domain = '', $mgmt_if =
       notify  => Service['isc-dhcp-server'],
     }
     service { 'isc-dhcp-server':
-      ensure  => running,
+      ensure => running,
     }
 
     file { '/etc/sysctl.d/dh-provision.conf':
@@ -200,7 +200,7 @@ class provision ($vault_mount, $esxi = [], $c7000 = [], $domain = '', $mgmt_if =
     # If the interface is removed (DHCP functionallity is not needed)
     # clean up and do not run the DHCP server anymore.
     package { 'isc-dhcp-server':
-      ensure  => purged,
+      ensure => purged,
     }
   }
 }
