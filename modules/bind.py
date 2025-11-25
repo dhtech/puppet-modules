@@ -168,8 +168,8 @@ def generate(host, *args):
     allow_transfer = [
         'localhost;',
         '77.80.255.5;   # ns1.net.dreamhack.se',
-        '77.80.228.24   # resolver1',
-        '77.80.228.74   # resolver2',
+        '77.80.228.24;  # resolver1',
+        '77.80.228.74;  # resolver2',
     ]
 
     ddns_hosts = [
