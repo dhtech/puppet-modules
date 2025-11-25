@@ -24,7 +24,7 @@ class analytics {
   }
 
   supervisor::register { 'analytics':
-    command   => '/usr/bin/python3 /analytics/analytics.py'
+    command => '/usr/bin/python3 /analytics/analytics.py'
   }
 
   apache::proxy { 'analytics':

@@ -59,6 +59,6 @@ class splashpage {
   }
 
   file { '/var/www/html/index.html':
-    ensure  => absent,
+    ensure => absent,
   }
 }
