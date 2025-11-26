@@ -53,6 +53,11 @@ class observer($nameservers, $icmp_target, $dns_target) {
     command     => '/bin/systemctl daemon-reload',
     refreshonly => true,
   }
+  package {
+    'net-tools':
+      ensure   => installed,
+      provider => apt,
+  }
 
   service { 'observer':
     ensure => running,
