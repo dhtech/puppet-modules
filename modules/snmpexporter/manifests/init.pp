@@ -97,7 +97,7 @@ class snmpexporter($layers) {
 
   file { 'snmpexporter.yaml':
     ensure => present,
-    source => 'puppet:///scripts/snmpexporter/etc/snmpexporter.yaml',
+    source => 'puppet:///repos/snmpexporter/etc/snmpexporter.yaml',
     path   => '/etc/snmpexporter/snmpexporter.yaml',
   }
 
