@@ -49,10 +49,10 @@ class speedtestv2 {
     require =>Package['nginx'],
   }
 
-  file { 'speedtest2-conf':
+  file { 'speedtestv2-conf':
     ensure  => file,
     path    => '/etc/nginx/sites-enabled/speedtest',
-    content => template('speedtest2/speedtest.conf.erb'),
+    content => template('speedtestv2/speedtest.conf.erb'),
     notify  => Service['nginx'],
     require => Package['nginx'],
   }
