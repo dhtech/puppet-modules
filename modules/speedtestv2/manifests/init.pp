@@ -78,13 +78,12 @@ class speedtestv2 {
     links  => 'follow',
   }
 
-
-  file { 'speedtestv2-downloading':
-    ensure  => file,
-    path    => '/usr/share/nginx/html/downloading',
-    content => template('speedtestv2/downloading.erb'),
-    notify  => Service['nginx'],
-    require => Package['nginx'],
+  -> file { 'speedtestv2-downloading':
+    ensure => file,
+    owner  => 'nginx',
+    group  => 'nginx',
+    mode   => '0644',
+    source => 'puppet:///modules/speedtestv2/downloading',
   }
 
   file { 'speedtestv2-index':
