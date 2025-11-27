@@ -14,6 +14,7 @@ def generate(host):
 
     info['icmp_target'] = 'ping.sunet.se'
     info['dns_target'] = 'slashdot.org.'
+    info['interface'] = 'eth0'
 
     return {'observer': info}
 
