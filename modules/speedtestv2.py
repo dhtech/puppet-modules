@@ -7,6 +7,6 @@
 def generate(host, *args):
 
     info = {}
-    return {'speedtest2': info}
+    return {'speedtestv2': info}
 
 # vim: ts=4: sts=4: sw=4: expandtab
