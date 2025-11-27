@@ -77,4 +77,37 @@ class speedtestv2 {
     source => 'puppet:///letsencrypt/privkey.pem',
     links  => 'follow',
   }
+
+
+  file { 'speedtestv2-downloading':
+    ensure  => file,
+    path    => '/usr/share/nginx/html/downloading',
+    content => template('speedtestv2/downloading.erb'),
+    notify  => Service['nginx'],
+    require => Package['nginx'],
+  }
+
+  file { 'speedtestv2-index':
+    ensure  => file,
+    path    => '/usr/share/nginx/html/index.html',
+    content => template('speedtestv2/index.html.erb'),
+    notify  => Service['nginx'],
+    require => Package['nginx'],
+  }
+
+  file { 'speedtestv2-hosted':
+    ensure  => file,
+    path    => '/usr/share/nginx/html/hosted.html',
+    content => template('speedtestv2/hosted.html.erb'),
+    notify  => Service['nginx'],
+    require => Package['nginx'],
+  }
+
+  file { 'speedtestv2-upload':
+    ensure  => file,
+    path    => '/usr/share/nginx/html/upload',
+    content => template('speedtestv2/upload.erb'),
+    notify  => Service['nginx'],
+    require => Package['nginx'],
+  }
 }
