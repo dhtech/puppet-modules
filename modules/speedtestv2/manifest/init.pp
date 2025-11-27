@@ -11,7 +11,7 @@
 # === Parameters
 #
 
-class speedtest2 {
+class speedtestv2 {
 
   ensure_packages(['ssl-cert', 'nginx'])
 
