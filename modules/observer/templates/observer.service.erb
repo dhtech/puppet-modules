@@ -6,7 +6,7 @@ Documentation=https://github.com/dhtech/observer
 Restart=always
 User=root
 EnvironmentFile=/etc/default/observer
-ExecStart=/opt/observer/observer $ARGS
+ExecStart=/opt/observer/observer-arm64 $ARGS
 ExecReload=/bin/kill -HUP $MAINPID
 
 [Install]
