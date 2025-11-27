@@ -15,7 +15,12 @@ def generate(host, *args):
         '192.168.0.0/16',
     ]
 
+    rfc6598_nets = [
+        '100.64.0.0/10'
+    ]
+
     networks.extend(rfc1918_nets)
+    networks.extend(rfc6598_nets)
 
     role = filter(lambda x: x.startswith('role='), args)[0].split('=')[1]
 
