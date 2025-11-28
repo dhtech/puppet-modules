@@ -11,15 +11,20 @@
 #
 
 class dhmap {
+  file { '/opt/dhmap':
+    ensure  => directory,
+    source  => 'puppet:///repos/dhmap',
+    recurse => true,
+  }
 
   file { 'dhmap':
     ensure => link,
     path   => '/var/www/html/dhmap',
-    target => '/scripts/dhmap/',
+    target => '/opt/dhmap/',
   }
 
   cron { 'update-seatmap':
-    command => '/scripts/dhmap/src/ipplan2dhmap.py /etc/ipplan.db > /var/www/html/dhmap/data.json',
+    command => '/opt/dhmap/src/ipplan2dhmap.py /etc/ipplan.db > /var/www/html/dhmap/data.json',
     user    => root,
     minute  => '*',
     require => File['dhmap'],
