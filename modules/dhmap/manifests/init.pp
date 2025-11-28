@@ -16,7 +16,7 @@ class dhmap {
     source  => 'puppet:///repos/dhmap',
     recurse => true,
   }
-  
+
   file { 'dhmap':
     ensure => link,
     path   => '/var/www/html/dhmap',
