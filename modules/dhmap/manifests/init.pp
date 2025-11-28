@@ -17,6 +17,11 @@ class dhmap {
     recurse => true,
   }
 
+  file { '/opt/dhmap/src/ipplan2dhmap.py':
+  mode    => '0755',
+  require => File['/opt/dhmap'],
+  }
+
   file { 'dhmap':
     ensure => link,
     path   => '/var/www/html/dhmap',
