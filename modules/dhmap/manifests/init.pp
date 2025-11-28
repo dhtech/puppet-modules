@@ -15,11 +15,12 @@ class dhmap {
     ensure  => directory,
     source  => 'puppet:///repos/dhmap',
     recurse => true,
+    ignore  => ['.git'],
   }
 
   file { '/opt/dhmap/src/ipplan2dhmap.py':
-  mode    => '0755',
-  require => File['/opt/dhmap'],
+    mode    => '0755',
+    require => File['/opt/dhmap'],
   }
 
   file { 'dhmap':
