@@ -20,6 +20,7 @@ class dhmap {
 
   file { '/opt/dhmap/src/ipplan2dhmap.py':
     mode    => '0755',
+    source => 'puppet:///repos/dhmap/src/ipplan2dhmap.py',
     require => File['/opt/dhmap'],
   }
 
