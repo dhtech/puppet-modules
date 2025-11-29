@@ -213,6 +213,13 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes, $snmpv3_provider
     owner  => 'root',
     group  => 'root',
   }
+  file { '/usr/share/GeoIP/city.mmdb':
+    ensure => present,
+    source => 'puppet:///data/city.mmdb',
+    mode   => '0644',
+    owner  => 'root',
+    group  => 'root',
+  }
   apache::proxy { '1_akvorado-orch-api':
     url     => '/api/v0/orchestrator/',
     backend => 'http://localhost:8080/api/v0/orchestrator/',
