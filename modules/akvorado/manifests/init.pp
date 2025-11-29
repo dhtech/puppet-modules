@@ -177,7 +177,7 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes, $snmpv3_provider
     mode   => '0550',
     links  => follow,
     source => 'puppet:///data/akvorado-latest',
-    notify => [Service['akvorado-orch'],Exec['protobuf-schema']]
+    notify => [Service['akvorado-orch']]
   }
   file { '/etc/akvorado/akvorado.yaml':
     ensure  => file,
