@@ -29,7 +29,6 @@ clickhouse:
     topic: flows
     brokers:
       - 127.0.0.1:9092
-    version: 3.7.0
     tls:
       enable: false
       verify: true
@@ -84,7 +83,6 @@ kafka:
   topic: flows
   brokers:
     - 127.0.0.1:9092
-  version: 3.7.0
   tls:
     enable: false
     verify: true
@@ -154,6 +152,11 @@ outlet:
           type: snmp
       workers: 1
       maxbatchrequests: 10
+    http:
+      listen: :8083
+      profiler: true
+      cache:
+        type: memory
     routing:
       provider:
         collectasns: true
@@ -220,7 +223,6 @@ inlet:
       topic: flows
       brokers:
         - 127.0.0.1:9092
-      version: 3.7.0
       tls:
         enable: false
         verify: true
