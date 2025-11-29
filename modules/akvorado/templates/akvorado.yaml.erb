@@ -104,20 +104,13 @@ kafka:
       segment.bytes: "1073741824"
     configentriesstrictsync: true
 geoip:
-  asndatabase:
+  asn-database:
     - /usr/share/GeoIP/asn.mmdb
-  geodatabase:
+  geo-database:
     - /usr/share/GeoIP/country.mmdb
   optional: false
-schema:
-  disabled: []
-  enabled: []
-  maintableonly: []
-  notmaintableonly: []
-  materialize: []
-  customdictionaries: {}
 outlet:
- metadata:
+  - metadata:
       cacheduration: 30m0s
       cacherefresh: 1h0m0s
       cachecheckinterval: 2m0s
@@ -161,7 +154,7 @@ outlet:
           type: snmp
       workers: 1
       maxbatchrequests: 10
- routing:
+    routing:
       provider:
         collectasns: true
         collectaspaths: true
@@ -174,7 +167,7 @@ outlet:
         ribpeerremovalmaxtime: 100ms
         ribpeerremovalsleepinterval: 500ms
         type: bmp
- core:
+    core:
       workers: 6
       exporterclassifiers:
         - ClassifySiteRegex(Exporter.Name, "^([^-]+)-", "$1")
@@ -242,13 +235,6 @@ inlet:
       maxmessagebytes: 1000000
       compressioncodec: zstd
       queuesize: 32
-    schema:
-      disabled: []
-      enabled: []
-      maintableonly: []
-      notmaintableonly: []
-      materialize: []
-      customdictionaries: {}
 console:
   - reporting:
       logging: {}

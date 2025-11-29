@@ -63,35 +63,11 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes, $snmpv3_provider
     line   => 'controller.quorum.voters=1@localhost:9093',
     notify => Service['kafka'],
   }
-  -> file_line { 'kafka-securityprotocolmap':
-    ensure => 'present',
-    path   => '/var/lib/kafka/config/server.properties',
-    line   => 'listener.security.protocol.map=CLIENT:PLAINTEXT,CONTROLLER:PLAINTEXT',
-    notify => Service['kafka'],
-  }
-  -> file_line { 'kafka-advertisedlsiteners':
-    ensure => 'present',
-    path   => '/var/lib/kafka/config/server.properties',
-    line   => 'advertised.listeners=CLIENT://localhost:9092',
-    notify => Service['kafka'],
-  }
-  -> file_line { 'kafka-controllerlistenernames':
-    ensure => 'present',
-    path   => '/var/lib/kafka/config/server.properties',
-    line   => 'controller.listener.names=CONTROLLER',
-    notify => Service['kafka'],
-  }
-  -> file_line { 'kafka-interbrokerlistenername':
-    ensure => 'present',
-    path   => '/var/lib/kafka/config/server.properties',
-    line   => 'inter.broker.listener.name=CLIENT',
-    notify => Service['kafka'],
-  }
   -> file_line { 'kafka-listenlocalhost':
     ensure => 'present',
     path   => '/var/lib/kafka/config/server.properties',
-    line   => 'listeners=PLAINTEXT://localhost:9092',
-    match  => '#listeners=PLAINTEXT',
+    line   => 'listeners=PLAINTEXT://localhost:9092,CONTROLLER://localhost:9093',
+    match  => 'listeners=PLAINTEXT://:9092,CONTROLLER://:9093',
     notify => Service['kafka'],
   }
   -> file_line { 'kafka-logdir':
