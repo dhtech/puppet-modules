@@ -38,12 +38,6 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes, $snmpv3_provider
     group  => 'kafka',
     mode   => '0700',
   }
-  -> file { '/var/lib/zookeeper-data':
-    ensure => 'directory',
-    owner  => 'kafka',
-    group  => 'kafka',
-    mode   => '0700',
-  }
   exec { 'untar-kafka':
     command     => '/bin/tar -xvf /var/lib/kafka/kafka.tgz -C /var/lib/kafka --strip 1',
     refreshonly => true,
@@ -57,18 +51,40 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes, $snmpv3_provider
     group  => 'root',
     notify => [ Exec['systemctl-daemon-reload'], Service['kafka'] ],
   }
-  -> file { '/etc/systemd/system/zookeeper.service':
-    ensure => present,
-    source => 'puppet:///modules/akvorado/zookeeper.service',
-    mode   => '0644',
-    owner  => 'root',
-    group  => 'root',
-    notify => [ Exec['systemctl-daemon-reload'], Service['zookeeper'] ],
-  }
   -> file_line { 'kafka-enabledeletetopics':
     ensure => 'present',
     path   => '/var/lib/kafka/config/server.properties',
     line   => 'delete.topic.enable = true',
+    notify => Service['kafka'],
+  }
+  -> file_line { 'kafka-quorumvoters':
+    ensure => 'present',
+    path   => '/var/lib/kafka/config/server.properties',
+    line   => 'controller.quorum.voters=1@localhost:9093',
+    notify => Service['kafka'],
+  }
+  -> file_line { 'kafka-securityprotocolmap':
+    ensure => 'present',
+    path   => '/var/lib/kafka/config/server.properties',
+    line   => 'listener.security.protocol.map=CLIENT:PLAINTEXT,CONTROLLER:PLAINTEXT',
+    notify => Service['kafka'],
+  }
+  -> file_line { 'kafka-advertisedlsiteners':
+    ensure => 'present',
+    path   => '/var/lib/kafka/config/server.properties',
+    line   => 'advertised.listeners=CLIENT://localhost:9092',
+    notify => Service['kafka'],
+  }
+  -> file_line { 'kafka-controllerlistenernames':
+    ensure => 'present',
+    path   => '/var/lib/kafka/config/server.properties',
+    line   => 'controller.listener.names=CONTROLLER',
+    notify => Service['kafka'],
+  }
+  -> file_line { 'kafka-interbrokerlistenername':
+    ensure => 'present',
+    path   => '/var/lib/kafka/config/server.properties',
+    line   => 'inter.broker.listener.name=CLIENT',
     notify => Service['kafka'],
   }
   -> file_line { 'kafka-listenlocalhost':
@@ -85,24 +101,7 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes, $snmpv3_provider
     match  => 'log.dirs=/tmp/kafka-logs',
     notify => Service['kafka'],
   }
-  -> file_line { 'zookeeper-datadir':
-    ensure => 'present',
-    path   => '/var/lib/kafka/config/zookeeper.properties',
-    line   => 'dataDir=/var/lib/zookeeper-data',
-    match  => 'dataDir=/tmp/zookeeper',
-    notify => Service['zookeeper'],
-  }
-  -> file_line { 'zookeeper-listen':
-    ensure => 'present',
-    path   => '/var/lib/kafka/config/zookeeper.properties',
-    line   => 'clientPortAddress=127.0.0.1',
-    notify => Service['zookeeper'],
-  }
   service { 'kafka':
-    ensure => running,
-    enable => true,
-  }
-  service { 'zookeeper':
     ensure => running,
     enable => true,
   }
@@ -202,6 +201,14 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes, $snmpv3_provider
     group  => 'root',
     notify => [Exec['systemctl-daemon-reload'],Service['akvorado-inlet']],
   }
+  file { '/etc/systemd/system/akvorado-outlet.service':
+    ensure => present,
+    source => 'puppet:///modules/akvorado/akvorado-outlet.service',
+    mode   => '0644',
+    owner  => 'root',
+    group  => 'root',
+    notify => [Exec['systemctl-daemon-reload'],Service['akvorado-outlet']],
+  }
   file { '/etc/systemd/system/akvorado-console.service':
     ensure => present,
     source => 'puppet:///modules/akvorado/akvorado-console.service',
@@ -251,6 +258,10 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes, $snmpv3_provider
     ensure => running,
     enable => true,
   }
+  service { 'akvorado-outlet':
+    ensure => running,
+    enable => true,
+  }
   service { 'akvorado-console':
     ensure => running,
     enable => true,
@@ -262,10 +273,5 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes, $snmpv3_provider
   exec { 'systemctl-daemon-reload':
     command     => '/bin/systemctl daemon-reload',
     refreshonly => true,
-  }
-  exec { 'protobuf-schema':
-    command     => '/usr/bin/curl http://127.0.0.1:8080/api/v0/orchestrator/clickhouse/init.sh | sh',
-    refreshonly => true,
-    require     => Service['akvorado-orch']
   }
 }

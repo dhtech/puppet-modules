@@ -116,35 +116,8 @@ schema:
   notmaintableonly: []
   materialize: []
   customdictionaries: {}
-inlet:
-  - reporting:
-      logging: {}
-      metrics: {}
-    http:
-      listen: :8081
-      profiler: true
-      cache:
-        type: memory
-    flow:
-      inputs:
-        - decoder: netflow
-          listen: :2055
-          queuesize: 100000
-          receivebuffer: 10485760
-          timestampsource: udp
-          type: udp
-          usesrcaddrforexporteraddr: false
-          workers: 6
-        - decoder: sflow
-          listen: :6343
-          queuesize: 100000
-          receivebuffer: 10485760
-          timestampsource: udp
-          type: udp
-          usesrcaddrforexporteraddr: false
-          workers: 6
-      ratelimit: 0
-    metadata:
+outlet:
+ metadata:
       cacheduration: 30m0s
       cacherefresh: 1h0m0s
       cachecheckinterval: 2m0s
@@ -188,7 +161,7 @@ inlet:
           type: snmp
       workers: 1
       maxbatchrequests: 10
-    routing:
+ routing:
       provider:
         collectasns: true
         collectaspaths: true
@@ -201,26 +174,7 @@ inlet:
         ribpeerremovalmaxtime: 100ms
         ribpeerremovalsleepinterval: 500ms
         type: bmp
-    kafka:
-      topic: flows
-      brokers:
-        - 127.0.0.1:9092
-      version: 3.7.0
-      tls:
-        enable: false
-        verify: true
-        cafile: ""
-        certfile: ""
-        keyfile: ""
-        saslusername: ""
-        saslpassword: ""
-        saslmechanism: none
-      flushinterval: 10s
-      flushbytes: 104857599
-      maxmessagebytes: 1000000
-      compressioncodec: zstd
-      queuesize: 32
-    core:
+ core:
       workers: 6
       exporterclassifiers:
         - ClassifySiteRegex(Exporter.Name, "^([^-]+)-", "$1")
@@ -241,6 +195,53 @@ inlet:
       netproviders:
         - flow
         - routing
+inlet:
+  - reporting:
+      logging: {}
+      metrics: {}
+    http:
+      listen: :8081
+      profiler: true
+      cache:
+        type: memory
+    flow:
+      inputs:
+        - decoder: netflow
+          listen: :2055
+          queuesize: 100000
+          receivebuffer: 10485760
+          timestampsource: udp
+          type: udp
+          usesrcaddrforexporteraddr: false
+          workers: 6
+        - decoder: sflow
+          listen: :6343
+          queuesize: 100000
+          receivebuffer: 10485760
+          timestampsource: udp
+          type: udp
+          usesrcaddrforexporteraddr: false
+          workers: 6
+      ratelimit: 0
+    kafka:
+      topic: flows
+      brokers:
+        - 127.0.0.1:9092
+      version: 3.7.0
+      tls:
+        enable: false
+        verify: true
+        cafile: ""
+        certfile: ""
+        keyfile: ""
+        saslusername: ""
+        saslpassword: ""
+        saslmechanism: none
+      flushinterval: 10s
+      flushbytes: 104857599
+      maxmessagebytes: 1000000
+      compressioncodec: zstd
+      queuesize: 32
     schema:
       disabled: []
       enabled: []
