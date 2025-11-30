@@ -77,7 +77,7 @@ class speedtestv2 {
     source => 'puppet:///letsencrypt/privkey.pem',
     links  => 'follow',
   }
-  file { 'usr/share/nginx/html/speedtestv2-downloading.html':
+  file { '/usr/share/nginx/html/speedtestv2-downloading.html':
     ensure => present,
     owner  => 'nginx',
     group  => 'nginx',
