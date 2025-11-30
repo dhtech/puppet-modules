@@ -79,32 +79,32 @@ class speedtestv2 {
   }
   file { '/usr/share/nginx/html/speedtestv2-downloading.html':
     ensure => present,
-    owner  => 'nginx',
-    group  => 'nginx',
+    owner  => 'root',
+    group  => 'root',
     mode   => '0644',
     source => 'puppet:///modules/speedtestv2/downloading.html',
 }
 
 file { '/usr/share/nginx/html/index.html':
     ensure => present,
-    owner  => 'nginx',
-    group  => 'nginx',
+    owner  => 'root',
+    group  => 'root',
     mode   => '0644',
     source => 'puppet:///modules/speedtestv2/index.html',
 }
 
 file { '/usr/share/nginx/html/hosted.html':
     ensure => present,
-    owner  => 'nginx',
-    group  => 'nginx',
+    owner  => 'root',
+    group  => 'root',
     mode   => '0644',
     source => 'puppet:///modules/speedtestv2-hosted.html',
 }
 
 file { '/usr/share/nginx/html/upload.html':
     ensure => present,
-    owner  => 'nginx',
-    group  => 'nginx',
+    owner  => 'root',
+    group  => 'root',
     mode   => '0644',
     source => 'puppet:///modules/speedtestv2-hosted.html',
 }
