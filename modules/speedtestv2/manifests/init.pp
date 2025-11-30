@@ -98,7 +98,7 @@ file { '/usr/share/nginx/html/hosted.html':
     owner  => 'root',
     group  => 'root',
     mode   => '0644',
-    source => 'puppet:///modules/speedtestv2-hosted.html',
+    source => 'puppet:///modules/speedtestv2/hosted.html',
 }
 
 file { '/usr/share/nginx/html/upload.html':
@@ -106,7 +106,7 @@ file { '/usr/share/nginx/html/upload.html':
     owner  => 'root',
     group  => 'root',
     mode   => '0644',
-    source => 'puppet:///modules/speedtestv2-hosted.html',
+    source => 'puppet:///modules/speedtestv2/upload.html',
 }
 
 }
