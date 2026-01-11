@@ -12,9 +12,9 @@
 #
 
 class speedtestv2 {
-  
+
   include apt
-  
+
   exec { 'apt-update':
     command => '/usr/bin/apt update',
   }
@@ -55,19 +55,18 @@ class speedtestv2 {
   file { 'speedtestv2-conf':
     ensure  => file,
     path    => '/etc/nginx/sites-enabled/speedtest',
-    source => 'puppet:///modules/speedtestv2/speedtest.conf',
+    source  => 'puppet:///modules/speedtestv2/speedtest.conf',
     notify  => Service['nginx'],
     require => Package['nginx'],
   }
 
   file { '/usr/share/nginx/html/':
-	  ensure => directory,
-	  recurse => true,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0755',
-    source => 'puppet:///modules/speedtestv2/Speed-Test-main/',
+    ensure  => directory,
+    recurse => true,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0755',
+    source  => 'puppet:///modules/speedtestv2/Speed-Test-main/',
     require => Package['nginx'], #Make sure that apt install has been run
   }
 }
-
