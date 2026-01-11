@@ -12,49 +12,16 @@
 #
 
 class speedtestv2 {
-
-  ensure_packages(['ssl-cert', 'nginx'])
-
-  file { '/etc/ssl/certs/server-fullchain.crt':
-    ensure => file,
-    owner  => 'root',
-    group  => 'ssl-cert',
-    mode   => '0644',
-    source => 'puppet:///letsencrypt/fullchain.pem',
-    links  => 'follow',
-    notify => Service['nginx'],
+  
+  include apt
+  
+  exec { 'apt-update':
+    command => '/usr/bin/apt update',
   }
 
-  file { '/etc/ssl/private/server.key':
-    ensure => file,
-    owner  => 'root',
-    group  => 'ssl-cert',
-    mode   => '0640',
-    source => 'puppet:///letsencrypt/privkey.pem',
-    links  => 'follow',
-    notify => Service['nginx'],
-  }
-
-  service { 'nginx':
-    ensure  => 'running',
-    name    => 'nginx',
-    enable  => true,
-    require => Package['nginx'],
-  }
-
-  file { '/etc/nginx/sites-enabled/default':
-    ensure  =>absent,
-    force   =>true,
-    notify  =>Service['nginx'],
-    require =>Package['nginx'],
-  }
-
-  file { 'speedtestv2-conf':
-    ensure  => file,
-    path    => '/etc/nginx/sites-enabled/speedtest',
-    content => template('speedtestv2/speedtest.conf.erb'),
-    notify  => Service['nginx'],
-    require => Package['nginx'],
+  package { 'nginx':
+    ensure  => installed,
+    require => Exec['apt-update'],
   }
 
   # Needed for 'ssl-cert' group
@@ -77,39 +44,30 @@ class speedtestv2 {
     source => 'puppet:///letsencrypt/privkey.pem',
     links  => 'follow',
   }
-  file { '/usr/share/nginx/html/speedtestv2-downloading.html':
-    ensure => present,
+
+  file { '/etc/nginx/sites-enabled/default':
+    ensure  =>absent,
+    force   =>true,
+    notify  =>Service['nginx'],
+    require =>Package['nginx'],
+  }
+
+  file { 'speedtestv2-conf':
+    ensure  => file,
+    path    => '/etc/nginx/sites-enabled/speedtest',
+    source => 'puppet:///modules/speedtestv2/speedtest.conf',
+    notify  => Service['nginx'],
+    require => Package['nginx'],
+  }
+
+  file { '/usr/share/nginx/html/':
+	  ensure => directory,
+	  recurse => true,
     owner  => 'root',
     group  => 'root',
-    mode   => '0644',
-    source => 'puppet:///modules/speedtestv2/downloading.html',
+    mode   => '0755',
+    source => 'puppet:///modules/speedtestv2/Speed-Test-main/',
+    require => Package['nginx'], #Make sure that apt install has been run
+  }
 }
-
-file { '/usr/share/nginx/html/index.html':
-    ensure => present,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
-    source => 'puppet:///modules/speedtestv2/index.html',
-}
-
-file { '/usr/share/nginx/html/hosted.html':
-    ensure => present,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
-    source => 'puppet:///modules/speedtestv2/hosted.html',
-}
-
-file { '/usr/share/nginx/html/upload.html':
-    ensure => present,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
-    source => 'puppet:///modules/speedtestv2/upload.html',
-}
-
-}
-
-
 
