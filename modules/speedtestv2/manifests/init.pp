@@ -39,7 +39,7 @@ class speedtestv2 {
     owner  => 'root',
     group  => 'ssl-cert',
     mode   => '0644',
-    source => 'puppet:///letsencrypt/fullchain.pem',
+    source => 'puppet:///letsencrypt/fullchain2.pem',
     links  => 'follow',
   }
 
@@ -48,7 +48,7 @@ class speedtestv2 {
     owner  => 'root',
     group  => 'ssl-cert',
     mode   => '0640',
-    source => 'puppet:///letsencrypt/privkey.pem',
+    source => 'puppet:///letsencrypt/privkey2.pem',
     links  => 'follow',
   }
 
