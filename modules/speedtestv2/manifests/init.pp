@@ -24,6 +24,13 @@ class speedtestv2 {
     require => Exec['apt-update'],
   }
 
+    service { 'nginx':
+    ensure => running,
+    enable => true,
+    require => Package['nginx'],
+  }
+
+
   # Needed for 'ssl-cert' group
   ensure_packages(['ssl-cert'])
 
