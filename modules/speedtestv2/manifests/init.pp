@@ -36,20 +36,20 @@ class speedtestv2 {
 
   file { '/etc/ssl/certs/speedtest2.event.dreamhack.se.crt':
     ensure  => file,
-    owner   => 'root',
-    group   => 'ssl-cert',
-    mode    => '0644',
-    source  => 'puppet:///letsencrypt/fullchain.pem',
-    links   => 'follow',
+    owner  => 'root',
+    group  => 'ssl-cert',
+    mode   => '0644',
+    source => 'puppet:///letsencrypt/fullchain.pem',
+    links  => 'follow',
   }
 
   file { '/etc/ssl/private/speedtest2.event.dreamhack.se.key':
-    ensure  => file,
-    owner   => 'root',
-    group   => 'ssl-cert',
-    mode    => '0640',
-    source  => 'puppet:///letsencrypt/privkey.pem',
-    links   => 'follow',
+    ensure => file,
+    owner  => 'root',
+    group  => 'ssl-cert',
+    mode   => '0640',
+    source => 'puppet:///letsencrypt/privkey.pem',
+    links  => 'follow',
   }
 
   file { '/etc/nginx/sites-enabled/default':
