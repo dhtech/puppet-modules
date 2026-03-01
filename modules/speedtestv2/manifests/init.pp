@@ -35,7 +35,7 @@ class speedtestv2 {
   ensure_packages(['ssl-cert'])
 
   file { '/etc/ssl/certs/speedtest2.event.dreamhack.se.crt':
-    ensure  => file,
+    ensure => file,
     owner  => 'root',
     group  => 'ssl-cert',
     mode   => '0644',
