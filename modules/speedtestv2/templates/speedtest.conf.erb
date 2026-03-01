@@ -7,9 +7,7 @@
 
 server {
         server_name _ localhost speedtest2.event.dreamhack.se;
-        listen 80 reuseport;
         listen 443 ssl reuseport;
-        listen [::]:80 reuseport;
         listen [::]:443 ssl reuseport;
         # If you like to Enable HTTP2 add "http2" to the above line.
         # If HTTP2 Enabled. Upload location should Proxy_Pass to http 1.1 port.
@@ -103,4 +101,14 @@ server {
           gzip_http_version 1.1;
           gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript application/javascript image/svg+xml;
       }
+}
+
+server {
+    listen  80 default_server;
+    listen  [::]:80 default_server;
+    server_name _ localhost speedtest2.event.dreamhack.se;
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
 }
