@@ -25,8 +25,8 @@ class speedtestv2 {
   }
 
     service { 'nginx':
-    ensure => running,
-    enable => true,
+    ensure  => running,
+    enable  => true,
     require => Package['nginx'],
   }
 
@@ -35,28 +35,28 @@ class speedtestv2 {
   ensure_packages(['ssl-cert'])
 
   file { '/etc/ssl/certs/speedtest2.event.dreamhack.se.crt':
-    ensure => file,
-    owner  => 'root',
-    group  => 'ssl-cert',
-    mode   => '0644',
-    source => 'puppet:///letsencrypt/fullchain.pem',
-    links  => 'follow',
+    ensure  => file,
+    owner   => 'root',
+    group   => 'ssl-cert',
+    mode    => '0644',
+    source  => 'puppet:///letsencrypt/fullchain.pem',
+    links   => 'follow',
   }
 
   file { '/etc/ssl/private/speedtest2.event.dreamhack.se.key':
-    ensure => file,
-    owner  => 'root',
-    group  => 'ssl-cert',
-    mode   => '0640',
-    source => 'puppet:///letsencrypt/privkey.pem',
-    links  => 'follow',
+    ensure  => file,
+    owner   => 'root',
+    group   => 'ssl-cert',
+    mode    => '0640',
+    source  => 'puppet:///letsencrypt/privkey.pem',
+    links   => 'follow',
   }
 
   file { '/etc/nginx/sites-enabled/default':
-    ensure  =>absent,
-    force   =>true,
-    notify  =>Service['nginx'],
-    require =>Package['nginx'],
+    ensure  => absent,
+    force   => true,
+    notify  => Service['nginx'],
+    require => Package['nginx'],
   }
 
   file { 'speedtestv2-conf':
