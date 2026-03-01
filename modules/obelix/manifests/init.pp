@@ -10,7 +10,7 @@
 
 class obelix {
   package { 'asterisk':
-    ensure  => installed,
+    ensure => installed,
   }
   service { 'asterisk':
     ensure  => running,

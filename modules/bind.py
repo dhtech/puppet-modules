@@ -15,7 +15,12 @@ def generate(host, *args):
         '192.168.0.0/16',
     ]
 
+    rfc6598_nets = [
+        '100.64.0.0/10'
+    ]
+
     networks.extend(rfc1918_nets)
+    networks.extend(rfc6598_nets)
 
     role = filter(lambda x: x.startswith('role='), args)[0].split('=')[1]
 
@@ -168,17 +173,13 @@ def generate(host, *args):
     allow_transfer = [
         'localhost;',
         '77.80.255.5;   # ns1.net.dreamhack.se',
-        '77.80.231.201; # ddns1@dh',
-        '77.80.231.202; # ddns2@dh',
-        '77.80.231.213; # ddns3@dh',
-        '77.80.255.12;  # eest test obsd',
-        '77.80.255.54;  # eest test debian',
+        '77.80.228.24;  # resolver1',
+        '77.80.228.74;  # resolver2',
     ]
 
     ddns_hosts = [
-        '77.80.231.201;  # ddns1@dh',
-        '77.80.231.202;  # ddns2@dh',
-        '77.80.231.213;  # ddns3@dh',
+        '77.80.228.24;  # resolver1@dh',
+        '77.80.228.74;  # resolver2@dh',
     ]
 
     also_notify = []

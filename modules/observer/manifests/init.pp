@@ -12,7 +12,7 @@
 # No parameters;
 #
 
-class observer($nameservers, $icmp_target, $dns_target) {
+class observer($nameservers, $icmp_target, $dns_target, $interface) {
 
   # Create directories for observer
   file { '/opt/observer':
@@ -52,6 +52,11 @@ class observer($nameservers, $icmp_target, $dns_target) {
   exec { 'observer-systemctl-daemon-reload':
     command     => '/bin/systemctl daemon-reload',
     refreshonly => true,
+  }
+  package {
+    'net-tools':
+      ensure   => installed,
+      provider => apt,
   }
 
   service { 'observer':

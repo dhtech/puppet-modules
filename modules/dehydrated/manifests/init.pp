@@ -25,11 +25,11 @@ class dehydrated($hostname_list = []) {
   }
 
   file { '/var/www/dehydrated':
-    ensure    => directory,
+    ensure => directory,
   }
 
   file { '/etc/dehydrated':
-    ensure    => directory,
+    ensure => directory,
   }
 
   file { '/etc/dehydrated/domains.txt':

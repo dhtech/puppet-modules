@@ -57,10 +57,10 @@ class puppet ($master, $environment, $sourceaddress) {
       content => template('puppet/puppet.conf.erb'),
     }
     package { 'puppet':
-      ensure  => installed,
+      ensure => installed,
     }
     package { 'puppet-agent':
-      ensure  => absent,
+      ensure => absent,
     }
     file { 'puppetlabs-pc1.list':
       ensure => absent,

@@ -8,7 +8,7 @@
 zone "<%= private_zone -%>"
 {
     type slave;
-    masters { 77.80.254.5; };
+    masters { 77.80.254.5; 77.80.255.5; };
     file "<%= @slave_zone_cfg %>/db.<%= private_zone %>";
     allow-query { trusted-clients; };
 };
@@ -19,7 +19,7 @@ zone "<%= private_zone -%>"
 zone "<%= zone -%>"
 {
     type slave;
-    masters { 77.80.254.5; };
+    masters { 77.80.254.5; 77.80.255.5; };
     file "<%= @slave_zone_cfg %>/db.<%= zone %>";
 <% if @role == 'resolver' -%>
     allow-query { clients; };

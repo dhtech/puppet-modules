@@ -62,7 +62,7 @@ class swbootd($current_event) {
   }
 
   service { ['isc-dhcp-server', 'redis-server']:
-    ensure  => running,
+    ensure => running,
   }
 
   file { '/scripts/swboot/config.py':
@@ -99,6 +99,6 @@ class swbootd($current_event) {
   }
 
   file { '/srv/tftp':
-    ensure  => directory,
+    ensure => directory,
   }
 }

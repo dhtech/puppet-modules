@@ -84,7 +84,7 @@ class iptables::pre ($forward_policy = 'drop') {
       policy => 'accept',
       purge  => false;
     'POSTROUTING:nat:IPv4':
-      purge     => false;
+      purge => false;
     'INPUT:filter:IPv6':
       policy => 'drop',
       purge  => true;

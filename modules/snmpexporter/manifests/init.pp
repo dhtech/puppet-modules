@@ -42,7 +42,7 @@ class snmpexporter($layers) {
 
   # Make sure directory /var/lib/mibs exists
   file { '/var/lib/mibs':
-    ensure  => 'directory',
+    ensure => 'directory',
   }
 
   # Install DH MIBs
@@ -97,7 +97,7 @@ class snmpexporter($layers) {
 
   file { 'snmpexporter.yaml':
     ensure => present,
-    source => 'puppet:///scripts/snmpexporter/etc/snmpexporter.yaml',
+    source => 'puppet:///repos/snmpexporter/etc/snmpexporter.yaml',
     path   => '/etc/snmpexporter/snmpexporter.yaml',
   }
 
