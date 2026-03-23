@@ -1,4 +1,4 @@
-class splunk{
+class splunkd{
   # Needed for 'ssl-cert' group
   ensure_packages(['ssl-cert'])
   
