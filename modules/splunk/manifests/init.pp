@@ -1,4 +1,7 @@
 class splunk{
+  # Needed for 'ssl-cert' group
+  ensure_packages(['ssl-cert'])
+  
     file { '/etc/ssl/certs/splunk.event.dreamhack.se.crt':
     ensure => file,
     owner  => 'root',
