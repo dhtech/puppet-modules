@@ -4,9 +4,10 @@ apiVersion: 1
 datasources:
 <% @prometheus_servers.each do |server, domain| -%>
   - name: prometheus_<%= domain %>
+    uid: prometheus_<%= domain %>
     type: prometheus
     url: http://<%= server %>:9090
     access: proxy
     isDefault: false
-    editable: false
+    editable: true
 <% end -%>
