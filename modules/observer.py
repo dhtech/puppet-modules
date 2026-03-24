@@ -17,11 +17,11 @@ def generate(host, *args):
     info['interface'] = 'eth0'
 
     if 'noipv6' in args:
-        info['disable6'] = '-disable6'
+        info['disable6'] = '-disable6 '
     else:
         info['disable6'] = ''
     if 'noipv4' in args:
-        info['disable4'] = '-disable4'
+        info['disable4'] = '-disable4 '
     else:
         info['disable4'] = ''
     return {'observer': info}
