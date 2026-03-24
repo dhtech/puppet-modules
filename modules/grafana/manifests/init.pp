@@ -11,7 +11,7 @@
 # for package details such as default paths etc.
 #
 
-class grafana($current_event) {
+class grafana($current_event, $prometheus_servers = []) {
 
   # Adding the apt repository
   package { 'apt-transport-https':
@@ -108,6 +108,15 @@ class grafana($current_event) {
       ].join(' '),
       refreshonly => true,
     }
+  }
+
+  # Prometheus datasource provisioning
+  file { 'grafana-prometheus-datasources':
+    path    => '/etc/grafana/provisioning/datasources/prometheus.yaml',
+    content => template('grafana/prometheus-datasource.yaml.erb'),
+    mode    => '0644',
+    require => Package['grafana'],
+    notify  => Service['grafana-server'],
   }
 
   # Setting up the Apache proxy
