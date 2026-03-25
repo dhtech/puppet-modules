@@ -1,0 +1,13 @@
+# Managed by Puppet - do not edit manually
+apiVersion: 1
+
+datasources:
+<% @akvorado_servers.each do |server, domain| -%>
+  - name: akvorado_<%= domain %>
+    uid: akvorado_<%= domain %>
+    type: ovhcloud-akvorado-datasource
+    url: http://<%= server %>
+    access: proxy
+    isDefault: false
+    editable: true
+<% end -%>
