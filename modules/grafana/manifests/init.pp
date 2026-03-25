@@ -11,7 +11,7 @@
 # for package details such as default paths etc.
 #
 
-class grafana($current_event, $prometheus_servers = []) {
+class grafana($current_event, $prometheus_servers = [], $akvorado_servers = []) {
 
   # Adding the apt repository
   package { 'apt-transport-https':
@@ -117,6 +117,43 @@ class grafana($current_event, $prometheus_servers = []) {
     mode    => '0644',
     require => Package['grafana'],
     notify  => Service['grafana-server'],
+  }
+
+  # Akvorado datasource provisioning
+  file { 'grafana-akvorado-datasources':
+    path    => '/etc/grafana/provisioning/datasources/akvorado.yaml',
+    content => template('grafana/akvorado-datasource.yaml.erb'),
+    mode    => '0644',
+    require => Package['grafana'],
+    notify  => Service['grafana-server'],
+  }
+
+  # Stage dashboards and library panels from SVN for one-time import
+  file { '/var/lib/grafana/dashboards-staging':
+    ensure  => directory,
+    source  => "puppet:///svn/${current_event}/services/grafana/staging",
+    recurse => true,
+    owner   => 'grafana',
+    group   => 'grafana',
+    require => Package['grafana'],
+  }
+
+  file { 'grafana-import-script':
+    path    => '/usr/local/bin/grafana-import-dashboards',
+    content => template('grafana/grafana-import-dashboards.py.erb'),
+    mode    => '0755',
+    require => Package['grafana'],
+  }
+
+  # One-time import via API — flag file prevents re-import on subsequent Puppet runs
+  exec { 'import-grafana-dashboards':
+    command => '/usr/local/bin/grafana-import-dashboards',
+    creates => '/var/lib/grafana/.dashboards-imported',
+    require => [
+      Service['grafana-server'],
+      File['/var/lib/grafana/dashboards-staging'],
+      File['grafana-import-script'],
+    ],
   }
 
   # Setting up the Apache proxy

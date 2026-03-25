@@ -1,0 +1,73 @@
+#!/usr/bin/env python3
+# Managed by Puppet - do not edit manually
+# Imports dashboards from staging into Grafana via API.
+# Runs once; flag file prevents re-import on subsequent Puppet runs.
+
+import json
+import subprocess
+import sys
+import urllib.request
+import urllib.error
+from pathlib import Path
+
+STAGING     = Path('/var/lib/grafana/dashboards-staging')
+FLAG_FILE   = Path('/var/lib/grafana/.dashboards-imported')
+GRAFANA_URL = 'http://localhost:3001'
+
+lib_files  = sorted((STAGING / 'Library_Panels').glob('*.json')) if (STAGING / 'Library_Panels').is_dir() else []
+dash_files = sorted((STAGING / 'General').glob('*.json'))        if (STAGING / 'General').is_dir()        else []
+
+if not lib_files and not dash_files:
+    print('No dashboards found in staging, skipping import.')
+    sys.exit(0)
+
+password = subprocess.check_output([
+    '/usr/local/bin/dh-create-service-account',
+    '--type', 'grafana',
+    '--product', 'login',
+    '--format', '{password}',
+], text=True).strip()
+
+auth = (b'admin', password.encode())
+
+def post(path, payload):
+    data = json.dumps(payload).encode()
+    req  = urllib.request.Request(
+        GRAFANA_URL + path,
+        data=data,
+        headers={'Content-Type': 'application/json'},
+        method='POST',
+    )
+    import base64
+    req.add_header('Authorization', 'Basic ' + base64.b64encode(b'admin:' + password.encode()).decode())
+    try:
+        with urllib.request.urlopen(req) as resp:
+            print(f'  OK ({resp.status}): {path}')
+    except urllib.error.HTTPError as e:
+        print(f'  ERROR {e.code} importing {path}: {e.read().decode()}', file=sys.stderr)
+        sys.exit(1)
+
+# Import library panels first — dashboards may reference them by UID
+for f in lib_files:
+    print(f'Importing library panel: {f.name}')
+    raw = json.loads(f.read_text())
+    result = raw['result']
+    payload = {
+        'kind':      result['kind'],
+        'name':      result['name'],
+        'model':     result['model'],
+        'uid':       result['uid'],
+        'folderId':  result['folderId'],
+        'folderUid': result['folderUid'],
+    }
+    post('/api/library-elements', payload)
+
+# Import dashboards after library panels exist
+for f in dash_files:
+    print(f'Importing dashboard: {f.name}')
+    dashboard = json.loads(f.read_text())
+    dashboard['id'] = None  # Let Grafana assign a new ID; uid is preserved for references
+    post('/api/dashboards/db', {'dashboard': dashboard, 'overwrite': False, 'folderId': 0})
+
+FLAG_FILE.touch()
+print('Import complete.')
