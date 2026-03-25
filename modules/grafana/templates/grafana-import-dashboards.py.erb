@@ -3,6 +3,7 @@
 # Imports dashboards from staging into Grafana via API.
 # Runs once; flag file prevents re-import on subsequent Puppet runs.
 
+import base64
 import json
 import subprocess
 import sys
@@ -10,12 +11,12 @@ import urllib.request
 import urllib.error
 from pathlib import Path
 
-STAGING     = Path('/var/lib/grafana/dashboards-staging')
-FLAG_FILE   = Path('/var/lib/grafana/.dashboards-imported')
+STAGING = Path('/var/lib/grafana/dashboards-staging')
+FLAG_FILE = Path('/var/lib/grafana/.dashboards-imported')
 GRAFANA_URL = 'http://localhost:3001'
 
-lib_files  = sorted((STAGING / 'Library_Panels').glob('*.json')) if (STAGING / 'Library_Panels').is_dir() else []
-dash_files = sorted((STAGING / 'General').glob('*.json'))        if (STAGING / 'General').is_dir()        else []
+lib_files = sorted((STAGING / 'Library_Panels').glob('*.json')) if (STAGING / 'Library_Panels').is_dir() else []
+dash_files = sorted((STAGING / 'General').glob('*.json')) if (STAGING / 'General').is_dir() else []
 
 if not lib_files and not dash_files:
     print('No dashboards found in staging, skipping import.')
@@ -28,17 +29,14 @@ password = subprocess.check_output([
     '--format', '{password}',
 ], text=True).strip()
 
-auth = (b'admin', password.encode())
-
 def post(path, payload):
     data = json.dumps(payload).encode()
-    req  = urllib.request.Request(
+    req = urllib.request.Request(
         GRAFANA_URL + path,
         data=data,
         headers={'Content-Type': 'application/json'},
         method='POST',
     )
-    import base64
     req.add_header('Authorization', 'Basic ' + base64.b64encode(b'admin:' + password.encode()).decode())
     try:
         with urllib.request.urlopen(req) as resp:
@@ -53,11 +51,11 @@ for f in lib_files:
     raw = json.loads(f.read_text())
     result = raw['result']
     payload = {
-        'kind':      result['kind'],
-        'name':      result['name'],
-        'model':     result['model'],
-        'uid':       result['uid'],
-        'folderId':  result['folderId'],
+        'kind': result['kind'],
+        'name': result['name'],
+        'model': result['model'],
+        'uid': result['uid'],
+        'folderId': result['folderId'],
         'folderUid': result['folderUid'],
     }
     post('/api/library-elements', payload)
