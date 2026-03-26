@@ -1,6 +1,6 @@
 [Unit]
-Requires=zookeeper.service
-After=zookeeper.service
+Description=Apache Kafka Service
+After=network.target
 
 [Service]
 Type=simple
