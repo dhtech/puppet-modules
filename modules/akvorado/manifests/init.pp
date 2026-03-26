@@ -201,21 +201,21 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes, $snmpv3_provider
   }
   file { '/usr/share/GeoIP/asn.mmdb':
     ensure => present,
-    source => 'puppet:///data/asn.mmdb',
+    source => 'puppet:///data/GeoLite2-ASN.mmdb',
     mode   => '0644',
     owner  => 'root',
     group  => 'root',
   }
   file { '/usr/share/GeoIP/country.mmdb':
     ensure => present,
-    source => 'puppet:///data/country.mmdb',
+    source => 'puppet:///data/GeoLite2-Country.mmdb',
     mode   => '0644',
     owner  => 'root',
     group  => 'root',
   }
   file { '/usr/share/GeoIP/city.mmdb':
     ensure => present,
-    source => 'puppet:///data/city.mmdb',
+    source => 'puppet:///data/GeoLite2-City.mmdb',
     mode   => '0644',
     owner  => 'root',
     group  => 'root',
