@@ -78,7 +78,9 @@ class akvorado ($current_event, $ipv4_prefixes, $ipv6_prefixes, $snmpv3_provider
     notify => Service['kafka'],
   }
   -> exec { 'format-kafka-storage':
+    # lint:ignore:140chars
     command     => '/var/lib/kafka/bin/kafka-storage.sh format -t $(/var/lib/kafka/bin/kafka-storage.sh random-uuid) -c /var/lib/kafka/config/server.properties --standalone',
+    # lint:endignore
     refreshonly => true,
     user        => 'kafka',
   }
