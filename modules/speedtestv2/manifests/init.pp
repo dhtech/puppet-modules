@@ -15,13 +15,12 @@ class speedtestv2 {
 
   include apt
 
-  exec { 'apt-update':
-    command => '/usr/bin/apt update',
-  }
-
   package { 'nginx':
     ensure  => installed,
-    require => Exec['apt-update'],
+  }
+
+  package { 'ssl-cert':
+    ensure  => installed,
   }
 
     service { 'nginx':
@@ -29,10 +28,6 @@ class speedtestv2 {
     enable  => true,
     require => Package['nginx'],
   }
-
-
-  # Needed for 'ssl-cert' group
-  ensure_packages(['ssl-cert'])
 
   file { '/etc/ssl/certs/speedtest2.event.dreamhack.se.crt':
     ensure => file,
