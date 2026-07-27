@@ -16,11 +16,11 @@ class speedtestv2 {
   include apt
 
   package { 'nginx':
-    ensure  => installed,
+    ensure => installed,
   }
 
   package { 'ssl-cert':
-    ensure  => installed,
+    ensure => installed,
   }
 
     service { 'nginx':
