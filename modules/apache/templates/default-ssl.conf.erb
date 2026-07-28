@@ -2,7 +2,6 @@
 # All manual changes will be overwritten
 
 <IfModule mod_ssl.c>
-  SSLStaplingCache "shmcb:logs/stapling-cache(150000)"
 
   <VirtualHost *:443>
     DocumentRoot /var/www/html
@@ -23,7 +22,6 @@
     # Requires Apache >=2.4.11
     #SSLSessionTickets Off
     SSLCompression off
-    SSLUseStapling on 
     SSLOptions +StrictRequire
 
     SSLCertificateFile /etc/ssl/certs/server-fullchain.crt
