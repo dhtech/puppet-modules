@@ -4,9 +4,11 @@
 # Your contribution helps us continue to improve and maintain the tool for everyone to use.
 # Official Website : https://OpenSpeedTest.com | Email: support@openspeedtest.com
 # Developed by : Vishnu | https://Vishnu.Pro | Email : me@vishnu.pro
+#
+# MANAGED BY PUPPET - do not edit manually, see modules/speedtestv2.
 
 server {
-        server_name _ localhost speedtest2.event.dreamhack.se;
+        server_name _ localhost <%= @fqdn %>;
         #listen 80  reuseport;
         listen 443 ssl reuseport;
         #listen [::]:80 reuseport;
@@ -15,10 +17,11 @@ server {
         # If HTTP2 Enabled. Upload location should Proxy_Pass to http 1.1 port.
         # Otherwise you will see abnormal Upload Speeds.
         # Nginx Server Windows SSL Performance was very poor! Better use Linux if you need SSL support.
-        ssl_certificate /etc/ssl/certs/speedtest2.event.dreamhack.se.crt; # Use your own certificate & key
-        ssl_certificate_key /etc/ssl/private/speedtest2.event.dreamhack.se.key; # <-- key
-        ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
-	ssl_ciphers "ALL";
+        ssl_certificate /etc/ssl/certs/<%= @fqdn %>.crt;
+        ssl_certificate_key /etc/ssl/private/<%= @fqdn %>.key;
+        # TLSv1/1.1 are deprecated and are refused outright by OpenSSL 3 at the
+        # default security level. Cipher selection is left to the nginx default.
+        ssl_protocols TLSv1.2 TLSv1.3;
         ssl_prefer_server_ciphers on;
 	ssl_session_cache shared:SSL:100m;
 	ssl_session_timeout 1d;
@@ -27,12 +30,14 @@ server {
         index index.html;
         client_max_body_size 35m;
         error_page 405 =200 $uri;
+        # Access logging stays off on purpose: a speed test generates a huge
+        # number of requests and logging them skews the result.
         access_log off;
         gzip off;
         fastcgi_read_timeout 999;
         log_not_found off;
         server_tokens off;
-        error_log /dev/null; #Disable this for Windows Nginx.
+        error_log /var/log/nginx/speedtest_error.log warn;
         tcp_nodelay on;
         tcp_nopush on;
         sendfile on;
@@ -41,32 +46,16 @@ server {
         open_file_cache_min_uses 2;
         open_file_cache_errors off;
 
-        location ~ /\.well-known/acme-challenge/ {
-            allow all;
-            default_type "text/plain";
-            root /usr/share/nginx/html/;
-            try_files $uri =404;
-            break;
-        }
-
+        # Upstream ships CORS headers here so the test can be embedded from
+        # another origin. We serve it directly, so the requests are same-origin
+        # and no cross-origin access is granted.
         location / {
-            add_header 'Access-Control-Allow-Origin' "*" always;
-            add_header 'Access-Control-Allow-Headers' 'Accept,Authorization,Cache-Control,Content-Type,DNT,If-Modified-Since,Keep-Alive,Origin,User-Agent,X-Mx-ReqToken,X-Requested-With' always;
-            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS' always;
             #Very Very Important! You SHOULD send no-store from server for Google Chrome.
             add_header Cache-Control 'no-store, no-cache, max-age=0, no-transform';
             add_header Last-Modified $date_gmt;
             if_modified_since off;
             expires off;
             etag off;
-
-            if ($request_method = OPTIONS ) {
-                add_header 'Access-Control-Allow-Credentials' "true";
-                add_header 'Access-Control-Allow-Headers' 'Accept,Authorization,Cache-Control,Content-Type,DNT,If-Modified-Since,Keep-Alive,Origin,User-Agent,X-Mx-ReqToken,X-Requested-With' always;
-                add_header 'Access-Control-Allow-Origin' "$http_origin" always;
-                add_header 'Access-Control-Allow-Methods' "GET, POST, OPTIONS" always;
-                return 200;
-            }
         }
 
        #HTTP2 & HTTP3 will not wait for the post body and return 200. We need to stop that behaviour.
@@ -109,7 +98,7 @@ server {
 server {
     listen  80 default_server;
     listen  [::]:80 default_server;
-    server_name _ localhost speedtest2.event.dreamhack.se;
+    server_name _ localhost <%= @fqdn %>;
 
     location / {
         return 301 https://$host$request_uri;
