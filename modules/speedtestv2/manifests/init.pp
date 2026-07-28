@@ -3,9 +3,9 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file
 #
-# == Class: speedtest 
+# == Class: speedtestv2
 #
-# This class manages the speedtest
+# This class manages the speedtestv2 site
 #
 #
 # === Parameters
@@ -74,14 +74,38 @@ class speedtestv2 {
   # assets left behind when the bundled OpenSpeedTest copy is upgraded.
   # 0644 keeps the static assets non-executable; Puppet adds the execute bit
   # back for directories on its own, so they end up 0755.
+  #
+  # The download payload is generated below rather than shipped, so it has to
+  # be ignored here: purge would otherwise delete it on every run, and it
+  # would be recreated on the next one.
   file { '/usr/share/nginx/html':
     ensure  => directory,
     recurse => true,
     purge   => true,
+    ignore  => ['downloading'],
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
     source  => 'puppet:///modules/speedtestv2/Speed-Test-main/',
     require => Package['nginx'], #Make sure that apt install has been run
+  }
+
+  # The client downloads this repeatedly to measure throughput, so it only has
+  # to be incompressible and large enough not to finish instantly. Generating
+  # it on the node keeps 30MiB of random bytes out of the repository, where it
+  # would sit in history forever and be cloned by everyone.
+  exec { 'speedtestv2-download-payload':
+    command => 'head -c 30M /dev/urandom > /usr/share/nginx/html/downloading',
+    creates => '/usr/share/nginx/html/downloading',
+    path    => ['/usr/bin', '/bin'],
+    require => File['/usr/share/nginx/html'],
+  }
+
+  file { '/usr/share/nginx/html/downloading':
+    ensure  => file,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    require => Exec['speedtestv2-download-payload'],
   }
 }
