@@ -11,11 +11,29 @@
 #
 
 class dhmap {
+  # /opt/dhmap is symlinked into the web root below, so everything synced
+  # here is publicly readable. The repository holds development and test
+  # material that has no business being served, so exclude it rather than
+  # relying on it being absent.
+  #
+  # 'local' and 'node_modules' matter most: neither is committed, but local
+  # is where a real ipplan database is dropped during development, and
+  # node_modules appears the moment anyone runs npm install in the checkout.
   file { '/opt/dhmap':
     ensure  => directory,
     source  => 'puppet:///repos/dhmap',
     recurse => true,
-    ignore  => ['.git'],
+    ignore  => [
+      '.git',
+      '.github',
+      'local',
+      'node_modules',
+      'test',
+      'Makefile',
+      'package.json',
+      'package-lock.json',
+      'playwright.config.js',
+    ],
   }
 
   file { '/opt/dhmap/src/ipplan2dhmap.py':

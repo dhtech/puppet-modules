@@ -12,7 +12,7 @@
 # No parameters;
 #
 
-class observer($nameservers, $icmp_target, $dns_target, $interface) {
+class observer($nameservers, $icmp_target, $dns_target, $interface, $disable6, $disable4) {
 
   # Create directories for observer
   file { '/opt/observer':
