@@ -73,4 +73,16 @@ class iptables ($rules, $log_fallthrough, $forward_policy = 'drop') {
         provider => 'ip6tables';
     }
   }
+
+  # Testing new iptables module
+  class { 'iptables::ng':
+    chains          => {
+      'INPUT'   => 'DROP',
+      'FORWARD' => upcase($forward_policy),
+      'OUTPUT'  => 'ACCEPT',
+    },
+    rules           => $rules,
+    log_fallthrough => str2bool($log_fallthrough),
+  }
+
 }
