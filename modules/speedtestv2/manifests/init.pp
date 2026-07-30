@@ -16,11 +16,11 @@ class speedtestv2 {
   include apt
 
   package { 'nginx':
-    ensure => installed,
+    ensure  => installed,
   }
 
   package { 'ssl-cert':
-    ensure => installed,
+    ensure  => installed,
   }
 
   service { 'nginx':
@@ -78,10 +78,22 @@ class speedtestv2 {
     ensure  => directory,
     recurse => true,
     purge   => true,
+    ignore  => ['downloading'],
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
     source  => 'puppet:///modules/speedtestv2/Speed-Test-main/',
     require => Package['nginx'], #Make sure that apt install has been run
   }
+
+  # Generate the random download file used by OpenSpeedTest. The file is only
+  # created once and is ignored by the managed web root so Puppet doesn't remove
+  # it on subsequent runs.
+  exec { 'generate-speedtest-download-file':
+    command => '/bin/dd if=/dev/urandom of=/usr/share/nginx/html/downloading bs=1M count=30',
+    creates => '/usr/share/nginx/html/downloading',
+    path    => ['/bin', '/usr/bin'],
+    require => File['/usr/share/nginx/html'],
+  }
+
 }
